@@ -15,7 +15,11 @@ class ModelManagment:
         }
 
     def save_model(self, model, checkpoint_file_path):
-        pass
+        try:
+            model.save(checkpoint_file_path)
+            self.logger.info("Model checkpoint save successfully")
+        except Exception as e:
+            self.logger.error(f"Failed to save model checkpoint: {e}")
 
     def load_model(self, checkpoint_file_path):
         pass
