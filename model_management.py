@@ -3,7 +3,7 @@ from config_manager import ConfigManager
 from stable_baselines3 import DQN
 from stable_baselines3 import PPO
 
-class ModelManagment:
+class ModelManagement:
 
     def __init__(self):
         self.logger = ProjectLogger(self.__class__.__name__).setup_logger()
