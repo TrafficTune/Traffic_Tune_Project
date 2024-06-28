@@ -1,9 +1,7 @@
 from project_logger import ProjectLogger
+from config_manager import ConfigManager
 from stable_baselines3 import DQN
 from stable_baselines3 import PPO
-
-from config_manager import ConfigManager
-
 
 class ModelManagment:
 
