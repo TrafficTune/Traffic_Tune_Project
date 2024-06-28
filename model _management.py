@@ -1,6 +1,6 @@
 from project_logger import ProjectLogger
-from stable_baseline3 import DQN
-from stable_baseline3 import PPO
+from stable_baselines3 import DQN
+from stable_baselines3 import PPO
 
 from config_manager import ConfigManager
 
@@ -21,8 +21,19 @@ class ModelManagment:
         except Exception as e:
             self.logger.error(f"Failed to save model checkpoint: {e}")
 
-    def load_model(self, checkpoint_file_path):
-        pass
+    def load_model(self, model_name, checkpoint_file_path):
+        model = self.models_dict.get(model_name)
+        if not model:
+            self.logger.error(f"Unsupported model: {model_name}")
+            return None
+
+        try:
+            model.load(checkpoint_file_path)
+            self.logger.info("Model loaded successfully from checkpoint")
+            return model
+        except Exception as e:
+            self.logger.error(f"Failed to load model from checkpoint: {e}")
+            return None
 
     def build_agent(self, model_name, env):
         agent_params = ConfigManager().load_agent_config(model_name, env)
