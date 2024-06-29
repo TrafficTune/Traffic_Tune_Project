@@ -92,7 +92,7 @@ def generate_new_flows(routes, low, high):
 # Initialize variables and paths
 num_of_intersection = "5_6"
 xml_file_path = f'Nets/intersection_{num_of_intersection}/routes_{num_of_intersection}/intersection_{num_of_intersection}.rou.xml'
-text_xml_path_file = f'Nets/intersection_{num_of_intersection}/xml_path_intersection_{num_of_intersection}.txt'
+text_xml_path_file = f'Nets/intersection_{num_of_intersection}/route_xml_path_intersection_{num_of_intersection}.txt'
 
 # Initialize lists and index
 new_flows = []
