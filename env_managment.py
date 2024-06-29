@@ -1,5 +1,6 @@
+import json
+
 import config_manager
-from config_manager import ConfigManager
 import project_logger
 from typing import Optional
 from sumo_rl import SumoEnvironment
@@ -38,15 +39,20 @@ class EnvManagement:
         """
         env_params = config_manager.ConfigManager.load_env_config(env_name)
         if not env_params:
-            self._logger.error(f"Unsupported model: {env_name}")
+            self._logger.error(f"Unsupported env: {env_name}")
             return None
 
         env_class = self._envs_dict.get(env_name)
         if not env_class:
-            self._logger.error(f"Unsupported model: {env_name}")
+            self._logger.error(f"Unsupported env: {env_name}")
             return None
 
         env = env_class(**env_params)
         self._logger.info(f"{env_name} agent built successfully")
 
         return env
+
+
+if __name__ == "__main__":
+    env_management = EnvManagement()
+    env_management.save_env(SumoEnvironment("", ""), "check/check.json")
