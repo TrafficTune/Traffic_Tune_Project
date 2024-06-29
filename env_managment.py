@@ -51,8 +51,3 @@ class EnvManagement:
         self._logger.info(f"{env_name} agent built successfully")
 
         return env
-
-
-if __name__ == "__main__":
-    env_management = EnvManagement()
-    env_management.save_env(SumoEnvironment("", ""), "check/check.json")
