@@ -8,5 +8,6 @@ traci
 numpy
 datetime
 pytz
+streamlit
 
 
