@@ -2,5 +2,11 @@ pandas
 matplotlib>=3.9.0
 sumo-rl @ git+https://github.com/LucasAlegre/sumo-rl
 gymnasium
-stable-baselines3[DQN,PPO]
+stable-baselines3
 typing
+traci
+numpy
+datetime
+pytz
+
+
