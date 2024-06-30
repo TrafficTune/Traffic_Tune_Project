@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- generated on 2024-06-30 13:11:45 by Eclipse SUMO netedit Version 1.20.0
+-->
+
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/routes_file.xsd">
+    <!-- Routes -->
+    <route id="E_S" edges="5066150 321331231"/>
+    <route id="E_W" edges="5066150 685510793#0 685510793#0.16"/>
+    <route id="N_E" edges="1092819228#0 1092819228#0.143 139252069"/>
+    <route id="N_S" edges="1092819228#0 1092819228#0.143 321331231"/>
+    <route id="N_W" edges="1092819228#0 E0 685510793#0.16"/>
+    <route id="W_E" edges="685510783#0 139252069"/>
+    <route id="W_S" edges="685510783#0 321331231"/>
+</routes>
