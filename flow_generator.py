@@ -3,7 +3,7 @@ import random
 import shutil as sh
 
 
-def add_vehicle_flows(original_xml_file_path: str, text_xml_file: str, inset_flows: list, new_index: int, level: str):
+def add_vehicle_flows(original_xml_file_path: str, text_xml_file: str, inset_flows: list, new_index: int, level: str) -> None:
     """
     Add vehicle flows in an XML file and save a new copy with flows.
 
@@ -45,7 +45,7 @@ def add_vehicle_flows(original_xml_file_path: str, text_xml_file: str, inset_flo
         f.write(f'{new_xml_file_path}\n')
 
 
-def get_routes(xml_file: str):
+def get_routes(xml_file: str) -> list:
     """
     Retrieve route IDs from an XML file.
 
@@ -63,7 +63,7 @@ def get_routes(xml_file: str):
     return routes_list
 
 
-def generate_new_flows(routes: list, low: int, high: int):
+def generate_new_flows(routes: list, low: int, high: int) -> list:
     """
     Generate new flow data for routes.
 
