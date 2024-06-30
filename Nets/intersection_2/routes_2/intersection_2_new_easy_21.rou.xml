@@ -1,9 +1,0 @@
-<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/routes_file.xsd">
-    
-    <route id="E_N" edges="5066149 E0" />
-    <route id="E_W" edges="5066149 215834183 215834183.33" />
-    <route id="N_E" edges="E1 E1.39 215834190#1" />
-    <route id="N_W" edges="E1 E2 215834183.33" />
-    <route id="W_E" edges="215834169 1047696856 215834154 215834190#1" />
-    <route id="W_N" edges="215834169 1047696856 215834154 E0" />
-<flow id="f_0" begin="0.00" route="E_N" end="3600.00" vehsPerHour="497" /><flow id="f_1" begin="0.00" route="E_W" end="3600.00" vehsPerHour="383" /><flow id="f_2" begin="0.00" route="N_E" end="3600.00" vehsPerHour="472" /><flow id="f_3" begin="0.00" route="N_W" end="3600.00" vehsPerHour="372" /><flow id="f_4" begin="0.00" route="W_E" end="3600.00" vehsPerHour="399" /><flow id="f_5" begin="0.00" route="W_N" end="3600.00" vehsPerHour="308" /></routes>

@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 2024-06-29 12:29:39 by Eclipse SUMO netedit Version 1.20.0
+<!-- generated on 2024-06-30 10:45:30 by Eclipse SUMO netedit Version 1.20.0
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/neteditConfiguration.xsd">
 
     <input>
-        <route-files value="/Users/eviat/Desktop/Final_Project/SUMO_FILE/intersection_3/intersection_3.rou.xml"/>
-        <sumo-net-file value="/Users/eviat/Desktop/Final_Project/SUMO_FILE/intersection_3/intersection_3.net.xml"/>
+        <sumocfg-file value="/Users/eviat/PycharmProjects/Traffic_Tune_Project/Nets/intersection_3/intersection_3.sumocfg"/>
+        <route-files value="/Users/eviat/PycharmProjects/Traffic_Tune_Project/Nets/intersection_3/routes_3/intersection_3_very_hard_27.rou.xml"/>
+        <sumo-net-file value="/Users/eviat/PycharmProjects/Traffic_Tune_Project/Nets/intersection_3/intersection_3.net.xml"/>
     </input>
 
     <output>
-        <output-file value="/Users/eviat/Desktop/Final_Project/SUMO_FILE/intersection_3/intersection_3.net.xml"/>
+        <output-file value="/Users/eviat/PycharmProjects/Traffic_Tune_Project/Nets/intersection_3/intersection_3.net.xml"/>
         <output.street-names value="true"/>
     </output>
 
@@ -610,6 +611,5 @@
     <connection from=":cluster_2252682311_271878068_2847672361_3123446741_#8more_8" to="740504604#2" fromLane="1" toLane="1" dir="s" state="M"/>
     <connection from=":cluster_2252682311_271878068_2847672361_3123446741_#8more_10" to="740504605#1" fromLane="0" toLane="0" dir="l" state="M"/>
     <connection from=":cluster_2252682311_271878068_2847672361_3123446741_#8more_10" to="740504605#1" fromLane="1" toLane="1" dir="l" state="M"/>
-
 
 </net>
