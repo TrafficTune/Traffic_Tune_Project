@@ -136,20 +136,20 @@ for j in range(1, 4):
     for i in range(28):
         if i >= 21:
             level_flow = "very_hard"
-            from_flow = 1800
-            to_flow = 2200
+            from_flow = 3000
+            to_flow = 4000
         elif i >= 14:
             level_flow = "hard"
-            from_flow = 1000
-            to_flow = 1800
+            from_flow = 1500
+            to_flow = 3000
         elif i >= 7:
             level_flow = "medium"
-            from_flow = 500
-            to_flow = 1000
+            from_flow = 750
+            to_flow = 1500
         else:
             level_flow = "easy"
-            from_flow = 200
-            to_flow = 500
+            from_flow = 500
+            to_flow = 750
 
         # Generate new flows
         new_flows = generate_new_flows(routes_list, from_flow, to_flow)
