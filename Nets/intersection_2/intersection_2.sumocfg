@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 2024-06-28 21:45:52 by Eclipse SUMO sumo Version 1.20.0
+<!-- generated on 2024-06-30 12:20:50 by Eclipse SUMO sumo Version 1.20.0
 -->
 
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
 
     <input>
         <net-file value="intersection_2.net.xml"/>
-        <route-files value="intersection_2.rou.xml"/>
+        <route-files value="routes_2/intersection_2_random_1.rou.xml"/>
     </input>
 
 </configuration>

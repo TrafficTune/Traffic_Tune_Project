@@ -1,6 +1,7 @@
 import xml.etree.ElementTree as ET
 import random
 import shutil as sh
+import os
 
 
 def add_vehicle_flows(original_xml_file_path: str, text_xml_file: str, inset_flows: list, new_index: int,
@@ -90,7 +91,7 @@ def generate_new_flows(routes: list, low: int, high: int) -> list:
     return flows
 
 
-def random_flows(routes: list) -> list:
+def random_flows(routes: list, high: float) -> list:
     """
     Generate new flow data for routes.
 
@@ -104,7 +105,7 @@ def random_flows(routes: list) -> list:
     """
     flows = []
     for i, route_id in enumerate(routes):
-        probability = str(random.uniform(0.1, 0.9))
+        probability = str(random.uniform(0.1, high))
         flow = {
             "id": f"f_{i}",
             "begin": "0.00",
@@ -120,48 +121,51 @@ def random_flows(routes: list) -> list:
 
 
 # Generate and update flows for 100 files with varying difficulty levels
-for j in range(1, 4):
+for j in range(1, 7):
     # Initialize variables and paths
     num_of_intersection = j
     xml_file_path = f'Nets/intersection_{num_of_intersection}/routes_{num_of_intersection}/intersection_{num_of_intersection}.rou.xml'
     text_xml_path_file = f'Nets/intersection_{num_of_intersection}/route_xml_path_intersection_{num_of_intersection}.txt'
+    if os.path.exists(text_xml_path_file):
+        os.remove(text_xml_path_file)
 
     # Initialize lists and index
     new_flows = []
-    xml_new_index = 1
 
     # Get routes from XML file
     routes_list = get_routes(xml_file_path)
 
-    for i in range(28):
-        if i >= 21:
-            level_flow = "very_hard"
-            from_flow = 3000
-            to_flow = 4000
-        elif i >= 14:
-            level_flow = "hard"
-            from_flow = 1500
-            to_flow = 3000
-        elif i >= 7:
-            level_flow = "medium"
-            from_flow = 750
-            to_flow = 1500
-        else:
-            level_flow = "easy"
-            from_flow = 500
-            to_flow = 750
+    levels_random = {
+        1: ("easy", 0.3),
+        2: ("medium", 0.5),
+        3: ("hard", 0.7),
+        4: ("very_hard", 0.9),
+    }
+    for k in range(1, 5):
+        level_flow, high_flow_probability = levels_random[k]
+        # generate random flows
+        random_flow = random_flows(routes_list, high_flow_probability)
+        add_vehicle_flows(xml_file_path, text_xml_path_file, random_flow, k, f"random_{level_flow}")
+
+    level_difficulty = {
+        (21, "very_hard", 3000, 4000),
+        (14, "hard", 1500, 3000),
+        (7, "medium", 750, 1500),
+        (0, "easy", 500, 750),
+    }
+    for i in range(1,29):
+        for boundary, level, from_flow, to_flow in level_difficulty:
+            if i >= boundary:
+                level_flow = level
+                from_flow_value = from_flow
+                to_flow_value = to_flow
+                break
 
         # Generate new flows
-        new_flows = generate_new_flows(routes_list, from_flow, to_flow)
+        new_flows = generate_new_flows(routes_list, from_flow_value, to_flow_value)
 
         # add vehicle flows and log new XML file path
-        add_vehicle_flows(xml_file_path, text_xml_path_file, new_flows, xml_new_index, level_flow)
+        add_vehicle_flows(xml_file_path, text_xml_path_file, new_flows, i, level_flow)
 
-        # Increment index for next file
-        xml_new_index += 1
-
-    # generate random flows
-    random_flow = random_flows(routes_list)
-    add_vehicle_flows(xml_file_path, text_xml_path_file, random_flow, 1, "random")
 
 print("Done")
