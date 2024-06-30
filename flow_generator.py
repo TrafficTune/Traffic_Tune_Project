@@ -3,7 +3,7 @@ import random
 import shutil as sh
 
 
-def add_vehicle_flows(original_xml_file_path, text_xml_file, inset_flows, new_index, level):
+def add_vehicle_flows(original_xml_file_path: str, text_xml_file: str, inset_flows: list, new_index: int, level: str):
     """
     Add vehicle flows in an XML file and save a new copy with flows.
 
@@ -45,7 +45,7 @@ def add_vehicle_flows(original_xml_file_path, text_xml_file, inset_flows, new_in
         f.write(f'{new_xml_file_path}\n')
 
 
-def get_routes(xml_file):
+def get_routes(xml_file: str):
     """
     Retrieve route IDs from an XML file.
 
@@ -63,7 +63,7 @@ def get_routes(xml_file):
     return routes_list
 
 
-def generate_new_flows(routes, low, high):
+def generate_new_flows(routes: list, low: int, high: int):
     """
     Generate new flow data for routes.
 
@@ -75,7 +75,7 @@ def generate_new_flows(routes, low, high):
     Returns:
     - new_flows (list): List of dictionaries containing generated flow data.
     """
-    new_flows = []
+    flows = []
     for i, route_id in enumerate(routes):
         vehs_per_hour = random.randint(low, high)
         flow = {
@@ -85,12 +85,12 @@ def generate_new_flows(routes, low, high):
             "end": "3600.00",
             "vehsPerHour": f"{vehs_per_hour}",
         }
-        new_flows.append(flow)
-    return new_flows
+        flows.append(flow)
+    return flows
 
 
 # Initialize variables and paths
-num_of_intersection = "5_6"
+num_of_intersection = "1"
 xml_file_path = f'Nets/intersection_{num_of_intersection}/routes_{num_of_intersection}/intersection_{num_of_intersection}.rou.xml'
 text_xml_path_file = f'Nets/intersection_{num_of_intersection}/route_xml_path_intersection_{num_of_intersection}.txt'
 
