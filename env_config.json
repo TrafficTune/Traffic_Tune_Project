@@ -2,8 +2,6 @@
 
 "kwargs": {
     "net_file": "/Users/md/anaconda3/lib/python3.11/site-packages/sumo_rl/nets/4x4-Lucas/4x4.net.xml",
-    "route_file": "/Users/md/anaconda3/lib/python3.11/site-packages/sumo_rl/nets/4x4-Lucas/4x4c1c2c1c2.rou.xml",
-    "out_csv_name": "Outputs/test/4x4loop-ppo/ppo",
     "use_gui": false,
     "virtual_display": [
         3200,

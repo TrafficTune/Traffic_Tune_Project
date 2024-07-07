@@ -1,4 +1,5 @@
 import json
+from datetime import datetime
 from time import sleep
 
 import typer
@@ -29,7 +30,11 @@ class EnvManager:
         self._policies = {}
 
     def initialize_env(self):
+        generator = self.env_generator("route_xml_path_intersection_1.txt")
         kwargs = self.kwargs
+        for rou, csv in generator:
+            kwargs["net_file"] = rou
+            kwargs["route_file"] = csv
 
         if self.sumo_type == "SingleAgentEnvironment":
             self.env = SumoEnvironment(**kwargs)
@@ -40,7 +45,8 @@ class EnvManager:
             self.env = ParallelPettingZooEnv(self.env)
             self.env = self.env.to_base_env()
         else:
-            raise TypeError("Invalid environment type, must be either 'SingleAgentEnvironment' or 'MultiAgentEnvironment'")
+            raise TypeError(
+                "Invalid environment type, must be either 'SingleAgentEnvironment' or 'MultiAgentEnvironment'")
 
         return self.env
 
@@ -63,5 +69,34 @@ class EnvManager:
     def get_policies(self):
         return self._policies
 
+    def env_generator(self, rou_path: str):
+        with open(rou_path, 'r') as rou_file:
+            for rou_line in rou_file:
+                unique_id = datetime.now().strftime("%m.%d-%H:%M:%S")
+                csv_output_path = self.generate_csv_output_path(rou_line.strip(), unique_id)
+                yield rou_line.strip(), csv_output_path
 
+    def generate_csv_output_path(self, rou_line: str, unique_id: str):
+        if rou_line.startswith('Nets/'):
+            base_output = rou_line.replace('Nets/', 'Outputs/Training/', 1)
+            path_parts = base_output.split('/')
+            csv_output_path = f"{path_parts[0]}/{path_parts[1]}/{path_parts[2]}/experiments/{unique_id}"
+            return csv_output_path
+        else:
+            raise ValueError("Invalid route file path")
+
+
+# for testing purposes only
+if __name__ == "__main__":
+    manager = EnvManager("MultiAgentEnvironment", "env_config.json")
+    g = manager.env_generator("route_xml_path_intersection_1.txt")
+    rou, csv = next(g)
+    print(rou)
+    print(csv)
+    # run simulation
+    #simulation end
+    sleep(5)
+    rou, csv = next(g)
+    print(rou)
+    print(csv)
 
