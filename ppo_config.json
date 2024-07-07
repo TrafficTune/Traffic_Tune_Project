@@ -1,0 +1,11 @@
+[{
+  "experiment_type": "Test1 with 1 agent",
+  "env_name": "PPO",
+  "gamma": 0.99
+},
+
+{
+  "env_id": "Test2 with 2 agents",
+    "env_name": "PPO",
+    "gamma": 0.95
+}]
