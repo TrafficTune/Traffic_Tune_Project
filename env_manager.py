@@ -29,12 +29,10 @@ class EnvManager:
 
         self._policies = {}
 
-    def initialize_env(self):
-        generator = self.env_generator("route_xml_path_intersection_1.txt")
+    def initialize_env(self, route: str, csv_file: str):
         kwargs = self.kwargs
-        for rou, csv in generator:
-            kwargs["net_file"] = rou
-            kwargs["route_file"] = csv
+        kwargs["net_file"] = route
+        kwargs["route_file"] = csv_file
 
         if self.sumo_type == "SingleAgentEnvironment":
             self.env = SumoEnvironment(**kwargs)
