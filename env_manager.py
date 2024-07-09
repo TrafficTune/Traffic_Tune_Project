@@ -31,8 +31,8 @@ class EnvManager:
 
     def initialize_env(self, route: str, csv_file: str):
         kwargs = self.kwargs
-        kwargs["net_file"] = route
-        kwargs["route_file"] = csv_file
+        kwargs["route_file"] = route
+        kwargs["out_csv_name"] = csv_file
 
         if self.sumo_type == "SingleAgentEnvironment":
             self.env = SumoEnvironment(**kwargs)
