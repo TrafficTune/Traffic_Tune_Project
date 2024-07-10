@@ -1,14 +1,9 @@
 {
-
 "kwargs": {
-    "net_file": "/Users/md/anaconda3/lib/python3.11/site-packages/sumo_rl/nets/4x4-Lucas/4x4.net.xml",
-    "use_gui": false,
-    "virtual_display": [
-        3200,
-        1800
-    ],
+    "net_file": "Nets/single_intersection/routes_1/single-intersection.net.xml",
+    "use_gui": true,
     "begin_time": 0,
-    "num_seconds": 20000,
+    "num_seconds": 3600,
     "max_depart_delay": -1,
     "waiting_time_memory": 1000,
     "time_to_teleport": -1,
@@ -16,13 +11,10 @@
     "yellow_time": 2,
     "min_green": 5,
     "max_green": 50,
-    "single_agent": false,
+    "single_agent": true,
     "reward_fn": "diff-waiting-time",
-    "add_system_info": false,
-    "add_per_agent_info": false,
     "sumo_seed": "random",
     "fixed_ts": false,
-    "sumo_warnings": true,
-    "additional_sumo_cmd": null,
-    "render_mode": null
+    "sumo_warnings": true
+
 }}
