@@ -153,7 +153,7 @@ for j in range(1, 7):
         (7, "medium", 750, 1500),
         (0, "easy", 500, 750),
     }
-    for i in range(1,29):
+    for i in range(1, 29):
         for boundary, level, from_flow, to_flow in level_difficulty:
             if i >= boundary:
                 level_flow = level
