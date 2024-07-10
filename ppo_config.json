@@ -1,11 +1,23 @@
-[{
+{
   "experiment_type": "Test1 with 1 agent",
   "env_name": "PPO",
-  "gamma": 0.99
-},
+            "train_batch_size":720,
+            "lr":2e-5,
+            "gamma":0.95,
+            "lambda_":0.9,
+            "use_gae":true,
+            "clip_param":0.4,
+            "grad_clip":null,
+            "entropy_coeff":0.1,
+            "vf_loss_coeff":0.25,
+            "sgd_minibatch_size":64,
+            "num_sgd_iter":10,
+            "use_critic":true,
+            "log_level":"INFO",
+            "num_of_episodes":3,
+            "checkpoint_freq":1,
+            "storage_path":"/Users/md/Desktop/Traffic_Tune_Project/Outputs/Training/PPO_test",
+            "num_env_runners":1
 
-{
-  "env_id": "Test2 with 2 agents",
-    "env_name": "PPO",
-    "gamma": 0.95
-}]
+}
+
