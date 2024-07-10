@@ -1,32 +1,38 @@
 import json
 import os
-import sys
+
+from pettingzoo.utils import conversions
+from ray.rllib.env import ParallelPettingZooEnv
+from sumo_rl import SumoEnvironment
+from sumo_rl.environment.env import SumoEnvironmentPZ
 import env_manager
-from ray.rllib.algorithms import PPOConfig
-import gymnasium as gym
+import ray
+from ray.rllib.algorithms import PPOConfig, PPO
+from ray import tune, air
 from ray.tune.registry import register_env
+import project_logger
 
 
 class PPOTrainer:
+    SINGLE_AGENT_ENV = "SingleAgentEnvironment"
+    MULTI_AGENT_ENV = "MultiAgentEnvironment"
+
     def __init__(self, config_path: str, env_manager: env_manager.EnvManager):
+        self._logger = project_logger.ProjectLogger(self.__class__.__name__).setup_logger()
         self.config = None
         self.config_path = config_path
         self.env_manager = env_manager
-        self.env = env_manager.env
-
+        self.env = None
         # Load all configuration data from the specified configuration file
         with open(self.config_path, 'r') as f:
             self.config_data = json.load(f)
         self.experiment_type = self.config_data.get("experiment_type")
         self.env_name = self.config_data.get("env_name")
-        self.num_rollout_workers = self.config_data.get("num_rollout_workers")
-        self.rollout_fragment_length = self.config_data.get("rollout_fragment_length")
         self.train_batch_size = self.config_data["train_batch_size"]
         self.lr = self.config_data["lr"]
         self.gamma = self.config_data["gamma"]
         self.lambda_ = self.config_data["lambda_"]
         self.use_gae = self.config_data["use_gae"]
-        self.clip_param = self.config_data["clip_param"]
         self.grad_clip = self.config_data["grad_clip"]
         self.use_critic = self.config_data["use_critic"]
         self.entropy_coeff = self.config_data["entropy_coeff"]
@@ -34,22 +40,42 @@ class PPOTrainer:
         self.sgd_minibatch_size = self.config_data["sgd_minibatch_size"]
         self.num_sgd_iter = self.config_data["num_sgd_iter"]
         self.log_level = self.config_data["log_level"]
-        self.framework = self.config_data["framework"]
-        self.num_gpus = self.config_data["num_gpus"]
-        self.timesteps_total = self.config_data["timesteps_total"]
+        self.num_of_episodes = self.config_data["num_of_episodes"]
         self.checkpoint_freq = self.config_data["checkpoint_freq"]
         self.storage_path = self.config_data["storage_path"]
-        self.policies = self.config_data["policies"]
-        self.policy_mapping_fn = self.config_data["policy_mapping_fn"]
         self.num_env_runners = self.config_data["num_env_runners"]
 
-    def env_creator(self,env_config):
-        return self.env
+    def build_config(self, kwargs):
+        ray.init(ignore_reinit_error=True)
 
-    def build_config(self):
-        register_env(self.env_name, env_creator=self.env_creator)
-        self.config = (PPOConfig()
-                       .environment(env=self.env_name)
+        # TODO: decide if get the kwargs from the env_manager or as a parameter in the function
+
+        def env_creator(env_config):
+            if self.env_manager.sumo_type == self.SINGLE_AGENT_ENV:
+                env = SumoEnvironment(**kwargs)
+            elif self.env_manager.sumo_type == self.MULTI_AGENT_ENV:
+                env = SumoEnvironmentPZ(**kwargs)
+                self.env_manager.set_policies()
+                env = conversions.aec_to_parallel(env)
+                env = ParallelPettingZooEnv(env)
+                env = env.to_base_env()
+            else:
+                raise TypeError(
+                    "Invalid environment type, must be either 'SingleAgentEnvironment' or 'MultiAgentEnvironment'")
+            return env
+
+        register_env(self.env_name, env_creator=env_creator)
+
+        # Create an instance of the environment
+        temp_env = env_creator({})
+        obs_space = temp_env.observation_space
+        act_space = temp_env.action_space
+        temp_env.close()
+
+        self.config = (PPOConfig().env_runners(num_cpus_per_env_runner=1, num_gpus_per_env_runner=0)
+
+                       .environment(env=self.env_name,
+                                    )  # TODO: needs to be taken from the env
                        .training(train_batch_size=self.train_batch_size,
                                  sgd_minibatch_size=self.sgd_minibatch_size,
                                  num_sgd_iter=self.num_sgd_iter,
@@ -57,27 +83,102 @@ class PPOTrainer:
                                  lr=self.lr,
                                  lambda_=self.lambda_,
                                  use_gae=self.use_gae,
-                                 clip_param=self.clip_param,
                                  grad_clip=self.grad_clip,
                                  entropy_coeff=self.entropy_coeff,
                                  vf_loss_coeff=self.vf_loss_coeff,
                                  use_critic=self.use_critic
                                  )
                        .debugging(log_level=self.log_level)
-                       .framework(framework=self.framework)
-                       .resources(num_gpus=self.num_gpus)
+                       .framework(framework="torch")
+                       .resources(num_gpus=int(os.environ.get("RLLIB_NUM_GPUS", "0")))
                        .env_runners(num_env_runners=self.num_env_runners, rollout_fragment_length='auto')
-                       .learners(num_learners=self.num_env_runners)
-                       .evaluation()
-                       .callbacks()
+                       .learners(num_learners=self.num_env_runners, num_cpus_per_learner=1, num_gpus_per_learner=0)
+                       .evaluation(evaluation_duration=1, evaluation_duration_unit='episodes',
+                                   evaluation_num_env_runners=1, evaluation_interval=1)
+                       # periodical evaluation during training
+                       # .callbacks()  # TODO: Add custom callbacks as needed
                        )
 
-        if self.env.sumo_type == "MultiAgentEnvironment":
+        if self.env_manager.sumo_type == "MultiAgentEnvironment":
             self.config.multi_agent(policies=self.env_manager.get_policies(),
-                                    policy_mapping_fn=self.env_manager.policy_mapping_fn)
+                                    policy_mapping_fn=self.env_manager.policy_mapping_fn,
+                                    policies_to_train=self.env_manager.get_policies())
+
         return self.config
 
-    def run_tuner(self):
-        pass
+    def train(self):
+        # TODO: log with project logger the self.experiment_type
+        base_config = self.config.to_dict()
+        param_space = {
+            # Use all the base config parameters
+            **base_config,
+            # Override some parameters with search spaces for tuning
+            "lr": tune.loguniform(1e-5, 1e-1),
+            "gamma": tune.uniform(0.9, 0.9999),
+            #     "lambda_": tune.uniform(0.9, 1.0),
+            #     "clip_param": tune.uniform(0.1, 0.3),
+            #     "entropy_coeff": tune.loguniform(1e-5, 1e-2),
+            #     "train_batch_size": tune.choice([4000, 8000]),
+            #     "sgd_minibatch_size": tune.choice([128, 256]),
+            #     "num_sgd_iter": tune.randint(1, 30),
+            #
+        }
 
-    # train,run,tune,fit
+        tuner = tune.Tuner(
+
+            self.env_name,
+            param_space=param_space,
+
+            run_config=air.RunConfig(
+                verbose=2,
+                storage_path=self.storage_path,
+                stop={"training_iteration": self.num_of_episodes},
+                checkpoint_config=air.CheckpointConfig(
+                    checkpoint_at_end=True,
+                    checkpoint_frequency=self.checkpoint_freq,
+                    checkpoint_score_attribute='env_runners/episode_reward_max',
+                    checkpoint_score_order="max"
+                ),
+
+            )
+        )
+
+        results = tuner.fit()
+
+        return results
+
+    def evaluate(self, results):  # TODO: didn't get to check this function
+        best_result = results.get_best_result("episode_reward_mean", "max")
+        best_checkpoint = best_result.checkpoint
+
+        config = best_result.config
+        algo = PPO(config=config)
+
+        algo.restore(best_checkpoint.path)
+
+        # Create an instance of the environment
+        # TODO: setup again the env or think of a way to get the env from the training
+        env = None
+        for episode in range(10):  # Run 10 evaluation episodes
+            obs, info = env.reset()
+            done = False
+            truncated = False
+            episode_reward = 0
+
+            while not (done or truncated):
+                if self.env_manager.sumo_type == self.SINGLE_AGENT_ENV:
+                    action = algo.compute_single_action(obs)
+                    obs, reward, done, truncated, info = env.step(action)
+                    episode_reward += reward
+                elif self.env_manager.sumo_type == self.MULTI_AGENT_ENV:
+                    actions = {}
+                    for agent_id, agent_obs in obs.items():
+                        policy_id = f"policy_{agent_id}"
+                        actions[agent_id] = algo.compute_single_action(agent_obs, policy_id=policy_id)
+                    obs, rewards, dones, infos = env.step(actions)
+                    episode_reward += sum(rewards.values())
+                    done = dones["__all__"]
+                else:
+                    raise ValueError("Invalid environment type")
+
+            print(f"Evaluation Episode {episode} reward: {episode_reward}")
