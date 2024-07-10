@@ -34,20 +34,8 @@ class EnvManager:
         kwargs["route_file"] = route
         kwargs["out_csv_name"] = csv_file
 
-        if self.sumo_type == "SingleAgentEnvironment":
-            self.env = SumoEnvironment(**kwargs)
-        elif self.sumo_type == "MultiAgentEnvironment":
-            self.env = SumoEnvironmentPZ(**kwargs)
-            self.set_policies()
-            self.env = conversions.aec_to_parallel(self.env)
-            self.env = ParallelPettingZooEnv(self.env)
-            self.env = self.env.to_base_env()
-        else:
-            raise TypeError(
-                "Invalid environment type, must be either 'SingleAgentEnvironment' or 'MultiAgentEnvironment'")
-
-        return self.env
-
+        return kwargs
+    
     def policy_mapping_fn(self, agent_id, episode, worker, **kwargs):
         policy_key = f"policy_{agent_id}"
         if policy_key not in self._policies:
@@ -97,4 +85,3 @@ if __name__ == "__main__":
     rou, csv = next(g)
     print(rou)
     print(csv)
-
