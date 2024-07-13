@@ -66,7 +66,8 @@ class EnvManager:
         if rou_line.startswith('Nets/'):
             base_output = rou_line.replace('Nets/', 'Outputs/Training/', 1)
             path_parts = base_output.split('/')
-            csv_output_path = f"{path_parts[0]}/{path_parts[1]}/{path_parts[2]}/experiments/{unique_id}"
+            rou_id = path_parts[4].split('.')
+            csv_output_path = f"{path_parts[0]}/{path_parts[1]}/{path_parts[2]}/experiments/{rou_id[0]}_{unique_id}"
             return csv_output_path
         else:
             raise ValueError("Invalid route file path")
