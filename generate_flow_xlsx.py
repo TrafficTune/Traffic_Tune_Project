@@ -75,19 +75,20 @@ def create_flow_files(data_frame, intersection):
         add_vehicle_flows(xml_rou_path, text_xml_path_file, flows, hour)
 
 
-# Function to create flow files for each row
-intersection_num = 6
+for i in range(1, 7):
+    # Function to create flow files for each row
+    intersection_num = i
 
-xlsx_file_path = f'/Users/eviat/Desktop/Final_Project/flow_count_tltan/intersection_{intersection_num}.xlsx'
+    xlsx_file_path = f'/Users/eviat/Desktop/Final_Project/flow_count_tltan/intersection_{intersection_num}.xlsx'
 
-sheet_name = 'a'
-df = pd.read_excel(xlsx_file_path, sheet_name=sheet_name)
+    sheet_name = 'a'
+    df = pd.read_excel(xlsx_file_path, sheet_name=sheet_name)
 
-xml_rou_path = f"/Users/eviat/Desktop/Final_Project/Traffic_Tune_Project/Nets/intersection_{intersection_num}/routes_{intersection_num}/intersection_{intersection_num}.rou.xml"
-text_xml_path_file = f'Nets/intersection_{intersection_num}/route_xml_path_intersection_{intersection_num}_hour.txt'
-if os.path.exists(text_xml_path_file):
-    os.remove(text_xml_path_file)
-create_flow_files(df, intersection_num)
+    xml_rou_path = f"/Users/eviat/Desktop/Final_Project/Traffic_Tune_Project/Nets/intersection_{intersection_num}/routes_{intersection_num}/intersection_{intersection_num}.rou.xml"
+    text_xml_path_file = f'Nets/intersection_{intersection_num}/route_xml_path_intersection_{intersection_num}_hour.txt'
+    if os.path.exists(text_xml_path_file):
+        os.remove(text_xml_path_file)
+    create_flow_files(df, intersection_num)
 
 print("Done!")
 
