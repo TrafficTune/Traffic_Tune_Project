@@ -1,21 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 2024-07-10 16:31:25 by Eclipse SUMO sumo Version 1.20.0
+<!-- generated on 2024-07-17 23:54:49 by Eclipse SUMO sumo Version 1.20.0
 -->
 
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
 
     <input>
         <net-file value="intersection_5.net.xml"/>
-        <route-files value="routes_5/intersection_5_random_medium_2.rou.xml"/>
+        <route-files value="routes_5_hour/intersection_5_16_17_.rou.xml"/>
     </input>
-
-    <output>
-        <tripinfo-output value="5.xml"/>
-    </output>
-
-    <time>
-        <end value="3600"/>
-    </time>
 
 </configuration>

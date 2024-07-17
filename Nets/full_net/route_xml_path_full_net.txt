@@ -1,0 +1,4 @@
+Nets/full_net/routes_full_net/full_net_random_easy_1.rou.xml
+Nets/full_net/routes_full_net/full_net_random_medium_2.rou.xml
+Nets/full_net/routes_full_net/full_net_random_hard_3.rou.xml
+Nets/full_net/routes_full_net/full_net_random_very_hard_4.rou.xml
