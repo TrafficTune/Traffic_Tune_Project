@@ -18,7 +18,7 @@ class PPOTrainer:
     SINGLE_AGENT_ENV = "SingleAgentEnvironment"
     MULTI_AGENT_ENV = "MultiAgentEnvironment"
 
-    def __init__(self, config_path: str, env_manager: env_manager.EnvManager):
+    def __init__(self, config_path: str, env_manager: env_manager.EnvManager, json_index: int):
         self._logger = project_logger.ProjectLogger(self.__class__.__name__).setup_logger()
         self.config = None
         self.config_path = config_path
@@ -27,7 +27,7 @@ class PPOTrainer:
         # Load all configuration data from the specified configuration file
         with open(self.config_path, 'r') as f:
             self.config_data = json.load(f)
-        self.config_data = self.config_data[1]
+        self.config_data = self.config_data[json_index]
         self.experiment_type = self.config_data.get("experiment_type")
         self.env_name = self.config_data.get("env_name")
         self.train_batch_size = self.config_data["train_batch_size"]
@@ -80,7 +80,7 @@ class PPOTrainer:
                                  vf_loss_coeff=self.vf_loss_coeff,
                                  use_critic=self.use_critic
                                  )
-                       .env_runners(num_env_runners=6, rollout_fragment_length=120, num_envs_per_env_runner=1)
+                       .env_runners(num_env_runners=self.num_env_runners, rollout_fragment_length='auto', num_envs_per_env_runner=1)
                        #  rollout_fragment_length = total time step/ num_env_runners
                        #  rollout_fragment_length = 3600/ 3 = 1200
                        .learners(num_learners=self.num_env_runners)
@@ -126,7 +126,7 @@ class PPOTrainer:
                     checkpoint_score_attribute='env_runners/episode_reward_max',
                     checkpoint_score_order="max"
                 ),
-                stop={"timestep_total": self.num_of_episodes},
+                stop={'counters/num_agent_steps_trained': 720 * self.num_of_episodes},
             )
         )
 

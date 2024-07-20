@@ -15,7 +15,7 @@ from sumo_rl.environment.env import SumoEnvironmentPZ
 
 class EnvManager:
 
-    def __init__(self, sumo_type: str, config_path: str):
+    def __init__(self, sumo_type: str, config_path: str, json_index: int):
         self.config = None
         self.config_path = config_path
         self.env = None
@@ -25,7 +25,7 @@ class EnvManager:
         with open(self.config_path, 'r') as f:
             self.config_data = json.load(f)
 
-        self.kwargs = self.config_data[1].get("kwargs")
+        self.kwargs = self.config_data[json_index].get("kwargs")
 
         self._policies = {}
 
