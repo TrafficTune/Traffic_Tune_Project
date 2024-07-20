@@ -25,7 +25,7 @@ class EnvManager:
         with open(self.config_path, 'r') as f:
             self.config_data = json.load(f)
 
-        self.kwargs = self.config_data.get("kwargs")
+        self.kwargs = self.config_data[1].get("kwargs")
 
         self._policies = {}
 
@@ -45,12 +45,13 @@ class EnvManager:
     def set_policies(self):
         if self.sumo_type == "SingleAgentEnvironment":
             raise TypeError("SumoEnvironment does not support multi-agent training")
-
+        self.env = SumoEnvironmentPZ(**self.kwargs)
         for agent in self.env.agents:
             policy_key = f"policy_{agent}"
             obs_space = self.env.observation_space(agent)
             act_space = self.env.action_space(agent)
             self._policies[policy_key] = (None, obs_space, act_space, {})
+        self.env.close()
 
     def get_policies(self):
         return self._policies
@@ -66,22 +67,8 @@ class EnvManager:
         if rou_line.startswith('Nets/'):
             base_output = rou_line.replace('Nets/', 'Outputs/Training/', 1)
             path_parts = base_output.split('/')
-            csv_output_path = f"{path_parts[0]}/{path_parts[1]}/{path_parts[2]}/experiments/{unique_id}"
+            rou_id = path_parts[4].split('.')
+            csv_output_path = f"{path_parts[0]}/{path_parts[1]}/{path_parts[2]}/experiments/{rou_id[0]}_{unique_id}"
             return csv_output_path
         else:
             raise ValueError("Invalid route file path")
-
-
-# for testing purposes only
-if __name__ == "__main__":
-    manager = EnvManager("MultiAgentEnvironment", "env_config.json")
-    g = manager.env_generator("route_xml_path_intersection_1.txt")
-    rou, csv = next(g)
-    print(rou)
-    print(csv)
-    # run simulation
-    #simulation end
-    sleep(5)
-    rou, csv = next(g)
-    print(rou)
-    print(csv)

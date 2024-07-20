@@ -1,20 +1,43 @@
-{
-"kwargs": {
-    "net_file": "Nets/single_intersection/routes_1/single-intersection.net.xml",
-    "use_gui": true,
-    "begin_time": 0,
-    "num_seconds": 3600,
-    "max_depart_delay": -1,
-    "waiting_time_memory": 1000,
-    "time_to_teleport": -1,
-    "delta_time": 5,
-    "yellow_time": 2,
-    "min_green": 5,
-    "max_green": 50,
-    "single_agent": true,
-    "reward_fn": "diff-waiting-time",
-    "sumo_seed": "random",
-    "fixed_ts": false,
-    "sumo_warnings": true
+[
+  {
+    "kwargs": {
+      "net_file": "/Users/eviat/Desktop/Final_Project/Traffic_Tune_Project/Nets/intersection_3/intersection_3.net.xml",
+      "use_gui": false,
+      "begin_time": 0,
+      "num_seconds": 3600,
+      "max_depart_delay": -1,
+      "waiting_time_memory": 1000,
+      "time_to_teleport": -1,
+      "delta_time": 5,
+      "yellow_time": 2,
+      "min_green": 5,
+      "max_green": 50,
+      "single_agent": true,
+      "reward_fn": "diff-waiting-time",
+      "sumo_seed": "random",
+      "fixed_ts": false,
+      "sumo_warnings": true
+    }
+  },
+  {
+    "kwargs": {
+      "net_file": "/Users/eviat/Desktop/Final_Project/Traffic_Tune_Project/Nets/full_net/full_net.net.xml",
+      "use_gui": false,
+      "begin_time": 0,
+      "num_seconds": 3600,
+      "max_depart_delay": -1,
+      "waiting_time_memory": 1000,
+      "time_to_teleport": -1,
+      "delta_time": 5,
+      "yellow_time": 2,
+      "min_green": 5,
+      "max_green": 50,
+      "single_agent": false,
+      "reward_fn": "diff-waiting-time",
+      "sumo_seed": "random",
+      "fixed_ts": false,
+      "sumo_warnings": true
+    }
+  }
+]
 
-}}

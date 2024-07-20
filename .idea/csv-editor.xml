@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CsvFileAttributes">
+    <option name="attributeMap">
+      <map>
+        <entry key="/Outputs/Training/full_net/experiments/full_net_random_easy_1_07.16-15:47:07_conn3_ep2.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/Outputs/Training/full_net/experiments/full_net_random_easy_1_07.16-15:47:07_conn3_ep3.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/Outputs/Training/full_net/experiments/full_net_random_easy_1_07.16-16:09:21_conn3_ep2.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/Outputs/Training/full_net/experiments/full_net_random_easy_1_07.16-16:09:21_conn3_ep3.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/Outputs/Training/intersection_1/experiments/intersection_1_random_easy_1.rou.xml_1_07.13-23:45:45_conn0_ep1.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/Outputs/Training/intersection_3/experiments/intersection_3_random_easy_1_07.14-23:52:36_conn0_ep1.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/Outputs/Training/intersection_3/experiments/intersection_3_random_easy_1_07.14-23:52:36_conn0_ep4.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/venv/lib/python3.10/site-packages/matplotlib/mpl-data/sample_data/Stocks.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/venv/lib/python3.10/site-packages/matplotlib/mpl-data/sample_data/data_x_x2_x3.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/venv/lib/python3.10/site-packages/matplotlib/mpl-data/sample_data/msft.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>
