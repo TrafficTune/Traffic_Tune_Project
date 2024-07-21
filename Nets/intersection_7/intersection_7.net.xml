@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 2024-07-01 09:48:52 by Eclipse SUMO netedit Version 1.20.0
+<!-- generated on 2024-07-21 21:03:00 by Eclipse SUMO netedit Version 1.20.0
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/neteditConfiguration.xsd">
 
     <input>
-        <sumocfg-file value="/Users/eviat/PycharmProjects/Traffic_Tune_Project/Nets/intersection_7/intersection_7.sumocfg"/>
-        <route-files value="/Users/eviat/PycharmProjects/Traffic_Tune_Project/Nets/intersection_7/routes_7/full_net_random_easy_1.rou.xml"/>
-        <sumo-net-file value="/Users/eviat/PycharmProjects/Traffic_Tune_Project/Nets/intersection_7/intersection_7.net.xml"/>
+        <sumocfg-file value="/Users/eviat/Desktop/Final_Project/Traffic_Tune_Project/Nets/intersection_7/intersection_7.sumocfg"/>
+        <route-files value="/Users/eviat/Desktop/Final_Project/Traffic_Tune_Project/Nets/intersection_7/routes_7/intersection_7_random_easy_1.rou.xml"/>
+        <sumo-net-file value="/Users/eviat/Desktop/Final_Project/Traffic_Tune_Project/Nets/intersection_7/intersection_7.net.xml"/>
     </input>
 
     <output>
-        <output-file value="/Users/eviat/PycharmProjects/Traffic_Tune_Project/Nets/intersection_7/intersection_7.net.xml"/>
+        <output-file value="/Users/eviat/Desktop/Final_Project/Traffic_Tune_Project/Nets/intersection_7/intersection_7.net.xml"/>
         <output.street-names value="true"/>
     </output>
 

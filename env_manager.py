@@ -1,7 +1,7 @@
 import json
 from datetime import datetime
 from time import sleep
-
+import os
 import typer
 import gymnasium as gym
 from pettingzoo.utils import conversions
@@ -20,6 +20,7 @@ class EnvManager:
         self.config_path = config_path
         self.env = None
         self.sumo_type = sumo_type
+        self.storage_path = None
 
         # Load all configuration data from the specified configuration file
         with open(self.config_path, 'r') as f:
@@ -30,7 +31,6 @@ class EnvManager:
             if config.get("json_id") == json_id:
                 self.kwargs = config.get("kwargs")
                 break
-
         self._policies = {}
 
     def initialize_env(self, route: str, csv_file: str):
@@ -39,6 +39,7 @@ class EnvManager:
         kwargs["out_csv_name"] = csv_file
         if self.sumo_type == "MultiAgentEnvironment":
             self.set_policies()
+        self.storage_path = self.get_storage_path(csv_file)
         return kwargs
     
     def policy_mapping_fn(self, agent_id, episode, worker, **kwargs):
@@ -56,7 +57,9 @@ class EnvManager:
             obs_space = self.env.observation_space(agent)
             act_space = self.env.action_space(agent)
             self._policies[policy_key] = (None, obs_space, act_space, {})
-        self.env.close()
+        self.env = conversions.aec_to_parallel(self.env)
+        self.env = ParallelPettingZooEnv(self.env)
+        self.env = self.env.to_base_env()
 
     def get_policies(self):
         return self._policies
@@ -77,3 +80,10 @@ class EnvManager:
             return csv_output_path
         else:
             raise ValueError("Invalid route file path")
+
+    def get_storage_path(self, csv_file: str):
+        if csv_file.startswith('Outputs/Training/'):
+            path_parts = csv_file.split('/')
+            abspath = os.path.dirname(os.path.abspath(__file__))
+            storage_path = f"{abspath}/{path_parts[0]}/{path_parts[1]}/{path_parts[2]}/saved_agent"
+            return storage_path

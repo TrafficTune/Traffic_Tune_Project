@@ -87,7 +87,7 @@
     "json_id": "intersection_5",
     "kwargs": {
       "net_file": "Nets/intersection_5/intersection_5.net.xml",
-      "use_gui": false,
+      "use_gui": true,
       "begin_time": 0,
       "num_seconds": 3600,
       "max_depart_delay": -1,
@@ -128,8 +128,8 @@
   {
     "json_id": "intersection_7",
     "kwargs": {
-      "net_file": "Nets/intersection_7/intersection_7.net.xml",
-      "use_gui": false,
+      "net_file": "/Users/eviat/Desktop/Final_Project/Traffic_Tune_Project/Nets/intersection_7/intersection_7.net.xml",
+      "use_gui": true,
       "begin_time": 0,
       "num_seconds": 3600,
       "max_depart_delay": -1,

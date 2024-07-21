@@ -14,6 +14,7 @@ from ray.tune.registry import register_env
 import project_logger
 
 
+
 class PPOTrainer:
     SINGLE_AGENT_ENV = "SingleAgentEnvironment"
     MULTI_AGENT_ENV = "MultiAgentEnvironment"
@@ -50,7 +51,7 @@ class PPOTrainer:
         self.log_level = self.config_data["log_level"]
         self.num_of_episodes = self.config_data["num_of_episodes"]
         self.checkpoint_freq = self.config_data["checkpoint_freq"]
-        self.storage_path = self.config_data["storage_path"]
+        self.storage_path = self.env_manager.storage_path
         self.num_env_runners = self.config_data["num_env_runners"]
         self.kwargs = None
 
@@ -59,9 +60,6 @@ class PPOTrainer:
             env = SumoEnvironment(**self.env_manager.kwargs)
         elif self.env_manager.sumo_type == self.MULTI_AGENT_ENV:
             env = self.env_manager.env
-            env = conversions.aec_to_parallel(env)
-            env = ParallelPettingZooEnv(env)
-            env = env.to_base_env()
         else:
             raise TypeError(
                 "Invalid environment type, must be either 'SingleAgentEnvironment' or 'MultiAgentEnvironment'")
@@ -84,15 +82,24 @@ class PPOTrainer:
                                  grad_clip=self.grad_clip,
                                  entropy_coeff=self.entropy_coeff,
                                  vf_loss_coeff=self.vf_loss_coeff,
-                                 use_critic=self.use_critic
+                                 use_critic=self.use_critic,
+
                                  )
-                       .env_runners(num_env_runners=self.num_env_runners, rollout_fragment_length='auto', num_envs_per_env_runner=1)
+                       .env_runners(num_env_runners=self.num_env_runners, rollout_fragment_length='auto',
+                                    num_envs_per_env_runner=1)
                        #  rollout_fragment_length = total time step/ num_env_runners
                        #  rollout_fragment_length = 3600/ 3 = 1200
                        .learners(num_learners=self.num_env_runners)
                        .debugging(log_level=self.log_level)
                        .framework(framework="torch")
                        .resources(num_gpus=int(os.environ.get("RLLIB_NUM_GPUS", "0")))
+                       .evaluation(
+                                evaluation_interval=1,
+                                evaluation_duration=720,
+                                evaluation_duration_unit="timesteps",
+                                evaluation_num_env_runners=1,
+                                evaluation_parallel_to_training=True,
+                            )
                        # periodical evaluation during training
                        # .callbacks()  # TODO: Add custom callbacks as needed
                        )
@@ -133,7 +140,6 @@ class PPOTrainer:
                     checkpoint_score_order="max"
                 ),
                 stop={'training_iteration': self.num_of_episodes * self.num_env_runners},
-                # batch 720 env (CSV) 3600 3600/720 = 5
             )
         )
 
@@ -151,7 +157,7 @@ class PPOTrainer:
 
         # Create an instance of the environment
         # TODO: setup again the env or think of a way to get the env from the training
-        env = None
+        env = self.env_manager.env.reset()
         for episode in range(10):  # Run 10 evaluation episodes
             obs, info = env.reset()
             done = False
