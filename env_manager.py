@@ -15,7 +15,7 @@ from sumo_rl.environment.env import SumoEnvironmentPZ
 
 class EnvManager:
 
-    def __init__(self, sumo_type: str, config_path: str, json_index: int):
+    def __init__(self, sumo_type: str, config_path: str, json_id: str):
         self.config = None
         self.config_path = config_path
         self.env = None
@@ -25,7 +25,11 @@ class EnvManager:
         with open(self.config_path, 'r') as f:
             self.config_data = json.load(f)
 
-        self.kwargs = self.config_data[json_index].get("kwargs")
+        self.kwargs = None
+        for config in self.config_data:
+            if config.get("json_id") == json_id:
+                self.kwargs = config.get("kwargs")
+                break
 
         self._policies = {}
 
@@ -33,7 +37,8 @@ class EnvManager:
         kwargs = self.kwargs
         kwargs["route_file"] = route
         kwargs["out_csv_name"] = csv_file
-
+        if self.sumo_type == "MultiAgentEnvironment":
+            self.set_policies()
         return kwargs
     
     def policy_mapping_fn(self, agent_id, episode, worker, **kwargs):
