@@ -18,7 +18,7 @@ class PPOTrainer:
     SINGLE_AGENT_ENV = "SingleAgentEnvironment"
     MULTI_AGENT_ENV = "MultiAgentEnvironment"
 
-    def __init__(self, config_path: str, env_manager: env_manager.EnvManager, json_index: int):
+    def __init__(self, config_path: str, env_manager: env_manager.EnvManager, experiment_type: str):
         self._logger = project_logger.ProjectLogger(self.__class__.__name__).setup_logger()
         self.config = None
         self.config_path = config_path
@@ -27,7 +27,13 @@ class PPOTrainer:
         # Load all configuration data from the specified configuration file
         with open(self.config_path, 'r') as f:
             self.config_data = json.load(f)
-        self.config_data = self.config_data[json_index]
+
+        self.config = None
+        for config in self.config_data:
+            if config.get("experiment_type") == experiment_type:
+                self.config_data = config.get("config")
+                break
+
         self.experiment_type = self.config_data.get("experiment_type")
         self.env_name = self.config_data.get("env_name")
         self.train_batch_size = self.config_data["train_batch_size"]
@@ -52,7 +58,7 @@ class PPOTrainer:
         if self.env_manager.sumo_type == self.SINGLE_AGENT_ENV:
             env = SumoEnvironment(**self.env_manager.kwargs)
         elif self.env_manager.sumo_type == self.MULTI_AGENT_ENV:
-            env = SumoEnvironmentPZ(**self.env_manager.kwargs)
+            env = self.env_manager.env
             env = conversions.aec_to_parallel(env)
             env = ParallelPettingZooEnv(env)
             env = env.to_base_env()
@@ -126,7 +132,8 @@ class PPOTrainer:
                     checkpoint_score_attribute='env_runners/episode_reward_max',
                     checkpoint_score_order="max"
                 ),
-                stop={'counters/num_agent_steps_trained': 720 * self.num_of_episodes},
+                stop={'training_iteration': self.num_of_episodes * self.num_env_runners},
+                # batch 720 env (CSV) 3600 3600/720 = 5
             )
         )
 
