@@ -4,13 +4,13 @@
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/neteditConfiguration.xsd">
 
     <input>
-        <sumocfg-file value="/Users/eviat/PycharmProjects/Traffic_Tune_Project/Nets/full_net/full_net.sumocfg"/>
-        <route-files value="/Users/eviat/PycharmProjects/Traffic_Tune_Project/Nets/full_net/routes_full_net/full_net_random_easy_1.rou.xml"/>
-        <sumo-net-file value="/Users/eviat/PycharmProjects/Traffic_Tune_Project/Nets/full_net/full_net.net.xml"/>
+        <sumocfg-file value="/Users/eviat/PycharmProjects/Traffic_Tune_Project/Nets/intersection_7/intersection_7.sumocfg"/>
+        <route-files value="/Users/eviat/PycharmProjects/Traffic_Tune_Project/Nets/intersection_7/routes_7/full_net_random_easy_1.rou.xml"/>
+        <sumo-net-file value="/Users/eviat/PycharmProjects/Traffic_Tune_Project/Nets/intersection_7/intersection_7.net.xml"/>
     </input>
 
     <output>
-        <output-file value="/Users/eviat/PycharmProjects/Traffic_Tune_Project/Nets/full_net/full_net.net.xml"/>
+        <output-file value="/Users/eviat/PycharmProjects/Traffic_Tune_Project/Nets/intersection_7/intersection_7.net.xml"/>
         <output.street-names value="true"/>
     </output>
 
