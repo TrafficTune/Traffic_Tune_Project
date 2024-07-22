@@ -93,13 +93,11 @@ class PPOTrainer:
                        .debugging(log_level=self.log_level)
                        .framework(framework="torch")
                        .resources(num_gpus=int(os.environ.get("RLLIB_NUM_GPUS", "0")))
-                       .evaluation(
-                                evaluation_interval=1,
-                                evaluation_duration=720,
-                                evaluation_duration_unit="timesteps",
-                                evaluation_num_env_runners=1,
-                                evaluation_parallel_to_training=True,
-                            )
+                       # .evaluation(
+                       #          evaluation_interval=1,
+                       #          evaluation_duration=1,
+                       #          evaluation_num_env_runners=1,
+                       #      )
                        # periodical evaluation during training
                        # .callbacks()  # TODO: Add custom callbacks as needed
                        )

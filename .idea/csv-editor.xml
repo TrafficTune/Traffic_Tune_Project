@@ -31,7 +31,84 @@
             </Attribute>
           </value>
         </entry>
-        <entry key="/Outputs/Training/intersection_1/experiments/intersection_1_random_easy_1.rou.xml_1_07.13-23:45:45_conn0_ep1.csv">
+        <entry key="/Outputs/Training/full_net/experiments/full_net_random_easy_1_07.20-21:44:58_conn3_ep1.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/Outputs/Training/full_net/experiments/full_net_random_easy_1_07.20-21:44:58_conn3_ep2.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/Outputs/Training/full_net/experiments/full_net_random_easy_1_07.20-21:53:53_conn3_ep1.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/Outputs/Training/full_net/experiments/full_net_random_easy_1_07.20-21:53:53_conn3_ep2.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/Outputs/Training/full_net/experiments/full_net_random_easy_1_07.20-23:28:24_conn3_ep1.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/Outputs/Training/full_net/experiments/full_net_random_easy_1_07.20-23:28:24_conn3_ep2.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/Outputs/Training/full_net/experiments/full_net_random_easy_1_07.20-23:28:24_conn3_ep3.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/Outputs/Training/full_net/experiments/full_net_random_easy_1_07.20-23:28:24_conn3_ep4.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/Outputs/Training/intersection_1/experiments/intersection_1_random_easy_1_07.22-12:11:08_conn0_ep2.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/Outputs/Training/intersection_1/experiments/intersection_1_random_hard_3_07.22-12:14:15_conn0_ep1.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/Outputs/Training/intersection_1/experiments/intersection_1_random_hard_3_07.22-12:14:15_conn0_ep2.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/Outputs/Training/intersection_2/experiments/intersection_2_random_very_hard_4_07.22-12:27:06_conn0_ep1.csv">
           <value>
             <Attribute>
               <option name="separator" value="," />
@@ -46,6 +123,48 @@
           </value>
         </entry>
         <entry key="/Outputs/Training/intersection_3/experiments/intersection_3_random_easy_1_07.14-23:52:36_conn0_ep4.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/Outputs/Training/intersection_5/experiments/intersection_5_random_easy_1_07.21-20:50:33_conn0_ep1.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/Outputs/Training/intersection_5/experiments/intersection_5_random_easy_1_07.21-20:50:33_conn0_ep2.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/Outputs/Training/intersection_5/experiments/intersection_5_random_easy_1_07.21-20:50:33_conn0_ep3.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/Outputs/Training/intersection_7/experiments/intersection_7_random_easy_1_07.21-21:13:44_conn3_ep1.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/Outputs/Training/intersection_7/experiments/intersection_7_random_hard_3_07.22-13:00:31_conn1_ep1.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/Outputs/Training/intersection_7/experiments/intersection_7_random_hard_3_07.22-13:00:31_conn1_ep2.csv">
           <value>
             <Attribute>
               <option name="separator" value="," />
