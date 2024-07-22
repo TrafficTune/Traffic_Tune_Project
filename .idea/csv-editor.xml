@@ -150,6 +150,62 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="/Outputs/Training/intersection_6/experiments/intersection_6_random_easy_1_07.22-18:02:41_conn0_ep1.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/Outputs/Training/intersection_6/experiments/intersection_6_random_easy_1_07.22-18:02:41_conn0_ep2.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/Outputs/Training/intersection_6/experiments/intersection_6_random_easy_1_07.22-18:31:54_conn0_ep2.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/Outputs/Training/intersection_6/experiments/intersection_6_random_easy_1_07.22-18:31:54_conn0_ep8.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/Outputs/Training/intersection_6/experiments/intersection_6_random_easy_1_07.22-18:31:54_conn0_ep9.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/Outputs/Training/intersection_6/experiments/intersection_6_random_easy_1_07.22-18:44:29_conn0_ep2.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/Outputs/Training/intersection_6/experiments/intersection_6_random_easy_1_07.22-18:44:29_conn0_ep3.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/Outputs/Training/intersection_6/experiments/intersection_6_random_easy_1_07.22-18:44:29_conn0_ep4.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="/Outputs/Training/intersection_7/experiments/intersection_7_random_easy_1_07.21-21:13:44_conn3_ep1.csv">
           <value>
             <Attribute>

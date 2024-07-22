@@ -15,7 +15,7 @@
     "num_sgd_iter": 10,
     "use_critic": true,
     "log_level": "INFO",
-    "num_of_episodes": 2,
+    "num_of_episodes": 3,
     "checkpoint_freq": 1,
     "storage_path": "/Users/eviat/Desktop/Final_Project/Traffic_Tune_Project/Outputs/Training/PPO_test",
     "num_env_runners": 1

@@ -58,6 +58,7 @@ class PPOTrainer:
     def env_creator(self, env_config):
         if self.env_manager.sumo_type == self.SINGLE_AGENT_ENV:
             env = SumoEnvironment(**self.env_manager.kwargs)
+            self.env_manager.env = env
         elif self.env_manager.sumo_type == self.MULTI_AGENT_ENV:
             env = self.env_manager.env
         else:
@@ -93,11 +94,12 @@ class PPOTrainer:
                        .debugging(log_level=self.log_level)
                        .framework(framework="torch")
                        .resources(num_gpus=int(os.environ.get("RLLIB_NUM_GPUS", "0")))
-                       # .evaluation(
-                       #          evaluation_interval=1,
-                       #          evaluation_duration=1,
-                       #          evaluation_num_env_runners=1,
-                       #      )
+                       .evaluation(
+                                evaluation_interval=2,
+                                evaluation_duration=self.num_of_episodes,
+                                evaluation_num_env_runners=1,
+                                evaluation_duration_unit="episodes"
+                            )
                        # periodical evaluation during training
                        # .callbacks()  # TODO: Add custom callbacks as needed
                        )
