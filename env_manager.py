@@ -64,19 +64,19 @@ class EnvManager:
     def get_policies(self):
         return self._policies
 
-    def env_generator(self, rou_path: str):
+    def env_generator(self, rou_path: str, algo_name: str):
         with open(rou_path, 'r') as rou_file:
             for rou_line in rou_file:
                 unique_id = datetime.now().strftime("%m.%d-%H:%M:%S")
-                csv_output_path = self.generate_csv_output_path(rou_line.strip(), unique_id)
+                csv_output_path = self.generate_csv_output_path(rou_line.strip(), unique_id, algo_name)
                 yield rou_line.strip(), csv_output_path
 
-    def generate_csv_output_path(self, rou_line: str, unique_id: str):
+    def generate_csv_output_path(self, rou_line: str, unique_id: str, algo_name: str):
         if rou_line.startswith('Nets/'):
             base_output = rou_line.replace('Nets/', 'Outputs/Training/', 1)
             path_parts = base_output.split('/')
             rou_id = path_parts[4].split('.')
-            csv_output_path = f"{path_parts[0]}/{path_parts[1]}/{path_parts[2]}/experiments/{rou_id[0]}_{unique_id}"
+            csv_output_path = f"{path_parts[0]}/{path_parts[1]}/{path_parts[2]}/experiments/{algo_name}_{rou_id[0]}_{unique_id}"
             return csv_output_path
         else:
             raise ValueError("Invalid route file path")
@@ -87,3 +87,4 @@ class EnvManager:
             abspath = os.path.dirname(os.path.abspath(__file__))
             storage_path = f"{abspath}/{path_parts[0]}/{path_parts[1]}/{path_parts[2]}/saved_agent"
             return storage_path
+
