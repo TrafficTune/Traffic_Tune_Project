@@ -108,6 +108,13 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="/Outputs/Training/intersection_2/experiments/intersection_2_random_easy_1_07.22-12:24:37_conn0_ep2.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="/Outputs/Training/intersection_2/experiments/intersection_2_random_very_hard_4_07.22-12:27:06_conn0_ep1.csv">
           <value>
             <Attribute>
