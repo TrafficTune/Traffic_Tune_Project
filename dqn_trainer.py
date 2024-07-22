@@ -144,6 +144,10 @@ class DQNTrainer:
                     checkpoint_score_order="max"
                 ),
                 stop={'training_iteration': self.num_of_episodes * self.num_env_runners},
+                # TODO: Stop condition need to change
+                #  in single, runs 4 episodes instead of 3
+                #  in multi, currently does not stop
+                #  (ran about 3 episodes instead of 2, did not stop on its own)
             )
         )
 
