@@ -1,5 +1,5 @@
 [{
- "experiment_type": "SingleAgent",
+ "experiment_type": "PPO_SingleAgent",
   "config": {
     "env_name": "PPO",
     "train_batch_size": 720,
@@ -21,7 +21,7 @@
     "num_env_runners": 1
   }
 },{
-  "experiment_type": "MultiAgent",
+  "experiment_type": "PPO_MultiAgent",
   "config": {
     "env_name": "PPO",
     "train_batch_size": 720,
