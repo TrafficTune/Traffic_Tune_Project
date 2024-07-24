@@ -14,10 +14,9 @@
     "sgd_minibatch_size": 64,
     "num_sgd_iter": 10,
     "use_critic": true,
-    "log_level": "INFO",
+    "log_level": "ERROR",
     "num_of_episodes": 3,
     "checkpoint_freq": 1,
-    "storage_path": "/Users/eviat/Desktop/Final_Project/Traffic_Tune_Project/Outputs/Training/PPO_test",
     "num_env_runners": 1
   }
 },{
@@ -36,10 +35,9 @@
     "sgd_minibatch_size": 64,
     "num_sgd_iter": 10,
     "use_critic": true,
-    "log_level": "INFO",
+    "log_level": "ERROR",
     "num_of_episodes": 2,
     "checkpoint_freq": 1,
-    "storage_path": "/Users/eviat/Desktop/Final_Project/Traffic_Tune_Project/Outputs/Training/PPO_test",
     "num_env_runners": 6
   }
 }

@@ -102,8 +102,6 @@ class DQNTrainer:
                                  )
                        .env_runners(num_env_runners=self.num_env_runners, rollout_fragment_length='auto',
                                     num_envs_per_env_runner=1)
-                       #  rollout_fragment_length = total time step/ num_env_runners
-                       #  rollout_fragment_length = 3600/ 3 = 1200
                        .learners(num_learners=self.num_env_runners)
                        .debugging(log_level=self.log_level)
                        .framework(framework="torch")
