@@ -85,22 +85,21 @@ class PPOTrainer:
                                  vf_loss_coeff=self.vf_loss_coeff,
                                  use_critic=self.use_critic,
 
+
                                  )
                        .env_runners(num_env_runners=self.num_env_runners, rollout_fragment_length='auto',
                                     num_envs_per_env_runner=1)
-                       #  rollout_fragment_length = total time step/ num_env_runners
-                       #  rollout_fragment_length = 3600/ 3 = 1200
                        .learners(num_learners=self.num_env_runners)
                        .debugging(log_level=self.log_level)
                        .framework(framework="torch")
                        .resources(num_gpus=int(os.environ.get("RLLIB_NUM_GPUS", "0")))
-                       .evaluation(
-                                evaluation_interval=2,
-                                evaluation_duration=self.num_of_episodes,
-                                evaluation_num_env_runners=1,
-                                evaluation_duration_unit="episodes"
-                            )
-                       # periodical evaluation during training
+                       .reporting(min_sample_timesteps_per_iteration=720)
+                       # .evaluation(
+                       #          evaluation_interval=2,
+                       #          evaluation_duration=self.num_of_episodes,
+                       #          evaluation_num_env_runners=1,
+                       #          evaluation_duration_unit="episodes"
+                       #      )
                        # .callbacks()  # TODO: Add custom callbacks as needed
                        )
 

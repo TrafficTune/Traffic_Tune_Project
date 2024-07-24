@@ -2,7 +2,7 @@
   "experiment_type": "DQN_SingleAgent",
   "config": {
     "env_name": "DQN",
-    "train_batch_size": 32,
+    "train_batch_size": 1,
     "lr": 5e-4,
     "gamma": 0.95,
     "grad_clip": null,
@@ -20,7 +20,7 @@
     "n_step": 1,
     "training_intensity": null,
     "log_level": "INFO",
-    "num_of_episodes": 2,
+    "num_of_episodes": 3,
     "checkpoint_freq": 1,
     "num_env_runners": 1
   }

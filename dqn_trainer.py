@@ -97,7 +97,8 @@ class DQNTrainer:
                                 double_q=self.double_q,
                                 hiddens=self.hiddens,
                                 n_step=self.n_step,
-                                training_intensity=self.training_intensity
+                                training_intensity=self.training_intensity,
+                                num_steps_sampled_before_learning_starts=1
                                  )
                        .env_runners(num_env_runners=self.num_env_runners, rollout_fragment_length='auto',
                                     num_envs_per_env_runner=1)
@@ -107,6 +108,7 @@ class DQNTrainer:
                        .debugging(log_level=self.log_level)
                        .framework(framework="torch")
                        .resources(num_gpus=int(os.environ.get("RLLIB_NUM_GPUS", "0")))
+                       .reporting(min_sample_timesteps_per_iteration=720)
                        # .evaluation(
                        #          evaluation_interval=2,
                        #          evaluation_duration=self.num_of_episodes,
@@ -131,9 +133,6 @@ class DQNTrainer:
         #     **base_config,
         #     # Override some parameters with search spaces for tuning
         # }
-        x = 3.6
-        if self.env_manager.sumo_type == "SingleAgentEnvironment":
-            x = 0.72
 
         tuner = tune.Tuner(
             self.env_name,
@@ -146,7 +145,7 @@ class DQNTrainer:
                     checkpoint_score_attribute='env_runners/episode_reward_max',
                     checkpoint_score_order="max"
                 ),
-                stop={"training_iteration": self.num_of_episodes * x},
+                stop={"training_iteration": self.num_of_episodes * self.num_env_runners},
                 # each iteration in multi agent there are 1002 steps
                 # TODO: Stop condition need to change
                 #  in single, runs 4 episodes instead of 3
