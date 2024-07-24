@@ -131,6 +131,9 @@ class DQNTrainer:
         #     **base_config,
         #     # Override some parameters with search spaces for tuning
         # }
+        x = 3.6
+        if self.env_manager.sumo_type == "SingleAgentEnvironment":
+            x = 0.72
 
         tuner = tune.Tuner(
             self.env_name,
@@ -143,7 +146,8 @@ class DQNTrainer:
                     checkpoint_score_attribute='env_runners/episode_reward_max',
                     checkpoint_score_order="max"
                 ),
-                stop={'training_iteration': self.num_of_episodes * self.num_env_runners},
+                stop={"training_iteration": self.num_of_episodes * x},
+                # each iteration in multi agent there are 1002 steps
                 # TODO: Stop condition need to change
                 #  in single, runs 4 episodes instead of 3
                 #  in multi, currently does not stop

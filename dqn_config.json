@@ -20,7 +20,7 @@
     "n_step": 1,
     "training_intensity": null,
     "log_level": "INFO",
-    "num_of_episodes": 3,
+    "num_of_episodes": 2,
     "checkpoint_freq": 1,
     "num_env_runners": 1
   }
@@ -67,12 +67,12 @@
     "noisy": false,
     "sigma0": 0.5,
     "dueling": true,
-    "double_q": false,
+  "double_q": false,
     "hiddens": [64, 64],
     "n_step": 1,
     "training_intensity": null,
     "log_level": "INFO",
-    "num_of_episodes": 3,
+    "num_of_episodes": 2,
     "checkpoint_freq": 1,
     "num_env_runners": 6
   }
