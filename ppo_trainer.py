@@ -21,7 +21,6 @@ class PPOTrainer:
 
     def __init__(self, config_path: str, env_manager: env_manager.EnvManager, experiment_type: str):
         self._logger = project_logger.ProjectLogger(self.__class__.__name__).setup_logger()
-        self.config = None
         self.config_path = config_path
         self.env_manager = env_manager
         self.env = None
@@ -32,27 +31,18 @@ class PPOTrainer:
         self.config = None
         for config in self.config_data:
             if config.get("experiment_type") == experiment_type:
-                self.config_data = config.get("config")
+                self.config = config
+                print(config)
                 break
 
-        self.experiment_type = self.config_data.get("experiment_type")
-        self.env_name = self.config_data.get("env_name")
-        self.train_batch_size = self.config_data["train_batch_size"]
-        self.lr = self.config_data["lr"]
-        self.gamma = self.config_data["gamma"]
-        self.lambda_ = self.config_data["lambda_"]
-        self.use_gae = self.config_data["use_gae"]
-        self.grad_clip = self.config_data["grad_clip"]
-        self.use_critic = self.config_data["use_critic"]
-        self.entropy_coeff = self.config_data["entropy_coeff"]
-        self.vf_loss_coeff = self.config_data["vf_loss_coeff"]
-        self.sgd_minibatch_size = self.config_data["sgd_minibatch_size"]
-        self.num_sgd_iter = self.config_data["num_sgd_iter"]
-        self.log_level = self.config_data["log_level"]
-        self.num_of_episodes = self.config_data["num_of_episodes"]
-        self.checkpoint_freq = self.config_data["checkpoint_freq"]
+        self.experiment_type = self.config["experiment_type"]
+        self.env_name = self.config["env_name"]
+        self.log_level = self.config["log_level"]
+        self.num_of_episodes = self.config["num_of_episodes"]
+        self.checkpoint_freq = self.config["checkpoint_freq"]
+        self.num_env_runners = self.config["num_env_runners"]
+        self.config = self.config["config"]
         self.storage_path = self.env_manager.storage_path
-        self.num_env_runners = self.config_data["num_env_runners"]
         self.kwargs = None
 
     def env_creator(self, env_config):
@@ -73,20 +63,7 @@ class PPOTrainer:
 
         self.config = (PPOConfig()
                        .environment(env=self.env_name)  # TODO: needs to be taken from the env
-                       .training(train_batch_size=self.train_batch_size,
-                                 sgd_minibatch_size=self.sgd_minibatch_size,
-                                 num_sgd_iter=self.num_sgd_iter,
-                                 gamma=self.gamma,
-                                 lr=self.lr,
-                                 lambda_=self.lambda_,
-                                 use_gae=self.use_gae,
-                                 grad_clip=self.grad_clip,
-                                 entropy_coeff=self.entropy_coeff,
-                                 vf_loss_coeff=self.vf_loss_coeff,
-                                 use_critic=self.use_critic,
-
-
-                                 )
+                       .training(**self.config)
                        .env_runners(num_env_runners=self.num_env_runners, rollout_fragment_length='auto',
                                     num_envs_per_env_runner=1)
                        .learners(num_learners=self.num_env_runners)
@@ -180,3 +157,28 @@ class PPOTrainer:
                     raise ValueError("Invalid environment type")
 
             print(f"Evaluation Episode {episode} reward: {episode_reward}")
+
+
+if __name__ == "__main__":
+    num_intersection = 3  # Choose which intersection you want to train
+
+    # Choose the experiment_type:
+    # PPO_SingleAgent | PPO_MultiAgent | DQN_SingleAgent | DDQN_SingleAgent | DQN_MultiAgent | DDQN_MultiAgent
+    experiment_type = "PPO_SingleAgent"
+
+    num_training_cycles = 1
+    # Initialize the environment manager
+    manager = env_manager.EnvManager(f"SingleAgentEnvironment", "env_config.json", json_id=f"intersection_{num_intersection}")
+    generator = manager.env_generator(
+        f"Nets/intersection_{num_intersection}/route_xml_path_intersection_{num_intersection}.txt",
+        algo_name="ppo")
+
+    # Initialize the environment manager with new route file
+    rou, csv = next(generator)
+    manager.initialize_env(rou, csv)
+
+    ppo_agent = PPOTrainer(config_path="ppo_config.json", env_manager=manager, experiment_type=experiment_type)
+
+    print(ppo_agent.experiment_type)
+    print(ppo_agent.env_name)
+    print(ppo_agent.num_env_runners)

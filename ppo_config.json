@@ -1,45 +1,47 @@
-[{
- "experiment_type": "PPO_SingleAgent",
-  "config": {
+[
+  {
+    "experiment_type": "PPO_SingleAgent",
     "env_name": "PPO",
-    "train_batch_size": 720,
-    "lr": 2e-5,
-    "gamma": 0.95,
-    "lambda_": 0.9,
-    "use_gae": true,
-    "clip_param": 0.4,
-    "grad_clip": null,
-    "entropy_coeff": 0.1,
-    "vf_loss_coeff": 0.25,
-    "sgd_minibatch_size": 64,
-    "num_sgd_iter": 10,
-    "use_critic": true,
     "log_level": "ERROR",
-    "num_of_episodes": 3,
+    "num_of_episodes": 5,
     "checkpoint_freq": 1,
-    "num_env_runners": 1
-  }
-},{
-  "experiment_type": "PPO_MultiAgent",
-  "config": {
+    "num_env_runners": 1,
+    "config": {
+      "train_batch_size": 720,
+      "lr": 2e-5,
+      "gamma": 0.95,
+      "lambda_": 0.9,
+      "use_gae": true,
+      "clip_param": 0.4,
+      "grad_clip": null,
+      "entropy_coeff": 0.1,
+      "vf_loss_coeff": 0.25,
+      "sgd_minibatch_size": 64,
+      "num_sgd_iter": 10,
+      "use_critic": true
+    }
+  },
+  {
+    "experiment_type": "PPO_MultiAgent",
     "env_name": "PPO",
-    "train_batch_size": 720,
-    "lr": 2e-5,
-    "gamma": 0.95,
-    "lambda_": 0.9,
-    "use_gae": true,
-    "clip_param": 0.4,
-    "grad_clip": null,
-    "entropy_coeff": 0.1,
-    "vf_loss_coeff": 0.25,
-    "sgd_minibatch_size": 64,
-    "num_sgd_iter": 10,
-    "use_critic": true,
     "log_level": "ERROR",
     "num_of_episodes": 2,
     "checkpoint_freq": 1,
-    "num_env_runners": 6
+    "num_env_runners": 6,
+    "config": {
+      "train_batch_size": 720,
+      "lr": 2e-5,
+      "gamma": 0.95,
+      "lambda_": 0.9,
+      "use_gae": true,
+      "clip_param": 0.4,
+      "grad_clip": null,
+      "entropy_coeff": 0.1,
+      "vf_loss_coeff": 0.25,
+      "sgd_minibatch_size": 64,
+      "num_sgd_iter": 10,
+      "use_critic": true
+    }
   }
-}
 ]
 

@@ -36,8 +36,8 @@ class DQNTrainer:
                 break
 
         self.experiment_type = self.config_data.get("experiment_type")
-
         self.env_name = self.config_data.get("env_name")
+
         self.train_batch_size = self.config_data["train_batch_size"]
         self.lr = self.config_data["lr"]
         self.gamma = self.config_data["gamma"]
@@ -55,6 +55,7 @@ class DQNTrainer:
         self.hiddens = self.config_data["hiddens"]
         self.n_step = self.config_data["n_step"]
         self.training_intensity = self.config_data["training_intensity"]
+
         self.log_level = self.config_data["log_level"]
         self.num_of_episodes = self.config_data["num_of_episodes"]
         self.checkpoint_freq = self.config_data["checkpoint_freq"]
@@ -190,3 +191,28 @@ class DQNTrainer:
                     raise ValueError("Invalid environment type")
 
             print(f"Evaluation Episode {episode} reward: {episode_reward}")
+
+
+if __name__ == "__main__":
+    num_intersection = 3  # Choose which intersection you want to train
+
+    # Choose the experiment_type:
+    # PPO_SingleAgent | PPO_MultiAgent | DQN_SingleAgent | DDQN_SingleAgent | DQN_MultiAgent | DDQN_MultiAgent
+    experiment_type = "DDQN_SingleAgent"
+
+    num_training_cycles = 1
+    # Initialize the environment manager
+    manager = env_manager.EnvManager(f"SingleAgentEnvironment", "env_config.json", json_id=f"intersection_{num_intersection}")
+    generator = manager.env_generator(
+        f"Nets/intersection_{num_intersection}/route_xml_path_intersection_{num_intersection}.txt",
+        algo_name="ppo")
+
+    # Initialize the environment manager with new route file
+    rou, csv = next(generator)
+    manager.initialize_env(rou, csv)
+
+    ppo_agent = ALGOTrainer(config_path="dqn_config.json", env_manager=manager, experiment_type=experiment_type)
+
+    print(ppo_agent.experiment_type)
+    print(ppo_agent.env_name)
+    print(ppo_agent.num_env_runners)

@@ -1,7 +1,11 @@
 [{
   "experiment_type": "DQN_SingleAgent",
+  "env_name": "DQN",
+  "log_level": "ERROR",
+  "num_of_episodes": 5,
+  "checkpoint_freq": 1,
+  "num_env_runners": 1,
   "config": {
-    "env_name": "DQN",
     "train_batch_size": 1,
     "lr": 5e-4,
     "gamma": 0.95,
@@ -18,16 +22,16 @@
     "double_q": false,
     "hiddens": [64, 64],
     "n_step": 1,
-    "training_intensity": null,
-    "log_level": "ERROR",
-    "num_of_episodes": 3,
-    "checkpoint_freq": 1,
-    "num_env_runners": 1
+    "training_intensity": null
   }
 },{
   "experiment_type": "DDQN_SingleAgent",
+  "env_name": "DQN",
+  "log_level": "ERROR",
+  "num_of_episodes": 5,
+  "checkpoint_freq": 1,
+  "num_env_runners": 1,
   "config": {
-    "env_name": "DQN",
     "train_batch_size": 1,
     "lr": 5e-4,
     "gamma": 0.95,
@@ -44,16 +48,16 @@
     "double_q": true,
     "hiddens": [64, 64],
     "n_step": 1,
-    "training_intensity": null,
-    "log_level": "ERROR",
-    "num_of_episodes": 3,
-    "checkpoint_freq": 1,
-    "num_env_runners": 1
+    "training_intensity": null
   }
 },{
   "experiment_type": "DQN_MultiAgent",
+  "env_name": "DQN",
+  "log_level": "ERROR",
+  "num_of_episodes": 2,
+  "checkpoint_freq": 1,
+  "num_env_runners": 6,
   "config": {
-    "env_name": "DQN",
     "train_batch_size": 1,
     "lr": 5e-4,
     "gamma": 0.95,
@@ -67,19 +71,19 @@
     "noisy": false,
     "sigma0": 0.5,
     "dueling": true,
-  "double_q": false,
+    "double_q": false,
     "hiddens": [64, 64],
     "n_step": 1,
-    "training_intensity": null,
-    "log_level": "ERROR",
-    "num_of_episodes": 2,
-    "checkpoint_freq": 1,
-    "num_env_runners": 6
+    "training_intensity": null
   }
 },{
   "experiment_type": "DDQN_MultiAgent",
+  "env_name": "DQN",
+  "log_level": "ERROR",
+  "num_of_episodes": 3,
+  "checkpoint_freq": 1,
+  "num_env_runners": 6,
   "config": {
-    "env_name": "DQN",
     "train_batch_size": 1,
     "lr": 5e-4,
     "gamma": 0.95,
@@ -96,11 +100,7 @@
     "double_q": true,
     "hiddens": [64, 64],
     "n_step": 1,
-    "training_intensity": null,
-    "log_level": "ERROR",
-    "num_of_episodes": 3,
-    "checkpoint_freq": 1,
-    "num_env_runners": 6
+    "training_intensity": null
   }
 }
 ]
