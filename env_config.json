@@ -63,7 +63,7 @@
     }
   },
   {
-    "json_id": "intersection_4",
+    "intersection_id": "intersection_4",
     "kwargs": {
       "net_file": "Nets/intersection_4/intersection_4.net.xml",
       "use_gui": false,
