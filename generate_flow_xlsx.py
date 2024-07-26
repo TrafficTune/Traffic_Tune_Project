@@ -79,12 +79,14 @@ for i in range(1, 7):
     # Function to create flow files for each row
     intersection_num = i
 
-    xlsx_file_path = f'/Users/eviat/Desktop/Final_Project/flow_count_tltan/intersection_{intersection_num}.xlsx'
+    xlsx_file_path = '/Users/eviat/Desktop/Final_Project/flow_count_tltan/flow_hour_all.xlsx'
 
-    sheet_name = 'a'
+    sheet_name = f'intersection_{intersection_num}'
+
     df = pd.read_excel(xlsx_file_path, sheet_name=sheet_name)
 
-    xml_rou_path = f"/Users/eviat/Desktop/Final_Project/Traffic_Tune_Project/Nets/intersection_{intersection_num}/routes_{intersection_num}/intersection_{intersection_num}.rou.xml"
+    xml_rou_path = (f"/Users/eviat/Desktop/Final_Project/Traffic_Tune_Project/Nets/intersection_{intersection_num}"
+                    f"/routes_{intersection_num}/intersection_{intersection_num}.rou.xml")
     text_xml_path_file = f'Nets/intersection_{intersection_num}/route_xml_path_intersection_{intersection_num}_hour.txt'
     if os.path.exists(text_xml_path_file):
         os.remove(text_xml_path_file)
