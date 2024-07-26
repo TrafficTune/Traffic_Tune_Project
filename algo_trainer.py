@@ -161,7 +161,7 @@ class ALGOTrainer:
         results = tuner.fit()
         return results
 
-    def is_valid_experiment(self, experiment_type, config_path):
+    def is_valid_experiment(self, experiment_type: str, config_path: str):
         """
         Check if the experiment type matches the configuration file path.
 
