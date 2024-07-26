@@ -1,6 +1,6 @@
 [
   {
-    "json_id": "intersection_1",
+    "intersection_id": "intersection_1",
     "kwargs": {
       "net_file": "Nets/intersection_1/intersection_1.net.xml",
       "use_gui": false,
@@ -21,7 +21,7 @@
     }
   },
   {
-    "json_id": "intersection_2",
+    "intersection_id": "intersection_2",
     "kwargs": {
       "net_file": "Nets/intersection_2/intersection_2.net.xml",
       "use_gui": false,
@@ -42,7 +42,7 @@
     }
   },
   {
-    "json_id": "intersection_3",
+    "intersection_id": "intersection_3",
     "kwargs": {
       "net_file": "Nets/intersection_3/intersection_3.net.xml",
       "use_gui": false,
@@ -84,7 +84,7 @@
     }
   },
   {
-    "json_id": "intersection_5",
+    "intersection_id": "intersection_5",
     "kwargs": {
       "net_file": "Nets/intersection_5/intersection_5.net.xml",
       "use_gui": false,
@@ -105,7 +105,7 @@
     }
   },
   {
-    "json_id": "intersection_6",
+    "intersection_id": "intersection_6",
     "kwargs": {
       "net_file": "Nets/intersection_6/intersection_6.net.xml",
       "use_gui": false,
@@ -126,7 +126,7 @@
     }
   },
   {
-    "json_id": "intersection_7",
+    "intersection_id": "intersection_7",
     "kwargs": {
       "net_file": "/Users/eviat/Desktop/Final_Project/Traffic_Tune_Project/Nets/intersection_7/intersection_7.net.xml",
       "use_gui": false,
