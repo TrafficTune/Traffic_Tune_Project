@@ -19,7 +19,17 @@
       "sgd_minibatch_size": 64,
       "num_sgd_iter": 10,
       "use_critic": true
-    }
+    },
+     "param_space": {
+        "lr": {"func": "tune.loguniform", "args": [1e-8, 1e-5]},
+        "gamma": {"func": "tune.uniform", "args": [0.9, 0.999]},
+        "train_batch_size": {"func": "tune.choice", "args": [[512, 720, 1024, 2048]]},
+        "sgd_minibatch_size": {"func": "tune.choice", "args": [[64, 128, 256]]},
+        "num_sgd_iter": {"func": "tune.randint", "args": [1, 20]},
+        "lambda_": {"func": "tune.uniform", "args": [0.9, 1.0]},
+        "clip_param": {"func": "tune.uniform", "args": [0.1, 0.4]},
+        "entropy_coeff": {"func": "tune.loguniform", "args": [1e-5, 1e-1]}
+  }
   },
   {
     "experiment_type": "PPO_MultiAgent",
@@ -41,7 +51,17 @@
       "sgd_minibatch_size": 64,
       "num_sgd_iter": 10,
       "use_critic": true
-    }
+    },
+     "param_space": {
+        "lr": {"func": "tune.loguniform", "args": [1e-6, 1e-2]},
+        "gamma": {"func": "tune.uniform", "args": [0.9, 0.999]},
+        "train_batch_size": {"func": "tune.choice", "args": [[512, 720, 1024, 2048]]},
+        "sgd_minibatch_size": {"func": "tune.choice", "args": [[64, 128, 256]]},
+        "num_sgd_iter": {"func": "tune.randint", "args": [1, 20]},
+        "lambda_": {"func": "tune.uniform", "args": [0.9, 1.0]},
+        "clip_param": {"func": "tune.uniform", "args": [0.1, 0.4]},
+        "entropy_coeff": {"func": "tune.loguniform", "args": [1e-5, 1e-1]}
+  }
   }
 ]
 

@@ -38,6 +38,7 @@ class ALGOTrainer:
         self.env_manager = env_manager
         self.env = None
         self.config_path = config_path
+        self.pram_space = None
 
         if not self.is_valid_experiment(experiment_type=experiment_type, config_path=config_path):
             raise ValueError("ALGOTrainer: The experiment_type and the config_path do not match\n"
@@ -61,6 +62,7 @@ class ALGOTrainer:
         self.checkpoint_freq = self.config["checkpoint_freq"]
         self.num_env_runners = self.config["num_env_runners"]
         self.training_config = self.config["config"]
+        self.param_space = self.convert_to_tune_calls(self.config["param_space"])
         self.storage_path = self.env_manager.storage_path
         self.kwargs = None
 
@@ -143,9 +145,14 @@ class ALGOTrainer:
         """
         base_config = self.config.to_dict()
 
+        param_space = {
+            **base_config,
+            **self.param_space
+        }
+
         tuner = tune.Tuner(
             self.env_name,
-            param_space=base_config,
+            param_space=param_space,
             run_config=air.RunConfig(
                 storage_path=self.storage_path,
                 checkpoint_config=air.CheckpointConfig(
@@ -175,3 +182,33 @@ class ALGOTrainer:
         if ("PPO" in experiment_type and "ppo" in config_path) or ("DQN" in experiment_type and "dqn" in config_path):
             return True
         return False
+
+    def convert_to_tune_calls(self, param):
+        """
+            Convert a dictionary of parameter specifications to Ray Tune search space calls.
+
+            This function takes a dictionary where each key represents a parameter name and
+            each value is a dictionary specifying a Ray Tune function and its arguments. It
+            converts these specifications into the appropriate Ray Tune search space objects.
+
+            Args:
+                param (dict): A dictionary where keys are parameter names and values are dictionaries
+                              containing:
+                                - 'func' (str): The name of the Ray Tune function (e.g., 'tune.loguniform').
+                                - 'args' (list): A list of arguments to be passed to the Ray Tune function.
+
+            Returns:
+                dict: A dictionary where keys are the same parameter names and values are the corresponding
+                      Ray Tune search space objects.
+        """
+        param_space = {}
+        for key, value in param.items():
+            if value['func'] == 'tune.loguniform':
+                param_space[key] = tune.loguniform(*value['args'])
+            elif value['func'] == 'tune.uniform':
+                param_space[key] = tune.uniform(*value['args'])
+            elif value['func'] == 'tune.choice':
+                param_space[key] = tune.choice(*value['args'])
+            elif value['func'] == 'tune.randint':
+                param_space[key] = tune.randint(*value['args'])
+        return param_space

@@ -2,7 +2,7 @@
   "experiment_type": "DQN_SingleAgent",
   "env_name": "DQN",
   "log_level": "ERROR",
-  "num_of_episodes": 5,
+  "num_of_episodes": 2,
   "checkpoint_freq": 1,
   "num_env_runners": 1,
   "config": {
@@ -23,6 +23,15 @@
     "hiddens": [64, 64],
     "n_step": 1,
     "training_intensity": null
+  },
+  "param_space": {
+    "lr": {"func": "tune.loguniform", "args": [1e-8, 1e-4]},
+    "gamma": {"func": "tune.uniform", "args": [0.9, 0.99]},
+    "train_batch_size": {"func": "tune.choice", "args": [[1, 32, 64, 128]]},
+    "target_network_update_freq": {"func": "tune.choice", "args": [[100, 500, 1000]]},
+    "hiddens": {"func": "tune.choice", "args": [[[32, 32], [64, 64], [128, 128]]]},
+    "n_step": {"func": "tune.choice", "args": [[1, 3, 5]]},
+    "adam_epsilon": {"func": "tune.loguniform", "args": [1e-10, 1e-6]}
   }
 },{
   "experiment_type": "DDQN_SingleAgent",
@@ -49,6 +58,15 @@
     "hiddens": [64, 64],
     "n_step": 1,
     "training_intensity": null
+  },
+  "param_space": {
+    "lr": {"func": "tune.loguniform", "args": [1e-8, 1e-4]},
+    "gamma": {"func": "tune.uniform", "args": [0.9, 0.99]},
+    "train_batch_size": {"func": "tune.choice", "args": [[1, 32, 64, 128]]},
+    "target_network_update_freq": {"func": "tune.choice", "args": [[100, 500, 1000]]},
+    "hiddens": {"func": "tune.choice", "args": [[[32, 32], [64, 64], [128, 128]]]},
+    "n_step": {"func": "tune.choice", "args": [[1, 3, 5]]},
+    "adam_epsilon": {"func": "tune.loguniform", "args": [1e-10, 1e-6]}
   }
 },{
   "experiment_type": "DQN_MultiAgent",
@@ -75,6 +93,15 @@
     "hiddens": [64, 64],
     "n_step": 1,
     "training_intensity": null
+  },
+  "param_space": {
+    "lr": {"func": "tune.loguniform", "args": [1e-8, 1e-4]},
+    "gamma": {"func": "tune.uniform", "args": [0.9, 0.99]},
+    "train_batch_size": {"func": "tune.choice", "args": [[1, 32, 64, 128]]},
+    "target_network_update_freq": {"func": "tune.choice", "args": [[100, 500, 1000]]},
+    "hiddens": {"func": "tune.choice", "args": [[[32, 32], [64, 64], [128, 128]]]},
+    "n_step": {"func": "tune.choice", "args": [[1, 3, 5]]},
+    "adam_epsilon": {"func": "tune.loguniform", "args": [1e-10, 1e-6]}
   }
 },{
   "experiment_type": "DDQN_MultiAgent",
@@ -101,6 +128,15 @@
     "hiddens": [64, 64],
     "n_step": 1,
     "training_intensity": null
+  },
+  "param_space": {
+    "lr": {"func": "tune.loguniform", "args": [1e-8, 1e-4]},
+    "gamma": {"func": "tune.uniform", "args": [0.9, 0.99]},
+    "train_batch_size": {"func": "tune.choice", "args": [[1, 32, 64, 128]]},
+    "target_network_update_freq": {"func": "tune.choice", "args": [[100, 500, 1000]]},
+    "hiddens": {"func": "tune.choice", "args": [[[32, 32], [64, 64], [128, 128]]]},
+    "n_step": {"func": "tune.choice", "args": [[1, 3, 5]]},
+    "adam_epsilon": {"func": "tune.loguniform", "args": [1e-10, 1e-6]}
   }
 }
 ]
