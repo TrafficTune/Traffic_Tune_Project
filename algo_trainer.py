@@ -62,6 +62,7 @@ class ALGOTrainer:
         self.checkpoint_freq = self.config["checkpoint_freq"]
         self.num_env_runners = self.config["num_env_runners"]
         self.training_config = self.config["config"]
+
         self.param_space = self.convert_to_tune_calls(self.config["param_space"])
         self.storage_path = self.env_manager.storage_path
         self.kwargs = None
