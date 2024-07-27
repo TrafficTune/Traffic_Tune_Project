@@ -128,7 +128,7 @@
   {
     "intersection_id": "intersection_7",
     "kwargs": {
-      "net_file": "/Users/eviat/Desktop/Final_Project/Traffic_Tune_Project/Nets/intersection_7/intersection_7.net.xml",
+      "net_file": "Nets/intersection_7/intersection_7.net.xml",
       "use_gui": false,
       "begin_time": 0,
       "num_seconds": 3600,

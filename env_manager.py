@@ -51,6 +51,9 @@ class EnvManager:
             dict: Updated kwargs for environment initialization.
         """
         kwargs = self.kwargs
+        net_path = kwargs["net_file"]
+        abspath = os.path.dirname(os.path.abspath(__file__))
+        kwargs["net_file"] = f"{abspath}/{net_path}"
         kwargs["route_file"] = route
         kwargs["out_csv_name"] = csv_file
         if self.sumo_type == "MultiAgentEnvironment":
