@@ -85,7 +85,7 @@ for i in range(1, 7):
 
     df = pd.read_excel(xlsx_file_path, sheet_name=sheet_name)
 
-    xml_rou_path = (f"/Users/eviat/Desktop/Final_Project/Traffic_Tune_Project/Nets/intersection_{intersection_num}"
+    xml_rou_path = (f"Nets/intersection_{intersection_num}"
                     f"/routes_{intersection_num}/intersection_{intersection_num}.rou.xml")
     text_xml_path_file = f'Nets/intersection_{intersection_num}/route_xml_path_intersection_{intersection_num}_hour.txt'
     if os.path.exists(text_xml_path_file):

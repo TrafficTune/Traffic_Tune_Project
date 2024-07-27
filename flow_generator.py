@@ -167,5 +167,7 @@ for j in range(5, 6):
         # add vehicle flows and log new XML file path
         add_vehicle_flows(xml_file_path, text_xml_path_file, new_flows, i, level_flow)
 
+    print(f"Text XML file for intersection_{num_of_intersection} was create on:", text_xml_path_file)
+
 
 print("Done")
