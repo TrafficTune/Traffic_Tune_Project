@@ -8,6 +8,7 @@ from ray.rllib.algorithms import DQNConfig, DQN
 from ray import tune, air
 from ray.tune.registry import register_env
 import project_logger
+from callbacks import AverageWaitingTimeCallback
 
 
 class ALGOTrainer:
@@ -125,7 +126,7 @@ class ALGOTrainer:
                        #         evaluation_duration_unit="episodes",
                        #         evaluation_parallel_to_training=True
                        #     )
-                       # .callbacks() TODO: Add a custom callbacks as needed
+                       .callbacks(AverageWaitingTimeCallback)
                        )
 
         if self.env_manager.sumo_type == self.MULTI_AGENT_ENV:
