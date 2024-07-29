@@ -50,12 +50,14 @@ class AverageWaitingTimeCallback(DefaultCallbacks):
             for vehicle_id in traci.vehicle.getIDList():
                 vehicle_lane_id = traci.vehicle.getLaneID(vehicle_id)
 
-                # if vehicle_lane_id.split('_')[0] == agent_id:  # Filter vehicles for the agent's area
-                # TODO: what if multi agent?
-                # logging.info(f"Agent {agent_id} - Vehicle {vehicle_id}")
-                waiting_time = traci.vehicle.getWaitingTime(vehicle_id)
-                episode_waiting_time += waiting_time
-                vehicle_count += 1
+                # Filter vehicles for the agent's area
+                # TODO: needs to be fixed. in single agent case, lane_id has no agent_id in it.
+                #  also, in multi-agent case - but then we dont know if the lane_id is the agent's area
+
+                if traci.trafficlight.getControlledLanes(agent_id) == vehicle_lane_id:
+                    waiting_time = traci.vehicle.getWaitingTime(vehicle_id)
+                    episode_waiting_time += waiting_time
+                    vehicle_count += 1
 
             # Update the agent's waiting time and vehicle count
             episode.custom_metrics[f"{agent_id}_total_waiting_time"] = episode_waiting_time
