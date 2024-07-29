@@ -38,6 +38,7 @@ class AverageWaitingTimeCallback(DefaultCallbacks):
         self.waiting_times = {agent_id: {'total_waiting_time': 0, 'vehicle_count': 0}
                               for agent_id in agent_ids}
 
+
     def on_episode_end(self, *, worker, base_env, policies, episode, **kwargs):
         """
         Collect waiting time data at the end of each episode for each agent.
@@ -45,24 +46,37 @@ class AverageWaitingTimeCallback(DefaultCallbacks):
         for agent_id in self.waiting_times.keys():
             episode_waiting_time = 0
             vehicle_count = 0
+            lane_count = 0
 
-            # Iterate through all vehicles for the current agent
-            for vehicle_id in traci.vehicle.getIDList():
-                vehicle_lane_id = traci.vehicle.getLaneID(vehicle_id)
 
-                # Filter vehicles for the agent's area
-                # TODO: needs to be fixed. in single agent case, lane_id has no agent_id in it.
-                #  also, in multi-agent case - but then we dont know if the lane_id is the agent's area
 
-                if traci.trafficlight.getControlledLanes(agent_id) == vehicle_lane_id:
-                    waiting_time = traci.vehicle.getWaitingTime(vehicle_id)
-                    episode_waiting_time += waiting_time
-                    vehicle_count += 1
+            # # Iterate through all vehicles for the current agent
+            # for vehicle_id in traci.vehicle.getIDList():
+            #     vehicle_lane_id = traci.vehicle.getLaneID(vehicle_id)
+            #     route_id = traci.vehicle.getRouteID()
+            #     traci.lane.getWaitingTime(vehicle_lane_id)
+            #     # logging.info(f"Route ID: {route_id}")
+            #     # logging.info(f"Lane ID: {vehicle_lane_id}")
+            #     # Filter vehicles for the agent's area
+            #     # TODO: needs to be fixed. in single agent case, lane_id has no agent_id in it.
+            #     #  also, in multi-agent case - but then we dont know if the lane_id is the agent's area
+            #     logging.info(traci.trafficlight.getControlledLanes(agent_id))
+            #     # if traci.trafficlight.getControlledLanes(agent_id) == vehicle_lane_id:
+            #     waiting_time = traci.vehicle.getAccumulatedWaitingTime(vehicle_id)
+            #     episode_waiting_time += waiting_time
+            #     vehicle_count += 1
+
+            for lane in traci.trafficlight.getControlledLanes(agent_id):
+                waiting_time = traci.lane.getWaitingTime(lane)
+                logging.info(f"DEBUG1: Waiting time for lane {lane}: {waiting_time}")
+                episode_waiting_time += waiting_time
+                lane_count += 1
 
             # Update the agent's waiting time and vehicle count
             episode.custom_metrics[f"{agent_id}_total_waiting_time"] = episode_waiting_time
-            episode.custom_metrics[f"{agent_id}_vehicle_count"] = vehicle_count
-
+            episode.custom_metrics[f"{agent_id}_lane_count"] = lane_count
+            logging.info(f"DEBUG2: Number of lanes for agent {agent_id}: {lane_count}")
+            logging.info(f"DEBUG3: Total waiting time for agent {agent_id}: {episode_waiting_time}")
             # Log the total waiting time for the agent in this episode
             episode.custom_metrics[f"{agent_id}_episode_total_waiting_time"] = episode_waiting_time
             self.episode_count += 1
@@ -79,21 +93,21 @@ class AverageWaitingTimeCallback(DefaultCallbacks):
             if "episode_total_waiting_time" in key:
                 agent_id = key.replace("_episode_total_waiting_time", "")
                 if agent_id not in waiting_times:
-                    waiting_times[agent_id] = {"total_waiting_time": 0, "vehicle_count": 0}
+                    waiting_times[agent_id] = {"total_waiting_time": 0, "lane_count": 0}
                 waiting_times[agent_id]["total_waiting_time"] += value
-            elif "vehicle_count" in key:
-                agent_id = key.replace("_vehicle_count", "")
+            elif "lane_count" in key:
+                agent_id = key.replace("_lane_count", "")
                 if agent_id not in waiting_times:
-                    waiting_times[agent_id] = {"total_waiting_time": 0, "vehicle_count": 0}
-                waiting_times[agent_id]["vehicle_count"] += value
+                    waiting_times[agent_id] = {"total_waiting_time": 0, "lane_count": 0}
+                waiting_times[agent_id]["lane_count"] += value
 
         # Calculate mean waiting times
         for agent_id, data in waiting_times.items():
             total_waiting_time = data['total_waiting_time']
-            vehicle_count = data['vehicle_count']
+            lane_count = data['lane_count']
 
-            if vehicle_count > 0:
-                mean_waiting_time = total_waiting_time / vehicle_count
+            if lane_count > 0:
+                mean_waiting_time = total_waiting_time / lane_count
             else:
                 mean_waiting_time = 0
 
