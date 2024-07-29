@@ -1,0 +1,117 @@
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/routes_file.xsd">
+    
+    <route id="E_N_1" edges="E_W_1 E4 225589910#3 225589910#4" color="red" />
+    <route id="E_N_1_2" edges="E_W_1 E_W_2 971472783#1 971472770 5066149 E7" color="red" />
+    <route id="E_N_1_3" edges="E_W_1 E_W_2 971472783#1 971472770 5066149 215834150 215834183 212271963#1 740504606 462383650" color="red" />
+    <route id="E_N_1_4" edges="E_W_1 E_W_2 971472783#1 971472770 5066149 215834150 215834183 215834187#0 215834159 32299296 E_W_3_2_3 178456429#0 889092618#2-AddedOnRampEdge 889092618#2" color="red" />
+    <route id="E_N_1_5" edges="E_W_1 E_W_2 971472783#1 971472770 5066149 215834150 215834183 215834187#0 215834159 32299296 E_W_3_2_3 739661099 740524787#2 24862060#0 230054301" color="red" />
+    <route id="E_S_1_4" edges="E2 E3 971472783#1 971472770 5066149 215834150 215834183 215834187#0 215834159 280702848 740524789" color="blue" />
+    <route id="E_S_1_6" edges="E_W_2 971472783#1 971472770 5066149 215834150 215834183 215834187#0 215834159 32299296 E_W_3_2_3 739661099 740524787#2 198505048#1 5066150 321331231 215840480" color="red" />
+    <route id="N_E_2_1" edges="E5 E6 215834190#1 244869371#0 244869371#1 30307284#2 30307284#3 30307284#4" />
+    <route id="N_E_4_1" edges="178456430#0 178456430#0-AddedOffRampEdge 178456430#1 889092620#0 215834149 1092819225 32299300 740504604#2 215834169 W_E_3_2 215834154 215834190#1 244869371#0 244869371#1 30307284#2 30307284#3 30307284#4" color="green" />
+    <route id="N_N_2_1" edges="E5 E6 215834190#1 244869371#0 244869371#1 225589910#2 225589910#3 225589910#4" />
+    <route id="N_N_2_3" edges="E5 33658264#0 215834183 212271963#1 740504606 462383650 741765612" color="green" />
+    <route id="N_N_3_4" edges="178456430#0 178456430#0-AddedOffRampEdge 97803900#0 740524787#2 24862060#0 230054301" color="green" />
+    <route id="N_N_4_1" edges="178456430#0 178456430#0-AddedOffRampEdge 178456430#1 889092620#0 215834149 1092819225 32299300 740504604#2 215834169 W_E_3_2 215834154 215834190#1 244869371#0 244869371#1 225589910#2 225589910#3 225589910#4" color="green" />
+    <route id="N_N_4_5" edges="178456430#0 178456430#0-AddedOffRampEdge 97803900#0 740524787#2 24862060#0 230054301" color="green" />
+    <route id="N_N_6_1" edges="973340103 413008146#0 413008146#1 1092819228#0 1092819228#1 139252069 1279598614#1 740504608 740504607 215834156#0 889092620#0 215834149 1092819225 32299300 740504604#2 215834169 W_E_3_2 215834154 215834190#1 244869371#0 244869371#1 225589910#2 225589910#3 225589910#4" color="green" />
+    <route id="N_N_6_2" edges="973340103 413008146#0 413008146#1 1092819228#0 1092819228#1 139252069 1279598614#1 740504608 740504607 215834156#0 889092620#0 215834149 1092819225 32299300 740504604#2 215834169 W_E_3_2 215834154 E7" color="green" />
+    <route id="N_N_6_3" edges="973340103 413008146#0 413008146#1 1092819228#0 1092819228#1 139252069 1279598614#1 740504608 740504607 215834156#0 889092620#0 215834149 1092819225 32299300 740504605#1 740504606 462383650" color="green" />
+    <route id="N_N_6_4" edges="973340103 413008146#0 413008146#1 1092819228#0 1092819228#1 139252069 1279598614#1 740504608 740504607 215834156#0 889092618#1 889092618#2-AddedOnRampEdge 889092618#2" color="green" />
+    <route id="N_N_6_5" edges="973340103 413008146#0 413008146#1 1092819228#0 1092819228#1 139252069 180166262#0 230054301" color="green" />
+    <route id="N_S_1" edges="32293940#0 32293940#1 E0 E1" color="green" />
+    <route id="N_S_1_3" edges="32293940#0 225589919#0 971472770 5066149 215834150 215834183 215834187#0 215834159 280702848 740524789" color="green" />
+    <route id="N_S_1_6" edges="32293940#0 225589919#0 971472770 5066149 215834150 215834183 215834187#0 215834159 32299296 E_W_3_2_3 739661099 740524787#2 198505048#1 5066150 321331231 215840480" color="green" />
+    <route id="N_S_2_1" edges="E5 E6 215834190#1 244869371#0 225589914#0 E1" />
+    <route id="N_S_2_4" edges="E5 33658264#0 215834183 215834187#0 215834159 280702848 740524789" color="blue" />
+    <route id="N_S_4" edges="178456430#0 178456430#0-AddedOffRampEdge 178456430#1 889092620#0 30824395#0" color="green" />
+    <route id="N_S_4_1" edges="178456430#0 178456430#0-AddedOffRampEdge 178456430#1 889092620#0 215834149 1092819225 32299300 740504604#2 215834169 W_E_3_2 215834154 215834190#1 244869371#0 225589914#0 E1" color="green" />
+    <route id="N_S_4_6" edges="178456430#0 178456430#0-AddedOffRampEdge 97803900#0 740524787#2 198505048#1 5066150 321331231 215840480" color="green" />
+    <route id="N_S_6" edges="413008146#0 413008146#1 1092819228#0 1092819228#1 321331231 215840480" color="green" />
+    <route id="N_S_6_1" edges="973340103 413008146#0 413008146#1 1092819228#0 1092819228#1 139252069 1279598614#1 740504608 740504607 215834156#0 889092620#0 215834149 1092819225 32299300 740504604#2 215834169 W_E_3_2 215834154 215834190#1 244869371#0 225589914#0 E1" color="green" />
+    <route id="N_S_6_4" edges="973340103 413008146#0 413008146#1 1092819228#0 1092819228#1 139252069 1279598614#1 740504608 740504607 215834156#0 889092620#0 30824395#0" color="green" />
+    <route id="N_W_6" edges="413008146#0 413008146#1 1092819228#0 E8 685510793#0" color="green" />
+    <route id="S_E_1" edges="E2 225589921#0 30307284#3 30307284#4" color="blue" />
+    <route id="S_E_2_1" edges="739569486#0.4 741765615 741765614 215834169 W_E_3_2 215834154 215834190#1 244869371#0 244869371#1 30307284#2 30307284#3 30307284#4" color="blue" />
+    <route id="S_E_5_1" edges="172824408 172824408-AddedOffRampEdge 172824413#0 172824413#0.66 740504608 740504607 215834156#0 889092620#0 215834149 1092819225 32299300 740504604#2 215834169 W_E_3_2 215834154 215834190#1 244869371#0 244869371#1 30307284#2 30307284#3 30307284#4" color="blue" />
+    <route id="S_N_1" edges="E2 E3 225589910#2 225589910#3 225589910#4" color="blue" />
+    <route id="S_N_1_2" edges="E2 E3 971472783#1 971472770 5066149 E7" color="blue" />
+    <route id="S_N_1_3" edges="E2 E3 971472783#1 971472770 5066149 215834150 215834183 212271963#1 740504606 462383650" color="blue" />
+    <route id="S_N_1_4" edges="E2 E3 971472783#1 971472770 5066149 215834150 215834183 215834187#0 215834159 32299296 E_W_3_2_3 178456429#0 889092618#2-AddedOnRampEdge 889092618#2" color="blue" />
+    <route id="S_N_1_5" edges="E2 E3 971472783#1 971472770 5066149 215834150 215834183 215834187#0 215834159 32299296 E_W_3_2_3 739661099 740524787#2 24862060#0 230054301" color="blue" />
+    <route id="S_N_3_4" edges="231949487.4 215834211#0 215834159 32299296 E_W_3_2_3 178456429#0 889092618#2-AddedOnRampEdge 889092618#2" color="blue" />
+    <route id="S_N_3_5" edges="231949487.4 215834211#0 215834159 32299296 E_W_3_2_3 739661099 740524787#2 24862060#0 230054301" color="blue" />
+    <route id="S_N_5" edges="172824408 172824408-AddedOffRampEdge 503584906#0 180166262#0 230054301" color="blue" />
+    <route id="S_N_5_3" edges="172824408 172824408-AddedOffRampEdge 172824413#0 172824413#0.66 740504608 740504607 215834156#0 889092620#0 215834149 1092819225 32299300 740504605#1 740504606 462383650" color="blue" />
+    <route id="S_N_5_4" edges="172824408 172824408-AddedOffRampEdge 172824413#0 172824413#0.66 740504608 740504607 215834156#0 889092618#1 889092618#2-AddedOnRampEdge 889092618#2" color="blue" />
+    <route id="S_S_1_4" edges="E_W_2 971472783#1 971472770 5066149 215834150 215834183 215834187#0 215834159 280702848 740524789" color="blue" />
+    <route id="S_S_3_6" edges="231949487.4 215834211#0 215834159 32299296 E_W_3_2_3 739661099 740524787#2 198505048#1 5066150 321331231 215840480" color="blue" />
+    <route id="S_W_3_6" edges="231949487.4 215834211#0 215834159 32299296 E_W_3_2_3 739661099 740524787#2 198505048#1 5066150 685510796#1 685510793#0" color="blue" />
+    <route id="S_W_5_6" edges="172824408 172824408-AddedOffRampEdge 503584906#0 5066150 685510796#1 685510793#0" color="blue" />
+    <route id="W_E_6_1" edges="685510783#0 139252069 1279598614#1 740504608 740504607 215834156#0 889092620#0 215834149 1092819225 32299300 740504604#2 215834169 W_E_3_2 215834154 215834190#1 244869371#0 244869371#1 30307284#2 30307284#3 30307284#4" color="magenta" />
+    <route id="W_N_6_1" edges="685510783#0 139252069 1279598614#1 740504608 740504607 215834156#0 889092620#0 215834149 1092819225 32299300 740504604#2 215834169 W_E_3_2 215834154 215834190#1 244869371#0 244869371#1 225589910#2 225589910#3 225589910#4" color="magenta" />
+    <route id="W_N_6_2" edges="685510783#0 139252069 1279598614#1 740504608 740504607 215834156#0 889092620#0 215834149 1092819225 32299300 740504604#2 215834169 W_E_3_2 215834154 E7" color="magenta" />
+    <route id="W_N_6_3" edges="685510783#0 139252069 1279598614#1 740504608 740504607 215834156#0 889092620#0 215834149 1092819225 32299300 740504605#1 740504606 462383650" color="magenta" />
+    <route id="W_N_6_4" edges="685510783#0 139252069 1279598614#1 740504608 740504607 215834156#0 889092618#1 889092618#2-AddedOnRampEdge 889092618#2" color="magenta" />
+    <route id="W_N_6_5" edges="685510783#0 139252069 180166262#0 230054301" color="magenta" />
+    <route id="W_S_6" edges="685510783#0 321331231 215840480" color="magenta" />
+    <route id="W_S_6_1" edges="685510783#0 139252069 1279598614#1 740504608 740504607 215834156#0 889092620#0 215834149 1092819225 32299300 740504604#2 215834169 W_E_3_2 215834154 215834190#1 244869371#0 225589914#0 E1" color="magenta" />
+    <route id="W_S_6_4" edges="685510783#0 139252069 1279598614#1 740504608 740504607 215834156#0 889092620#0 30824395#0" color="magenta" />
+<flow id="f_0" begin="0.00" route="E_N_1" end="3600" probability="0.4429616692945886" departSpeed="random" departPos="random" departLane="random" /><!--
+--><flow id="f_1" begin="0.00" route="E_N_1_2" end="3600" probability="0.442055611089077" departSpeed="random" departPos="random" departLane="random" /><!--
+--><flow id="f_2" begin="0.00" route="E_N_1_3" end="3600" probability="0.19678476136263812" departSpeed="random" departPos="random" departLane="random" /><!--
+--><flow id="f_3" begin="0.00" route="E_N_1_4" end="3600" probability="0.5245200161922077" departSpeed="random" departPos="random" departLane="random" /><!--
+--><flow id="f_4" begin="0.00" route="E_N_1_5" end="3600" probability="0.35084376215638446" departSpeed="random" departPos="random" departLane="random" /><!--
+--><flow id="f_5" begin="0.00" route="E_S_1_4" end="3600" probability="0.44588992384326354" departSpeed="random" departPos="random" departLane="random" /><!--
+--><flow id="f_6" begin="0.00" route="E_S_1_6" end="3600" probability="0.5525789330309724" departSpeed="random" departPos="random" departLane="random" /><!--
+--><flow id="f_7" begin="0.00" route="N_E_2_1" end="3600" probability="0.1639009214273443" departSpeed="random" departPos="random" departLane="random" /><!--
+--><flow id="f_8" begin="0.00" route="N_E_4_1" end="3600" probability="0.6026032638801181" departSpeed="random" departPos="random" departLane="random" /><!--
+--><flow id="f_9" begin="0.00" route="N_N_2_1" end="3600" probability="0.333447918843384" departSpeed="random" departPos="random" departLane="random" /><!--
+--><flow id="f_10" begin="0.00" route="N_N_2_3" end="3600" probability="0.36589902951016073" departSpeed="random" departPos="random" departLane="random" /><!--
+--><flow id="f_11" begin="0.00" route="N_N_3_4" end="3600" probability="0.3764832608998032" departSpeed="random" departPos="random" departLane="random" /><!--
+--><flow id="f_12" begin="0.00" route="N_N_4_1" end="3600" probability="0.3845271974535287" departSpeed="random" departPos="random" departLane="random" /><!--
+--><flow id="f_13" begin="0.00" route="N_N_4_5" end="3600" probability="0.42352127230226033" departSpeed="random" departPos="random" departLane="random" /><!--
+--><flow id="f_14" begin="0.00" route="N_N_6_1" end="3600" probability="0.21346999879777123" departSpeed="random" departPos="random" departLane="random" /><!--
+--><flow id="f_15" begin="0.00" route="N_N_6_2" end="3600" probability="0.1436140577168715" departSpeed="random" departPos="random" departLane="random" /><!--
+--><flow id="f_16" begin="0.00" route="N_N_6_3" end="3600" probability="0.12291909707442111" departSpeed="random" departPos="random" departLane="random" /><!--
+--><flow id="f_17" begin="0.00" route="N_N_6_4" end="3600" probability="0.5224664156414547" departSpeed="random" departPos="random" departLane="random" /><!--
+--><flow id="f_18" begin="0.00" route="N_N_6_5" end="3600" probability="0.5803154226137858" departSpeed="random" departPos="random" departLane="random" /><!--
+--><flow id="f_19" begin="0.00" route="N_S_1" end="3600" probability="0.11624929562240296" departSpeed="random" departPos="random" departLane="random" /><!--
+--><flow id="f_20" begin="0.00" route="N_S_1_3" end="3600" probability="0.666851661662149" departSpeed="random" departPos="random" departLane="random" /><!--
+--><flow id="f_21" begin="0.00" route="N_S_1_6" end="3600" probability="0.12769986970480537" departSpeed="random" departPos="random" departLane="random" /><!--
+--><flow id="f_22" begin="0.00" route="N_S_2_1" end="3600" probability="0.47872809967434005" departSpeed="random" departPos="random" departLane="random" /><!--
+--><flow id="f_23" begin="0.00" route="N_S_2_4" end="3600" probability="0.340957500137622" departSpeed="random" departPos="random" departLane="random" /><!--
+--><flow id="f_24" begin="0.00" route="N_S_4" end="3600" probability="0.10296080957036335" departSpeed="random" departPos="random" departLane="random" /><!--
+--><flow id="f_25" begin="0.00" route="N_S_4_1" end="3600" probability="0.6178332389468738" departSpeed="random" departPos="random" departLane="random" /><!--
+--><flow id="f_26" begin="0.00" route="N_S_4_6" end="3600" probability="0.465605168895577" departSpeed="random" departPos="random" departLane="random" /><!--
+--><flow id="f_27" begin="0.00" route="N_S_6" end="3600" probability="0.33718690268320417" departSpeed="random" departPos="random" departLane="random" /><!--
+--><flow id="f_28" begin="0.00" route="N_S_6_1" end="3600" probability="0.4095992020168173" departSpeed="random" departPos="random" departLane="random" /><!--
+--><flow id="f_29" begin="0.00" route="N_S_6_4" end="3600" probability="0.1572734212118435" departSpeed="random" departPos="random" departLane="random" /><!--
+--><flow id="f_30" begin="0.00" route="N_W_6" end="3600" probability="0.3615178687942946" departSpeed="random" departPos="random" departLane="random" /><!--
+--><flow id="f_31" begin="0.00" route="S_E_1" end="3600" probability="0.14972598187533853" departSpeed="random" departPos="random" departLane="random" /><!--
+--><flow id="f_32" begin="0.00" route="S_E_2_1" end="3600" probability="0.36712583260652587" departSpeed="random" departPos="random" departLane="random" /><!--
+--><flow id="f_33" begin="0.00" route="S_E_5_1" end="3600" probability="0.36257045393505416" departSpeed="random" departPos="random" departLane="random" /><!--
+--><flow id="f_34" begin="0.00" route="S_N_1" end="3600" probability="0.41507688408297116" departSpeed="random" departPos="random" departLane="random" /><!--
+--><flow id="f_35" begin="0.00" route="S_N_1_2" end="3600" probability="0.16995005722061435" departSpeed="random" departPos="random" departLane="random" /><!--
+--><flow id="f_36" begin="0.00" route="S_N_1_3" end="3600" probability="0.68985107857354" departSpeed="random" departPos="random" departLane="random" /><!--
+--><flow id="f_37" begin="0.00" route="S_N_1_4" end="3600" probability="0.6116256772861655" departSpeed="random" departPos="random" departLane="random" /><!--
+--><flow id="f_38" begin="0.00" route="S_N_1_5" end="3600" probability="0.18132117623681146" departSpeed="random" departPos="random" departLane="random" /><!--
+--><flow id="f_39" begin="0.00" route="S_N_3_4" end="3600" probability="0.3359640765023535" departSpeed="random" departPos="random" departLane="random" /><!--
+--><flow id="f_40" begin="0.00" route="S_N_3_5" end="3600" probability="0.19045039137797282" departSpeed="random" departPos="random" departLane="random" /><!--
+--><flow id="f_41" begin="0.00" route="S_N_5" end="3600" probability="0.38115301545114866" departSpeed="random" departPos="random" departLane="random" /><!--
+--><flow id="f_42" begin="0.00" route="S_N_5_3" end="3600" probability="0.43853014417495817" departSpeed="random" departPos="random" departLane="random" /><!--
+--><flow id="f_43" begin="0.00" route="S_N_5_4" end="3600" probability="0.23940281171603922" departSpeed="random" departPos="random" departLane="random" /><!--
+--><flow id="f_44" begin="0.00" route="S_S_1_4" end="3600" probability="0.6127751753187692" departSpeed="random" departPos="random" departLane="random" /><!--
+--><flow id="f_45" begin="0.00" route="S_S_3_6" end="3600" probability="0.634424346451742" departSpeed="random" departPos="random" departLane="random" /><!--
+--><flow id="f_46" begin="0.00" route="S_W_3_6" end="3600" probability="0.28782104773553824" departSpeed="random" departPos="random" departLane="random" /><!--
+--><flow id="f_47" begin="0.00" route="S_W_5_6" end="3600" probability="0.6314063999984825" departSpeed="random" departPos="random" departLane="random" /><!--
+--><flow id="f_48" begin="0.00" route="W_E_6_1" end="3600" probability="0.3838467702346915" departSpeed="random" departPos="random" departLane="random" /><!--
+--><flow id="f_49" begin="0.00" route="W_N_6_1" end="3600" probability="0.46536589306897924" departSpeed="random" departPos="random" departLane="random" /><!--
+--><flow id="f_50" begin="0.00" route="W_N_6_2" end="3600" probability="0.24351127100624137" departSpeed="random" departPos="random" departLane="random" /><!--
+--><flow id="f_51" begin="0.00" route="W_N_6_3" end="3600" probability="0.4899377617805727" departSpeed="random" departPos="random" departLane="random" /><!--
+--><flow id="f_52" begin="0.00" route="W_N_6_4" end="3600" probability="0.4539932016692376" departSpeed="random" departPos="random" departLane="random" /><!--
+--><flow id="f_53" begin="0.00" route="W_N_6_5" end="3600" probability="0.5788046254420852" departSpeed="random" departPos="random" departLane="random" /><!--
+--><flow id="f_54" begin="0.00" route="W_S_6" end="3600" probability="0.5425668868278052" departSpeed="random" departPos="random" departLane="random" /><!--
+--><flow id="f_55" begin="0.00" route="W_S_6_1" end="3600" probability="0.2165880075412631" departSpeed="random" departPos="random" departLane="random" /><!--
+--><flow id="f_56" begin="0.00" route="W_S_6_4" end="3600" probability="0.5475906775359269" departSpeed="random" departPos="random" departLane="random" /><!--
+--></routes>

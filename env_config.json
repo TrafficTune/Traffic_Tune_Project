@@ -1,0 +1,150 @@
+[
+  {
+    "intersection_id": "intersection_1",
+    "kwargs": {
+      "net_file": "Nets/intersection_1/intersection_1.net.xml",
+      "use_gui": false,
+      "begin_time": 0,
+      "num_seconds": 3600,
+      "max_depart_delay": -1,
+      "waiting_time_memory": 1000,
+      "time_to_teleport": -1,
+      "delta_time": 5,
+      "yellow_time": 2,
+      "min_green": 5,
+      "max_green": 50,
+      "single_agent": true,
+      "reward_fn": "diff-waiting-time",
+      "sumo_seed": "random",
+      "fixed_ts": false,
+      "sumo_warnings": false
+    }
+  },
+  {
+    "intersection_id": "intersection_2",
+    "kwargs": {
+      "net_file": "Nets/intersection_2/intersection_2.net.xml",
+      "use_gui": false,
+      "begin_time": 0,
+      "num_seconds": 3600,
+      "max_depart_delay": -1,
+      "waiting_time_memory": 1000,
+      "time_to_teleport": -1,
+      "delta_time": 5,
+      "yellow_time": 2,
+      "min_green": 5,
+      "max_green": 50,
+      "single_agent": true,
+      "reward_fn": "diff-waiting-time",
+      "sumo_seed": "random",
+      "fixed_ts": false,
+      "sumo_warnings": false
+    }
+  },
+  {
+    "intersection_id": "intersection_3",
+    "kwargs": {
+      "net_file": "Nets/intersection_3/intersection_3.net.xml",
+      "use_gui": false,
+      "begin_time": 0,
+      "num_seconds": 3600,
+      "max_depart_delay": -1,
+      "waiting_time_memory": 1000,
+      "time_to_teleport": -1,
+      "delta_time": 5,
+      "yellow_time": 2,
+      "min_green": 5,
+      "max_green": 50,
+      "single_agent": true,
+      "reward_fn": "diff-waiting-time",
+      "sumo_seed": "random",
+      "fixed_ts": false,
+      "sumo_warnings": false
+    }
+  },
+  {
+    "intersection_id": "intersection_4",
+    "kwargs": {
+      "net_file": "Nets/intersection_4/intersection_4.net.xml",
+      "use_gui": false,
+      "begin_time": 0,
+      "num_seconds": 3600,
+      "max_depart_delay": -1,
+      "waiting_time_memory": 1000,
+      "time_to_teleport": -1,
+      "delta_time": 5,
+      "yellow_time": 2,
+      "min_green": 5,
+      "max_green": 50,
+      "single_agent": true,
+      "reward_fn": "diff-waiting-time",
+      "sumo_seed": "random",
+      "fixed_ts": false,
+      "sumo_warnings": false
+    }
+  },
+  {
+    "intersection_id": "intersection_5",
+    "kwargs": {
+      "net_file": "Nets/intersection_5/intersection_5.net.xml",
+      "use_gui": false,
+      "begin_time": 0,
+      "num_seconds": 3600,
+      "max_depart_delay": -1,
+      "waiting_time_memory": 1000,
+      "time_to_teleport": -1,
+      "delta_time": 5,
+      "yellow_time": 2,
+      "min_green": 5,
+      "max_green": 50,
+      "single_agent": true,
+      "reward_fn": "diff-waiting-time",
+      "sumo_seed": "random",
+      "fixed_ts": false,
+      "sumo_warnings": false
+    }
+  },
+  {
+    "intersection_id": "intersection_6",
+    "kwargs": {
+      "net_file": "Nets/intersection_6/intersection_6.net.xml",
+      "use_gui": false,
+      "begin_time": 0,
+      "num_seconds": 3600,
+      "max_depart_delay": -1,
+      "waiting_time_memory": 1000,
+      "time_to_teleport": -1,
+      "delta_time": 5,
+      "yellow_time": 2,
+      "min_green": 5,
+      "max_green": 50,
+      "single_agent": true,
+      "reward_fn": "diff-waiting-time",
+      "sumo_seed": "random",
+      "fixed_ts": false,
+      "sumo_warnings": false
+    }
+  },
+  {
+    "intersection_id": "intersection_7",
+    "kwargs": {
+      "net_file": "Nets/intersection_7/intersection_7.net.xml",
+      "use_gui": false,
+      "begin_time": 0,
+      "num_seconds": 3600,
+      "max_depart_delay": -1,
+      "waiting_time_memory": 1000,
+      "time_to_teleport": -1,
+      "delta_time": 5,
+      "yellow_time": 2,
+      "min_green": 5,
+      "max_green": 50,
+      "single_agent": false,
+      "reward_fn": "diff-waiting-time",
+      "sumo_seed": "random",
+      "fixed_ts": false,
+      "sumo_warnings": false
+    }
+  }
+]
+
