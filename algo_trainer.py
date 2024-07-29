@@ -7,7 +7,7 @@ from ray.rllib.algorithms import PPOConfig, PPO
 from ray.rllib.algorithms import DQNConfig, DQN
 from ray import tune, air
 from ray.tune.registry import register_env
-import project_logger
+from Logs import project_logger
 from callbacks import AverageWaitingTimeCallback
 
 
@@ -111,21 +111,21 @@ class ALGOTrainer:
         self.config = (self.ALGOConfig()
                        .environment(env=self.env_name)
                        .training(**self.training_config)
-                       .env_runners(num_env_runners=self.num_env_runners, rollout_fragment_length='auto',
+                       .env_runners(create_env_on_local_worker=True,num_env_runners=self.num_env_runners, rollout_fragment_length='auto',
                                     num_envs_per_env_runner=1)
                        .learners(num_learners=self.num_env_runners)
                        .debugging(log_level=self.log_level)
                        .framework(framework="torch")
                        .resources(num_gpus=int(os.environ.get("RLLIB_NUM_GPUS", "0")))
                        .reporting(min_sample_timesteps_per_iteration=720)
-                       # .evaluation(
-                       #         evaluation_interval=2,
-                       #         evaluation_duration=5,
-                       #         evaluation_force_reset_envs_before_iteration=True,
-                       #         evaluation_num_env_runners=1,
-                       #         evaluation_duration_unit="episodes",
-                       #         evaluation_parallel_to_training=True
-                       #     )
+                       .evaluation(
+                               evaluation_interval=1,
+                               evaluation_duration=1,
+                               evaluation_force_reset_envs_before_iteration=True,
+                               evaluation_num_env_runners=1,
+                               evaluation_duration_unit="episodes",
+                               evaluation_parallel_to_training=False
+                           )
                        .callbacks(AverageWaitingTimeCallback)
                        )
 
