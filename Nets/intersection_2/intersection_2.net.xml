@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 2024-07-10 15:21:16 by Eclipse SUMO netedit Version 1.20.0
+<!-- generated on 2024-07-29 10:15:14 by Eclipse SUMO netedit Version 1.20.0
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/neteditConfiguration.xsd">
 
     <input>
-        <sumocfg-file value="/Users/eviat/Desktop/Final_Project/Traffic_Tune_Project/Nets/intersection_2/intersection_2.sumocfg"/>
-        <route-files value="/Users/eviat/Desktop/Final_Project/Traffic_Tune_Project/Nets/intersection_2/routes_2/intersection_2_random_medium_2.rou.xml"/>
         <sumo-net-file value="/Users/eviat/Desktop/Final_Project/Traffic_Tune_Project/Nets/intersection_2/intersection_2.net.xml"/>
     </input>
 
@@ -221,7 +219,7 @@
         <lane id="E2_0" index="0" speed="20.00" length="27.52" shape="365.30,321.21 365.08,316.30 363.44,306.74 361.48,301.73 358.37,297.69 356.63,296.00"/>
     </edge>
 
-    <tlLogic id="J4" type="actuated" programID="0" offset="0">
+    <tlLogic id="2_tls" type="actuated" programID="0" offset="0">
         <phase duration="33" state="GGGGGGGGrrrr" minDur="13" maxDur="50"/>
         <phase duration="6"  state="yyyyyGGGrrrr"/>
         <phase duration="6"  state="rrrrrGGGGGrr" minDur="13" maxDur="50"/>
@@ -285,11 +283,11 @@
     <connection from="1047696856" to="215834154" fromLane="1" toLane="2" via=":2252682316_0_2" dir="s" state="M"/>
     <connection from="1047696856" to="215834154" fromLane="2" toLane="3" via=":2252682316_0_3" dir="s" state="M"/>
     <connection from="1047696856" to="215834154" fromLane="3" toLane="4" via=":2252682316_0_4" dir="s" state="M"/>
-    <connection from="215834154" to="215834190#1" fromLane="0" toLane="0" via=":cluster8991421878_8991421879_cluster2252682318_2252682322_385041476_cluster_10599613510_114130311_5_0" tl="J4" linkIndex="5" dir="s" state="O"/>
-    <connection from="215834154" to="215834190#1" fromLane="1" toLane="1" via=":cluster8991421878_8991421879_cluster2252682318_2252682322_385041476_cluster_10599613510_114130311_5_1" tl="J4" linkIndex="6" dir="s" state="O"/>
-    <connection from="215834154" to="215834190#1" fromLane="2" toLane="2" via=":cluster8991421878_8991421879_cluster2252682318_2252682322_385041476_cluster_10599613510_114130311_5_2" tl="J4" linkIndex="7" dir="s" state="O"/>
-    <connection from="215834154" to="E0" fromLane="3" toLane="0" via=":cluster8991421878_8991421879_cluster2252682318_2252682322_385041476_cluster_10599613510_114130311_8_0" tl="J4" linkIndex="8" dir="l" state="o"/>
-    <connection from="215834154" to="E0" fromLane="4" toLane="1" via=":cluster8991421878_8991421879_cluster2252682318_2252682322_385041476_cluster_10599613510_114130311_8_1" tl="J4" linkIndex="9" dir="l" state="o"/>
+    <connection from="215834154" to="215834190#1" fromLane="0" toLane="0" via=":cluster8991421878_8991421879_cluster2252682318_2252682322_385041476_cluster_10599613510_114130311_5_0" tl="2_tls" linkIndex="5" dir="s" state="O"/>
+    <connection from="215834154" to="215834190#1" fromLane="1" toLane="1" via=":cluster8991421878_8991421879_cluster2252682318_2252682322_385041476_cluster_10599613510_114130311_5_1" tl="2_tls" linkIndex="6" dir="s" state="O"/>
+    <connection from="215834154" to="215834190#1" fromLane="2" toLane="2" via=":cluster8991421878_8991421879_cluster2252682318_2252682322_385041476_cluster_10599613510_114130311_5_2" tl="2_tls" linkIndex="7" dir="s" state="O"/>
+    <connection from="215834154" to="E0" fromLane="3" toLane="0" via=":cluster8991421878_8991421879_cluster2252682318_2252682322_385041476_cluster_10599613510_114130311_8_0" tl="2_tls" linkIndex="8" dir="l" state="o"/>
+    <connection from="215834154" to="E0" fromLane="4" toLane="1" via=":cluster8991421878_8991421879_cluster2252682318_2252682322_385041476_cluster_10599613510_114130311_8_1" tl="2_tls" linkIndex="9" dir="l" state="o"/>
     <connection from="215834169" to="1047696856" fromLane="0" toLane="0" via=":114130298_0_0" dir="s" state="M"/>
     <connection from="215834169" to="1047696856" fromLane="1" toLane="1" via=":114130298_0_1" dir="s" state="M"/>
     <connection from="215834169" to="1047696856" fromLane="2" toLane="2" via=":114130298_0_2" dir="s" state="M"/>
@@ -298,16 +296,16 @@
     <connection from="215834183" to="215834183.33" fromLane="1" toLane="1" via=":J3_3_1" dir="s" state="M"/>
     <connection from="215834183" to="215834183.33" fromLane="2" toLane="2" via=":J3_3_2" dir="s" state="M"/>
     <connection from="215834183" to="215834183.33" fromLane="3" toLane="3" via=":J3_3_3" dir="s" state="M"/>
-    <connection from="5066149" to="E0" fromLane="0" toLane="0" via=":cluster8991421878_8991421879_cluster2252682318_2252682322_385041476_cluster_10599613510_114130311_0_0" tl="J4" linkIndex="0" dir="r" state="O"/>
-    <connection from="5066149" to="215834183" fromLane="0" toLane="0" via=":cluster8991421878_8991421879_cluster2252682318_2252682322_385041476_cluster_10599613510_114130311_1_0" tl="J4" linkIndex="1" dir="s" state="O"/>
-    <connection from="5066149" to="215834183" fromLane="1" toLane="1" via=":cluster8991421878_8991421879_cluster2252682318_2252682322_385041476_cluster_10599613510_114130311_1_1" tl="J4" linkIndex="2" dir="s" state="O"/>
-    <connection from="5066149" to="215834183" fromLane="2" toLane="2" via=":cluster8991421878_8991421879_cluster2252682318_2252682322_385041476_cluster_10599613510_114130311_1_2" tl="J4" linkIndex="3" dir="s" state="O"/>
-    <connection from="5066149" to="215834183" fromLane="3" toLane="3" via=":cluster8991421878_8991421879_cluster2252682318_2252682322_385041476_cluster_10599613510_114130311_1_3" tl="J4" linkIndex="4" dir="s" state="O"/>
+    <connection from="5066149" to="E0" fromLane="0" toLane="0" via=":cluster8991421878_8991421879_cluster2252682318_2252682322_385041476_cluster_10599613510_114130311_0_0" tl="2_tls" linkIndex="0" dir="r" state="O"/>
+    <connection from="5066149" to="215834183" fromLane="0" toLane="0" via=":cluster8991421878_8991421879_cluster2252682318_2252682322_385041476_cluster_10599613510_114130311_1_0" tl="2_tls" linkIndex="1" dir="s" state="O"/>
+    <connection from="5066149" to="215834183" fromLane="1" toLane="1" via=":cluster8991421878_8991421879_cluster2252682318_2252682322_385041476_cluster_10599613510_114130311_1_1" tl="2_tls" linkIndex="2" dir="s" state="O"/>
+    <connection from="5066149" to="215834183" fromLane="2" toLane="2" via=":cluster8991421878_8991421879_cluster2252682318_2252682322_385041476_cluster_10599613510_114130311_1_2" tl="2_tls" linkIndex="3" dir="s" state="O"/>
+    <connection from="5066149" to="215834183" fromLane="3" toLane="3" via=":cluster8991421878_8991421879_cluster2252682318_2252682322_385041476_cluster_10599613510_114130311_1_3" tl="2_tls" linkIndex="4" dir="s" state="O"/>
     <connection from="E1" to="E2" fromLane="0" toLane="0" via=":J2_0_0" dir="R" state="M"/>
     <connection from="E1" to="E1.39" fromLane="0" toLane="0" via=":J2_1_0" dir="s" state="M"/>
     <connection from="E1" to="E1.39" fromLane="1" toLane="1" via=":J2_1_1" dir="s" state="M"/>
-    <connection from="E1.39" to="215834190#1" fromLane="0" toLane="1" via=":cluster8991421878_8991421879_cluster2252682318_2252682322_385041476_cluster_10599613510_114130311_10_0" tl="J4" linkIndex="10" dir="l" state="o"/>
-    <connection from="E1.39" to="215834190#1" fromLane="1" toLane="2" via=":cluster8991421878_8991421879_cluster2252682318_2252682322_385041476_cluster_10599613510_114130311_10_1" tl="J4" linkIndex="11" dir="l" state="o"/>
+    <connection from="E1.39" to="215834190#1" fromLane="0" toLane="1" via=":cluster8991421878_8991421879_cluster2252682318_2252682322_385041476_cluster_10599613510_114130311_10_0" tl="2_tls" linkIndex="10" dir="l" state="o"/>
+    <connection from="E1.39" to="215834190#1" fromLane="1" toLane="2" via=":cluster8991421878_8991421879_cluster2252682318_2252682322_385041476_cluster_10599613510_114130311_10_1" tl="2_tls" linkIndex="11" dir="l" state="o"/>
     <connection from="E2" to="215834183.33" fromLane="0" toLane="0" via=":J3_0_0" dir="s" state="m"/>
     <connection from="E2" to="215834183.33" fromLane="0" toLane="1" via=":J3_0_1" dir="s" state="m"/>
     <connection from="E2" to="215834183.33" fromLane="0" toLane="2" via=":J3_0_2" dir="s" state="m"/>

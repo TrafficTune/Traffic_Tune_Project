@@ -10,6 +10,34 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="/Outputs/Training/intersection_2/experiments/DDQN_intersection_2_random_easy_1_07.25-13:53:20_conn0_ep11.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/Outputs/Training/intersection_2/experiments/DDQN_intersection_2_random_easy_1_07.25-13:53:20_conn0_ep3.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/Outputs/Training/intersection_2/experiments/DQN_intersection_2_random_easy_1_07.25-13:48:17_conn0_ep10.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/Outputs/Training/intersection_2/experiments/DQN_intersection_2_random_easy_1_07.25-13:48:17_conn0_ep11.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="/Outputs/Training/intersection_4/experiments/PPO_intersection_4_random_medium_2_07.26-13:45:10_conn0_ep1.csv">
           <value>
             <Attribute>
@@ -25,6 +53,13 @@
           </value>
         </entry>
         <entry key="/Outputs/Training/intersection_5/experiments/PPO_intersection_5_random_easy_1_07.26-14:28:37_conn0_ep2.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/Outputs/Training/intersection_7/experiments/DQN_intersection_7_random_easy_1_07.27-22:17:37_conn0_ep1.csv">
           <value>
             <Attribute>
               <option name="separator" value="," />
