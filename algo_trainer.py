@@ -85,6 +85,7 @@ class ALGOTrainer:
             TypeError: If an invalid environment type is specified.
         """
         if self.env_manager.sumo_type == self.SINGLE_AGENT_ENV:
+            # env = SumoEnvironment(**self.env_manager.kwargs, reward_fn=self.env_manager.custom_waiting_time_reward)
             env = SumoEnvironment(**self.env_manager.kwargs)
             self.env_manager.env = env
         elif self.env_manager.sumo_type == self.MULTI_AGENT_ENV:
@@ -118,14 +119,14 @@ class ALGOTrainer:
                        .framework(framework="torch")
                        .resources(num_gpus=int(os.environ.get("RLLIB_NUM_GPUS", "0")))
                        .reporting(min_sample_timesteps_per_iteration=720)
-                       .evaluation(
-                               evaluation_interval=1,
-                               evaluation_duration=1,
-                               evaluation_force_reset_envs_before_iteration=True,
-                               evaluation_num_env_runners=1,
-                               evaluation_duration_unit="episodes",
-                               evaluation_parallel_to_training=False
-                           )
+                       # .evaluation(
+                       #         evaluation_interval=1,
+                       #         evaluation_duration=1,
+                       #         evaluation_force_reset_envs_before_iteration=True,
+                       #         evaluation_num_env_runners=1,
+                       #         evaluation_duration_unit="episodes",
+                       #         evaluation_parallel_to_training=False
+                       #     )
                        .callbacks(AverageWaitingTimeCallback)
                        )
 
