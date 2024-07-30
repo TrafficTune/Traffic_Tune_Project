@@ -37,6 +37,9 @@ class EnvManager:
                 self.kwargs = config.get("kwargs")
                 break
 
+        net_path = self.kwargs["net_file"]
+        abspath = os.path.dirname(os.path.abspath(__file__))
+        self.kwargs["net_file"] = f"{abspath}/{net_path}"
         self._policies = {}
 
     def initialize_env(self, route: str, csv_file: str):
@@ -51,9 +54,6 @@ class EnvManager:
             dict: Updated kwargs for environment initialization.
         """
         kwargs = self.kwargs
-        net_path = kwargs["net_file"]
-        abspath = os.path.dirname(os.path.abspath(__file__))
-        kwargs["net_file"] = f"{abspath}/{net_path}"
         kwargs["route_file"] = route
         kwargs["out_csv_name"] = csv_file
         if self.sumo_type == "MultiAgentEnvironment":
