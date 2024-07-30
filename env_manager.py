@@ -4,6 +4,7 @@ import os
 from pettingzoo.utils import conversions
 from ray.rllib.env.wrappers.pettingzoo_env import ParallelPettingZooEnv
 from sumo_rl.environment.env import SumoEnvironmentPZ
+import traci
 
 
 class EnvManager:
@@ -26,6 +27,7 @@ class EnvManager:
         self.env = None
         self.sumo_type = sumo_type
         self.storage_path = None
+        self.last_measure = 0
 
         # Load all configuration data from the specified configuration file
         with open(self.config_path, 'r') as f:
@@ -181,3 +183,10 @@ class EnvManager:
             abspath = os.path.dirname(os.path.abspath(__file__))
             storage_path = f"{abspath}/{path_parts[0]}/{path_parts[1]}/{path_parts[2]}/saved_agent"
             return storage_path
+
+    def custom_waiting_time_reward(self, traffic_signal):
+        ts_wait = sum(traffic_signal.get_accumulated_waiting_time_per_lane()) / 100.0
+        throughput = traffic_signal.get_total_queued()
+        reward = (self.last_measure - ts_wait) + (throughput * 0.1)
+        self.last_measure = ts_wait
+        return reward
