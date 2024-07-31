@@ -148,9 +148,9 @@ for j in range(1, 8):
         add_vehicle_flows(xml_file_path, text_xml_path_file, random_flow, k, f"random_{level_flow}")
 
     level_difficulty = [
-        (12, "very_hard", 3000, 4000),
-        (8, "hard", 1500, 3000),
-        (4, "medium", 750, 1500),
+        (13, "very_hard", 3000, 4000),
+        (9, "hard", 1500, 3000),
+        (5, "medium", 750, 1500),
         (0, "easy", 500, 750),
     ]
 
