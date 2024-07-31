@@ -143,17 +143,18 @@ for j in range(1, 8):
     }
     for k in range(1, 5):
         level_flow, high_flow_probability = levels_random[k]
-        # generate random flows
+        # Generate random flows
         random_flow = random_flows(routes_list, high_flow_probability)
         add_vehicle_flows(xml_file_path, text_xml_path_file, random_flow, k, f"random_{level_flow}")
 
-    level_difficulty = {
-        (21, "very_hard", 3000, 4000),
-        (14, "hard", 1500, 3000),
-        (7, "medium", 750, 1500),
+    level_difficulty = [
+        (12, "very_hard", 3000, 4000),
+        (8, "hard", 1500, 3000),
+        (4, "medium", 750, 1500),
         (0, "easy", 500, 750),
-    }
-    for i in range(1, 29):
+    ]
+
+    for i in range(1, 17):
         for boundary, level, from_flow, to_flow in level_difficulty:
             if i >= boundary:
                 level_flow = level
@@ -164,7 +165,7 @@ for j in range(1, 8):
         # Generate new flows
         new_flows = generate_new_flows(routes_list, from_flow_value, to_flow_value)
 
-        # add vehicle flows and log new XML file path
+        # Add vehicle flows and log new XML file path
         add_vehicle_flows(xml_file_path, text_xml_path_file, new_flows, i, level_flow)
 
 
