@@ -5,6 +5,7 @@ import env_manager
 import ray
 from ray.rllib.algorithms import PPOConfig, PPO
 from ray.rllib.algorithms import DQNConfig, DQN
+from ray.rllib.algorithms import AlgorithmConfig
 from ray import tune, air
 from ray.tune.registry import register_env
 from Logs import project_logger
@@ -95,7 +96,7 @@ class ALGOTrainer:
                 "Invalid environment type, must be either 'SingleAgentEnvironment' or 'MultiAgentEnvironment'")
         return env
 
-    def build_config(self):
+    def build_config(self, flag=False):
         """
         Build and return the configuration for the training algorithm.
 
@@ -107,13 +108,17 @@ class ALGOTrainer:
         """
         ray.init(ignore_reinit_error=True)
 
+        if flag:
+            register_env(self.env_name, env_creator=self.env_creator)
+            return self.config
+
         register_env(self.env_name, env_creator=self.env_creator)
 
         self.config = (self.ALGOConfig()
                        .environment(env=self.env_name)
                        .training(**self.training_config)
-                       .env_runners(create_env_on_local_worker=True,num_env_runners=self.num_env_runners, rollout_fragment_length='auto',
-                                    num_envs_per_env_runner=1)
+                       .env_runners(create_env_on_local_worker=True, num_env_runners=self.num_env_runners,
+                                    rollout_fragment_length='auto', num_envs_per_env_runner=1)
                        .learners(num_learners=self.num_env_runners)
                        .debugging(log_level=self.log_level)
                        .framework(framework="torch")
@@ -127,7 +132,7 @@ class ALGOTrainer:
                        #         evaluation_duration_unit="episodes",
                        #         evaluation_parallel_to_training=False
                        #     )
-                       .callbacks(AverageWaitingTimeCallback)
+                       # .callbacks(AverageWaitingTimeCallback)
                        )
 
         if self.env_manager.sumo_type == self.MULTI_AGENT_ENV:
