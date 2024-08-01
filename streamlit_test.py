@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import json
 from io import StringIO
 
+
 # Define a function for custom styling
 def set_custom_style():
     st.markdown(
@@ -45,6 +46,7 @@ def set_custom_style():
         unsafe_allow_html=True
     )
 
+
 # Function to analyze episodes
 def analyze_episodes(num_intersection, files):
     episode_mean_waiting_times = []
@@ -66,6 +68,7 @@ def analyze_episodes(num_intersection, files):
         st.warning("No episodes were processed successfully.")
         return None, None, None, None, None
 
+
 # Function to plot waiting time
 def plot_waiting_time(file):
     if file is not None:
@@ -82,6 +85,7 @@ def plot_waiting_time(file):
         st.pyplot(plt)
     else:
         st.warning("File not provided.")
+
 
 # Function to plot reward from JSON
 def plot_reward_from_json(json_file, title, cycle_index=-1):
@@ -103,6 +107,31 @@ def plot_reward_from_json(json_file, title, cycle_index=-1):
     else:
         st.warning("JSON file not provided.")
 
+
+def plot_episode_mean_return(csv_file_path, title):
+    if csv_file_path is not None:
+        # Read CSV content
+        stringio = StringIO(csv_file_path.getvalue().decode("utf-8"))
+        df = pd.read_csv(stringio)
+
+        # Assuming the column you want to plot is named 'env_runners/episode_return_mean'
+        if 'env_runners/episode_return_mean' in df.columns:
+            values = df['env_runners/episode_return_mean']
+
+            # Plot the values
+            plt.figure(figsize=(12, 6))
+            plt.plot(values, marker='o', linestyle='-', color='#31a354')
+            plt.title(title, fontsize=16)
+            plt.xlabel('Episode number', fontsize=14)
+            plt.ylabel("Mean Return", fontsize=14)
+            plt.grid(True)
+            st.pyplot(plt)
+        else:
+            st.warning("The column 'env_runners/episode_return_mean' is not available in the CSV file.")
+    else:
+        st.warning("CSV file not provided.")
+
+
 # Main function
 def main():
     set_custom_style()
@@ -110,11 +139,13 @@ def main():
 
     st.sidebar.header("Analyze Episodes")
     num_intersection = st.sidebar.number_input("Intersection Number", min_value=1, max_value=10, value=4)
-    files = st.sidebar.file_uploader("Upload CSV Files for Episodes", accept_multiple_files=True, type="csv", key="upload_files")
+    files = st.sidebar.file_uploader("Upload CSV Files for Episodes", accept_multiple_files=True, type="csv",
+                                     key="upload_files")
 
     if st.sidebar.button("Analyze Episodes"):
         if files:
-            episode_mean_waiting_times, overall_mean, overall_std, min_episode, min_waiting_time = analyze_episodes(num_intersection, files)
+            episode_mean_waiting_times, overall_mean, overall_std, min_episode, min_waiting_time = analyze_episodes(
+                num_intersection, files)
             if episode_mean_waiting_times is not None:
                 st.header("Analysis Results")
                 st.subheader("Mean Waiting Times for All Episodes")
@@ -146,6 +177,17 @@ def main():
             plot_reward_from_json(json_file, title, cycle_index)
         else:
             st.warning("Please upload a JSON file to plot rewards.")
+
+    st.sidebar.header("Plot Return from csv")
+    csv_file = st.sidebar.file_uploader("Upload CSV progress File", type="csv", key="upload_csv_progress")
+    title = st.sidebar.text_input("Plot Title", "Episode Return Plot")
+    if st.sidebar.button("Plot Return"):
+        if csv_file:
+            st.header(f"Return Plot: {title}")
+            plot_episode_mean_return(csv_file, title)
+        else:
+            st.warning("Please upload a CSV file to plot returns.")
+
 
 if __name__ == "__main__":
     main()
