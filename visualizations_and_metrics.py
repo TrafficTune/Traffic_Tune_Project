@@ -168,3 +168,38 @@ def plot_reward_from_json(json_file_path, title, cycle_index=-1):
         plt.ylabel('Reward value')
         plt.grid(True)
         plt.show()
+
+
+def plot_episode_mean_return(csv_file_path, title):
+    """
+    Plots the mean return for each episode from a CSV file.
+
+    Parameters:
+    - csv_file_path (str): The path to the CSV file containing the mean return values.
+    - title (str): The title of the plot.
+
+    Returns:
+    - None: Displays the plot.
+    """
+    # Read the CSV file
+    df = pd.read_csv(csv_file_path)
+
+    # Create the plot
+    plt.figure(figsize=(12, 6))
+
+    # Plot the mean return values
+    plt.plot(df["env_runners/episode_return_mean"], marker='o')
+
+    # Customize the plot
+    plt.title(title)
+    plt.xlabel("Episode")
+    plt.ylabel("Mean Return")
+    plt.grid(True)
+    plt.show()
+
+
+if __name__ == "__main__":
+    plot_episode_mean_return(csv_file_path="Outputs/Training/intersection_2/saved_agent/DQN_2024-07-31_11-36-26/DQN_DQN_f9812_00000_0_adam_epsilon=0.0000,gamma=0.9653,hiddens=128_128,lr=0.0002,n_step=3,target_network_update_freq=200,train_bat_2024-07-31_11-36-26/progress.csv"
+                             , title="Mean Return per Episode - DQN - Intersection 2_1")
+    plot_episode_mean_return(csv_file_path="Outputs/Training/intersection_2/saved_agent/DQN_2024-07-31_11-38-48/DQN_DQN_4e8f8_00000_0_adam_epsilon=0.0000,gamma=0.9561,hiddens=64_64,lr=0.0008,n_step=7,target_network_update_freq=1000,train_batc_2024-07-31_11-38-48/progress.csv"
+                             , title="Mean Return per Episode - DQN - Intersection 2_2")
