@@ -51,6 +51,7 @@ def set_custom_style():
 def analyze_episodes(num_intersection, files):
     episode_mean_waiting_times = []
     for file in files:
+        files.sort(key=lambda x: int(x.name.split("_")[-1].split("ep")[1].split(".")[0]))
         if file is not None:
             csv_df = pd.read_csv(file)
             episode_mean_waiting_time = np.mean(csv_df["system_mean_waiting_time"])
@@ -113,6 +114,7 @@ def plot_episode_mean_return(csv_file_path, title):
         # Read CSV content
         stringio = StringIO(csv_file_path.getvalue().decode("utf-8"))
         df = pd.read_csv(stringio)
+        df = df.dropna(subset=['env_runners/episode_return_mean'])
 
         # Assuming the column you want to plot is named 'env_runners/episode_return_mean'
         if 'env_runners/episode_return_mean' in df.columns:
@@ -158,14 +160,15 @@ def main():
         else:
             st.warning("Please upload CSV files for analysis.")
 
-    st.sidebar.header("Plot Waiting Time")
-    file = st.sidebar.file_uploader("Upload CSV File for Waiting Time Plot", type="csv", key="upload_waiting_time")
-    if st.sidebar.button("Plot Waiting Time"):
-        if file:
-            st.header("Waiting Time Plot")
-            plot_waiting_time(file)
+    st.sidebar.header("Plot Return from csv")
+    csv_file = st.sidebar.file_uploader("Upload CSV progress File", type="csv", key="upload_csv_progress")
+    title = st.sidebar.text_input("Plot Title", "Episode Return Plot")
+    if st.sidebar.button("Plot Return"):
+        if csv_file:
+            st.header(f"Return Plot: {title}")
+            plot_episode_mean_return(csv_file, title)
         else:
-            st.warning("Please upload a CSV file to plot waiting time.")
+            st.warning("Please upload a CSV file to plot returns.")
 
     st.sidebar.header("Plot Reward from JSON")
     json_file = st.sidebar.file_uploader("Upload JSON File", type="json", key="upload_json")
@@ -178,15 +181,14 @@ def main():
         else:
             st.warning("Please upload a JSON file to plot rewards.")
 
-    st.sidebar.header("Plot Return from csv")
-    csv_file = st.sidebar.file_uploader("Upload CSV progress File", type="csv", key="upload_csv_progress")
-    title = st.sidebar.text_input("Plot Title", "Episode Return Plot")
-    if st.sidebar.button("Plot Return"):
-        if csv_file:
-            st.header(f"Return Plot: {title}")
-            plot_episode_mean_return(csv_file, title)
+    st.sidebar.header("Plot Episode Waiting Time")
+    file = st.sidebar.file_uploader("Upload CSV File for Waiting Time Plot", type="csv", key="upload_waiting_time")
+    if st.sidebar.button("Plot Waiting Time"):
+        if file:
+            st.header("Episode Waiting Time - Plot")
+            plot_waiting_time(file)
         else:
-            st.warning("Please upload a CSV file to plot returns.")
+            st.warning("Please upload a CSV file to plot waiting time.")
 
 
 if __name__ == "__main__":
