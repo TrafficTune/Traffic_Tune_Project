@@ -10,6 +10,7 @@ from ray import tune, air
 from ray.tune.registry import register_env
 from Logs import project_logger
 from callbacks import AverageWaitingTimeCallback
+from ray.tune.schedulers import ASHAScheduler
 
 
 class ALGOTrainer:
@@ -158,6 +159,13 @@ class ALGOTrainer:
             **self.param_space
         }
 
+        scheduler = ASHAScheduler(
+            metric="env_runners/episode_reward_max",
+            mode="max",
+            grace_period=3,
+            reduction_factor=2
+        )
+
         tuner = tune.Tuner(
             self.env_name,
             param_space=param_space,
@@ -170,6 +178,9 @@ class ALGOTrainer:
                     checkpoint_score_order="max"
                 ),
                 stop={'training_iteration': self.num_of_episodes * self.num_env_runners},
+            ),
+            tune_config=tune.TuneConfig(
+                scheduler=scheduler
             )
         )
 
@@ -220,3 +231,12 @@ class ALGOTrainer:
             elif value['func'] == 'tune.randint':
                 param_space[key] = tune.randint(*value['args'])
         return param_space
+
+    def from_dict(self, config):
+        """
+        Get the configuration for the training algorithm.
+
+        Returns:
+            The configured algorithm configuration.
+        """
+        return self.ALGOConfig.from_dict(config_dict=config)

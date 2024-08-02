@@ -47,23 +47,35 @@ def set_custom_style():
     )
 
 
+def extract_key_from_filename(filename):
+    # Split by underscore and extract the required parts for the key
+    parts = filename.split("_")
+    if len(parts) == 8:
+        level = f"{parts[3]}_{parts[4]}"
+    elif len(parts) == 9:
+        level = f"{parts[3]}_{parts[4]}_{parts[5]}"
+    episode = parts[-1].split("ep")[1].split(".")[0]
+    return f"{level}_{episode}"
+
+
 # Function to analyze episodes
-def analyze_episodes(num_intersection, files):
-    episode_mean_waiting_times = []
+def analyze_episodes(files):
+    episode_mean_waiting_times = {}
+
     for file in files:
-        files.sort(key=lambda x: int(x.name.split("_")[-1].split("ep")[1].split(".")[0]))
         if file is not None:
             csv_df = pd.read_csv(file)
             episode_mean_waiting_time = np.mean(csv_df["system_mean_waiting_time"])
-            episode_mean_waiting_times.append(episode_mean_waiting_time)
+            key = extract_key_from_filename(file.name)
+            episode_mean_waiting_times[key] = episode_mean_waiting_time
         else:
             st.warning("One or more files not provided.")
 
     if episode_mean_waiting_times:
-        overall_mean = np.mean(episode_mean_waiting_times)
-        overall_std = np.std(episode_mean_waiting_times)
-        min_waiting_time = min(episode_mean_waiting_times)
-        min_episode = episode_mean_waiting_times.index(min_waiting_time) + 1
+        overall_mean = np.mean(list(episode_mean_waiting_times.values()))
+        overall_std = np.std(list(episode_mean_waiting_times.values()))
+        min_waiting_time = min(episode_mean_waiting_times.values())
+        min_episode = min(episode_mean_waiting_times, key=episode_mean_waiting_times.get)
         return episode_mean_waiting_times, overall_mean, overall_std, min_episode, min_waiting_time
     else:
         st.warning("No episodes were processed successfully.")
@@ -78,7 +90,7 @@ def plot_waiting_time(file):
         plt.figure(figsize=(12, 6))
         plt.plot(csv_df.index, csv_df["system_mean_waiting_time"], label='Waiting Time', color='#2b8cbe')
         plt.axhline(y=overall_mean, color='r', linestyle='--', label=f'Overall Mean ({overall_mean:.2f})')
-        plt.title(f"System Mean Waiting Time", fontsize=16)
+        plt.title("System Mean Waiting Time", fontsize=16)
         plt.xlabel("Time Step", fontsize=14)
         plt.ylabel("Mean Waiting Time", fontsize=14)
         plt.grid(True)
@@ -89,12 +101,12 @@ def plot_waiting_time(file):
 
 
 # Function to plot reward from JSON
-def plot_reward_from_json(json_file, title, cycle_index=-1):
+def plot_reward_from_json(json_file, title, episode_num=0):
     if json_file is not None:
         stringio = StringIO(json_file.getvalue().decode("utf-8"))
         json_results = [json.loads(line) for line in stringio.readlines()]
         if json_results:
-            result_grid = json_results[cycle_index]
+            result_grid = json_results[episode_num]
             values = result_grid["env_runners"]["hist_stats"]["episode_reward"]
             plt.figure(figsize=(12, 6))
             plt.plot(values, marker='o', linestyle='-', color='#31a354')
@@ -109,10 +121,10 @@ def plot_reward_from_json(json_file, title, cycle_index=-1):
         st.warning("JSON file not provided.")
 
 
-def plot_episode_mean_return(csv_file_path, title):
-    if csv_file_path is not None:
+def plot_episode_mean_return(csv_file, title):
+    if csv_file is not None:
         # Read CSV content
-        stringio = StringIO(csv_file_path.getvalue().decode("utf-8"))
+        stringio = StringIO(csv_file.getvalue().decode("utf-8"))
         df = pd.read_csv(stringio)
         df = df.dropna(subset=['env_runners/episode_return_mean'])
 
@@ -139,56 +151,57 @@ def main():
     set_custom_style()
     st.title("Episode Analysis and Visualization")
 
-    st.sidebar.header("Analyze Episodes")
-    num_intersection = st.sidebar.number_input("Intersection Number", min_value=1, max_value=10, value=4)
-    files = st.sidebar.file_uploader("Upload CSV Files for Episodes", accept_multiple_files=True, type="csv",
-                                     key="upload_files")
+    # File uploaders and input fields in the sidebar
+    plot_title = st.sidebar.text_input("Plot Title", "Episode Return Plot")
+    st.sidebar.header("Upload Files for Analysis")
+    csv_files = st.sidebar.file_uploader("Upload Episodes CSV Files", accept_multiple_files=True, type="csv", key="upload_files")
+    progress_csv_file = st.sidebar.file_uploader("Upload Progress CSV File", type="csv", key="upload_csv_progress")
+    json_file = st.sidebar.file_uploader("Upload Return JSON File", type="json", key="upload_json")
+    episode_num = st.sidebar.number_input("Episode Index", min_value=-1, max_value=100, value=-1)
+    csv_file = st.sidebar.file_uploader("Upload Episode CSV File", type="csv", key="upload_episode_csv")
 
-    if st.sidebar.button("Analyze Episodes"):
-        if files:
-            episode_mean_waiting_times, overall_mean, overall_std, min_episode, min_waiting_time = analyze_episodes(
-                num_intersection, files)
-            if episode_mean_waiting_times is not None:
-                st.header("Analysis Results")
-                st.subheader("Mean Waiting Times for All Episodes")
-                with st.expander("View Mean Waiting Times"):
-                    st.write(episode_mean_waiting_times)
-                st.subheader("Overall Metrics")
-                st.metric("Overall Mean Waiting Time", f"{overall_mean:.2f}")
-                st.metric("Overall Standard Deviation", f"{overall_std:.2f}")
-                st.metric(f"Minimum Waiting Time (Episode {min_episode})", f"{min_waiting_time:.2f}")
+    # Analysis and plots
+    st.header("Analysis and Plots")
+
+    # Analyze episodes
+    if csv_files:
+        episode_mean_waiting_times, overall_mean, overall_std, min_episode, min_waiting_time=(
+            analyze_episodes(csv_files))
+        if episode_mean_waiting_times is not None:
+            st.subheader("Mean Waiting Times for All Episodes")
+            with st.expander("View Mean Waiting Times"):
+                episode_mean_waiting_times_with_numbers = {f"{k}": v for k, v in episode_mean_waiting_times.items()}
+                st.write(episode_mean_waiting_times_with_numbers)
+
+            st.subheader("Overall Metrics")
+            st.metric("Overall Mean Waiting Time", f"{overall_mean:.2f}")
+            st.metric("Overall Standard Deviation", f"{overall_std:.2f}")
+            st.metric(f"Minimum Waiting Time (Episode {min_episode})", f"{min_waiting_time:.2f}")
         else:
             st.warning("Please upload CSV files for analysis.")
+    else:
+        st.warning("Please upload Episodes CSV files for analysis.")
 
-    st.sidebar.header("Plot Return from csv")
-    csv_file = st.sidebar.file_uploader("Upload CSV progress File", type="csv", key="upload_csv_progress")
-    title = st.sidebar.text_input("Plot Title", "Episode Return Plot")
-    if st.sidebar.button("Plot Return"):
-        if csv_file:
-            st.header(f"Return Plot: {title}")
-            plot_episode_mean_return(csv_file, title)
-        else:
-            st.warning("Please upload a CSV file to plot returns.")
+    # Plot return from CSV
+    if progress_csv_file:
+        st.subheader(f"Return Plot: {plot_title}")
+        plot_episode_mean_return(progress_csv_file, plot_title)
+    else:
+        st.warning("Please upload a CSV progress file to plot returns.")
 
-    st.sidebar.header("Plot Reward from JSON")
-    json_file = st.sidebar.file_uploader("Upload JSON File", type="json", key="upload_json")
-    title = st.sidebar.text_input("Plot Title", "Episode Reward Plot")
-    cycle_index = st.sidebar.number_input("Cycle Index", min_value=-1, max_value=100, value=-1)
-    if st.sidebar.button("Plot Reward"):
-        if json_file:
-            st.header(f"Reward Plot: {title}")
-            plot_reward_from_json(json_file, title, cycle_index)
-        else:
-            st.warning("Please upload a JSON file to plot rewards.")
+    # Plot reward from JSON
+    if json_file:
+        st.subheader(f"Reward Plot: {plot_title}")
+        plot_reward_from_json(json_file, plot_title, episode_num)
+    else:
+        st.warning("Please upload a JSON file to plot rewards.")
 
-    st.sidebar.header("Plot Episode Waiting Time")
-    file = st.sidebar.file_uploader("Upload CSV File for Waiting Time Plot", type="csv", key="upload_waiting_time")
-    if st.sidebar.button("Plot Waiting Time"):
-        if file:
-            st.header("Episode Waiting Time - Plot")
-            plot_waiting_time(file)
-        else:
-            st.warning("Please upload a CSV file to plot waiting time.")
+    # Plot reward from JSON
+    if csv_file:
+        st.subheader(f"Episode Waiting Time Plot: {plot_title}")
+        plot_waiting_time(csv_file)
+    else:
+        st.warning("Please upload a JSON file to plot rewards.")
 
 
 if __name__ == "__main__":
