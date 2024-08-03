@@ -149,7 +149,9 @@ def plot_episode_mean_return(csv_file, title):
 # Main function
 def main():
     set_custom_style()
-    st.title("Episode Analysis and Visualization")
+    st.markdown("### ***Analysis and Visualizations for Traffic Tune Experiments***")
+    st.markdown("> Upload your desired files" )
+
 
     # File uploaders and input fields in the sidebar
     plot_title = st.sidebar.text_input("Plot Title", "Episode Return Plot")
@@ -161,7 +163,7 @@ def main():
     csv_file = st.sidebar.file_uploader("Upload Episode CSV File", type="csv", key="upload_episode_csv")
 
     # Analysis and plots
-    st.header("Analysis and Plots")
+    st.markdown("#### Analysis and Plots")
 
     # Analyze episodes
     if csv_files:
@@ -180,28 +182,28 @@ def main():
         else:
             st.warning("Please upload CSV files for analysis.")
     else:
-        st.warning("Please upload Episodes CSV files for analysis.")
+        st.warning("* Please upload Episodes CSV files for analysis")
 
     # Plot return from CSV
     if progress_csv_file:
         st.subheader(f"Return Plot: {plot_title}")
         plot_episode_mean_return(progress_csv_file, plot_title)
     else:
-        st.warning("Please upload a CSV progress file to plot returns.")
+        st.warning("* Please upload a CSV progress file to plot returns")
 
     # Plot reward from JSON
     if json_file:
         st.subheader(f"Reward Plot: {plot_title}")
         plot_reward_from_json(json_file, plot_title, episode_num)
     else:
-        st.warning("Please upload a JSON file to plot rewards.")
+        st.warning("* Please upload a JSON file to plot rewards")
 
     # Plot reward from JSON
     if csv_file:
         st.subheader(f"Episode Waiting Time Plot: {plot_title}")
         plot_waiting_time(csv_file)
     else:
-        st.warning("Please upload a JSON file to plot rewards.")
+        st.warning("* Please upload a JSON file to plot rewards")
 
 
 if __name__ == "__main__":
