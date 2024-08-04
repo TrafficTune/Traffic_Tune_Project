@@ -171,7 +171,7 @@ def main():
 
     # File uploaders and input fields in the sidebar
     plot_title = st.sidebar.text_input("Plot Title", "Episode Return Plot")
-    st.sidebar.header("Upload Files for Analysis")
+    st.sidebar.header("Files for Analysis")
     csv_files = st.sidebar.file_uploader("Upload Episodes CSV Files", accept_multiple_files=True, type="csv",
                                          key="upload_files")
     progress_csv_file = st.sidebar.file_uploader("Upload Progress CSV File", type="csv", key="upload_csv_progress")
@@ -193,9 +193,9 @@ def main():
                 st.write(episode_mean_waiting_times_with_numbers)
 
             st.subheader("Overall Metrics")
-            st.metric("Overall Mean Waiting Time", f"{overall_mean:.2f}")
-            st.metric("Overall Standard Deviation", f"{overall_std:.2f}")
-            st.metric(f"Minimum Waiting Time (Episode {min_episode})", f"{min_waiting_time:.2f}")
+            st.metric("Overall Mean Waiting Time", f"{overall_mean:.3f}")
+            st.metric("Overall Standard Deviation", f"{overall_std:.3f}")
+            st.metric(f"Minimum Waiting Time (Episode {min_episode})", f"{min_waiting_time:.3f}")
         else:
             st.warning("Please upload CSV files for analysis.")
     else:
