@@ -41,7 +41,24 @@ def set_custom_style():
             border: 1px solid #ddd;
             margin-top: 10px;
         }
+        .image-container {
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            width: 100%;
+            text-align: right;
+            padding: 30px;
+        }
         </style>
+        """,
+        unsafe_allow_html=True
+    )
+
+    st.markdown(
+        """
+        <div class="image-container">
+            <img src="https://github.com/TrafficTune/Traffic_Tune_Project/assets/73496652/c71694bb-5653-4a4e-b20a-05a5c9d263a5" alt="Placeholder Image">
+        </div>
         """,
         unsafe_allow_html=True
     )
@@ -150,13 +167,13 @@ def plot_episode_mean_return(csv_file, title):
 def main():
     set_custom_style()
     st.markdown("### ***Analysis and Visualizations for Traffic Tune Experiments***")
-    st.markdown("> Upload your desired files" )
-
+    st.markdown("> Upload your desired files")
 
     # File uploaders and input fields in the sidebar
     plot_title = st.sidebar.text_input("Plot Title", "Episode Return Plot")
     st.sidebar.header("Upload Files for Analysis")
-    csv_files = st.sidebar.file_uploader("Upload Episodes CSV Files", accept_multiple_files=True, type="csv", key="upload_files")
+    csv_files = st.sidebar.file_uploader("Upload Episodes CSV Files", accept_multiple_files=True, type="csv",
+                                         key="upload_files")
     progress_csv_file = st.sidebar.file_uploader("Upload Progress CSV File", type="csv", key="upload_csv_progress")
     json_file = st.sidebar.file_uploader("Upload Return JSON File", type="json", key="upload_json")
     episode_num = st.sidebar.number_input("Episode Index", min_value=-1, max_value=100, value=-1)
@@ -167,7 +184,7 @@ def main():
 
     # Analyze episodes
     if csv_files:
-        episode_mean_waiting_times, overall_mean, overall_std, min_episode, min_waiting_time=(
+        episode_mean_waiting_times, overall_mean, overall_std, min_episode, min_waiting_time = (
             analyze_episodes(csv_files))
         if episode_mean_waiting_times is not None:
             st.subheader("Mean Waiting Times for All Episodes")
