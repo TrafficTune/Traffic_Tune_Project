@@ -8,6 +8,7 @@ numpy==1.23.5
 datetime==5.5
 pytz==2024.1
 ray==2.31.0
+ray[rllib]
 
 
 
