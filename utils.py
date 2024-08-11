@@ -3,6 +3,7 @@ import subprocess
 import json
 import os
 import csv
+from ray import tune
 
 
 def send_imessage(message, recipient):
@@ -197,3 +198,34 @@ def extract_and_write_all_params():
 
                 writer.writeheader()
                 writer.writerows(rows)
+
+
+def convert_to_tune_calls(param):
+    """
+               Convert a dictionary of parameter specifications to Ray Tune search space calls.
+
+               This function takes a dictionary where each key represents a parameter name and
+               each value is a dictionary specifying a Ray Tune function and its arguments. It
+               converts these specifications into the appropriate Ray Tune search space objects.
+
+               Args:
+                   param (dict): A dictionary where keys are parameter names and values are dictionaries
+                                 containing:
+                                   - 'func' (str): The name of the Ray Tune function (e.g., 'tune.loguniform').
+                                   - 'args' (list): A list of arguments to be passed to the Ray Tune function.
+
+               Returns:
+                   dict: A dictionary where keys are the same parameter names and values are the corresponding
+                         Ray Tune search space objects.
+           """
+    param_space = {}
+    for key, value in param.items():
+        if value['func'] == 'tune.loguniform':
+            param_space[key] = tune.loguniform(*value['args'])
+        elif value['func'] == 'tune.uniform':
+            param_space[key] = tune.uniform(*value['args'])
+        elif value['func'] == 'tune.choice':
+            param_space[key] = tune.choice(*value['args'])
+        elif value['func'] == 'tune.randint':
+            param_space[key] = tune.randint(*value['args'])
+    return param_space

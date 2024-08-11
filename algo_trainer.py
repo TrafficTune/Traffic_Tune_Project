@@ -1,16 +1,22 @@
 import json
 import os
+import pickle
 from sumo_rl import SumoEnvironment
 import env_manager
 import ray
+import utils
 from ray.rllib.algorithms import PPOConfig, PPO
 from ray.rllib.algorithms import DQNConfig, DQN
 from ray.rllib.algorithms import AlgorithmConfig
-from ray import tune, air
+from ray import tune
 from ray.tune.registry import register_env
 from Logs import project_logger
 from callbacks import AverageWaitingTimeCallback
 from ray.tune.schedulers import ASHAScheduler
+from ray.rllib.policy.policy import PolicySpec
+from ray.rllib.algorithms.ppo import PPOTorchPolicy
+from ray.train import ScalingConfig, RunConfig, CheckpointConfig
+from ray.train.torch import TorchTrainer
 
 
 class ALGOTrainer:
@@ -66,7 +72,7 @@ class ALGOTrainer:
         self.num_env_runners = self.config["num_env_runners"]
         self.training_config = self.config["config"]
 
-        self.param_space = self.convert_to_tune_calls(self.config["param_space"])
+        self.param_space = utils.convert_to_tune_calls(self.config["param_space"])
         self.storage_path = self.env_manager.storage_path
         self.kwargs = None
 
@@ -107,7 +113,7 @@ class ALGOTrainer:
         Returns:
             The configured algorithm configuration.
         """
-        ray.init(ignore_reinit_error=True)
+        ray.init(ignore_reinit_error=True, num_gpus=1)
 
         if flag:
             register_env(self.env_name, env_creator=self.env_creator)
@@ -137,7 +143,15 @@ class ALGOTrainer:
                        )
 
         if self.env_manager.sumo_type == self.MULTI_AGENT_ENV:
-            self.config.multi_agent(policies=self.env_manager.get_policies(),
+            policies = self.env_manager.get_policies()
+
+            for policy_key, policy_tuple in policies.items():
+                policy_cls, policy_obs, policy_act, policy_config = policy_tuple
+                policy_config = self.param_space
+
+                policies[policy_key] = PolicySpec(policy_class=policy_cls, observation_space=policy_obs, action_space=policy_act, config=policy_config)
+
+            self.config.multi_agent(policies=policies,
                                     policy_mapping_fn=self.env_manager.policy_mapping_fn)
 
         return self.config
@@ -159,26 +173,43 @@ class ALGOTrainer:
             **self.param_space
         }
 
+        # scaling_config = ScalingConfig(
+        #     num_workers=self.num_env_runners,
+        #     use_gpu=True,
+        #     resources_per_worker={"CPU": 1, "GPU": 1/self.num_env_runners},
+        #     accelerator_type="G"
+        # )
+
+        # ray_trainer = TorchTrainer(
+        #     train_loop_per_worker=self.train_func,
+        #     scaling_config=scaling_config,
+        #     run_config=run_config,
+        # )
+
         scheduler = ASHAScheduler(
-            metric="env_runners/episode_reward_max",
+            metric="env_runners/episode_reward_mean",
             mode="max",
             grace_period=3,
-            reduction_factor=2
+            reduction_factor=2,
+            # single num episodes >= grace_period
+            max_t=self.num_of_episodes * self.num_env_runners
+        )
+
+        run_config = RunConfig(
+            storage_path=self.storage_path,
+            checkpoint_config=CheckpointConfig(
+                checkpoint_at_end=True,
+                checkpoint_frequency=self.checkpoint_freq,
+                checkpoint_score_attribute='env_runners/episode_reward_mean',
+                checkpoint_score_order="max"
+            ),
+            stop={'training_iteration': self.num_of_episodes * self.num_env_runners}
         )
 
         tuner = tune.Tuner(
             self.env_name,
             param_space=param_space,
-            run_config=air.RunConfig(
-                storage_path=self.storage_path,
-                checkpoint_config=air.CheckpointConfig(
-                    checkpoint_at_end=True,
-                    checkpoint_frequency=self.checkpoint_freq,
-                    checkpoint_score_attribute='env_runners/episode_reward_max',
-                    checkpoint_score_order="max"
-                ),
-                stop={'training_iteration': self.num_of_episodes * self.num_env_runners},
-            ),
+            run_config=run_config,
             tune_config=tune.TuneConfig(
                 scheduler=scheduler
             )
@@ -202,36 +233,6 @@ class ALGOTrainer:
             return True
         return False
 
-    def convert_to_tune_calls(self, param):
-        """
-            Convert a dictionary of parameter specifications to Ray Tune search space calls.
-
-            This function takes a dictionary where each key represents a parameter name and
-            each value is a dictionary specifying a Ray Tune function and its arguments. It
-            converts these specifications into the appropriate Ray Tune search space objects.
-
-            Args:
-                param (dict): A dictionary where keys are parameter names and values are dictionaries
-                              containing:
-                                - 'func' (str): The name of the Ray Tune function (e.g., 'tune.loguniform').
-                                - 'args' (list): A list of arguments to be passed to the Ray Tune function.
-
-            Returns:
-                dict: A dictionary where keys are the same parameter names and values are the corresponding
-                      Ray Tune search space objects.
-        """
-        param_space = {}
-        for key, value in param.items():
-            if value['func'] == 'tune.loguniform':
-                param_space[key] = tune.loguniform(*value['args'])
-            elif value['func'] == 'tune.uniform':
-                param_space[key] = tune.uniform(*value['args'])
-            elif value['func'] == 'tune.choice':
-                param_space[key] = tune.choice(*value['args'])
-            elif value['func'] == 'tune.randint':
-                param_space[key] = tune.randint(*value['args'])
-        return param_space
-
     def from_dict(self, config):
         """
         Get the configuration for the training algorithm.
@@ -240,3 +241,28 @@ class ALGOTrainer:
             The configured algorithm configuration.
         """
         return self.ALGOConfig.from_dict(config_dict=config)
+
+    # def train_func(self, config):
+    #     # Initialize SUMO environment
+    #     env = self.env_creator
+    #
+    #     # Initialize the PPO trainer with the environment
+    #     trainer = PPO(env=env, config=config)
+    #
+    #     for i in range(config["num_epochs"]):
+    #         # Run a single iteration of training
+    #         result = trainer.train()
+    #
+    #         # Optionally save the model checkpoint
+    #         if i % config["checkpoint_frequency"] == 0:
+    #             checkpoint_dir = trainer.save()
+    #             print(f"Checkpoint saved at {checkpoint_dir}")
+    #
+    #         # Report training progress to Ray Tune
+    #         CLIReporter(
+    #             episode_reward_mean=result["episode_reward_mean"],
+    #             episode_len_mean=result["episode_len_mean"]
+    #         )
+    #
+    #     # Final save of the model
+    #     trainer.save()
