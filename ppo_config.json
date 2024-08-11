@@ -1,9 +1,9 @@
 [
   {
     "experiment_type": "PPO_SingleAgent",
-    "env_name": "PPO",
+    "algo_name": "PPO",
     "log_level": "ERROR",
-    "num_of_episodes": 5,
+    "num_of_episodes": 40,
     "checkpoint_freq": 1,
     "num_env_runners": 1,
     "config": {
@@ -23,7 +23,6 @@
      "param_space": {
         "lr": {"func": "tune.loguniform", "args": [1e-8, 1e-5]},
         "gamma": {"func": "tune.uniform", "args": [0.9, 0.999]},
-        "train_batch_size": {"func": "tune.choice", "args": [[512, 720, 1024, 2048]]},
         "sgd_minibatch_size": {"func": "tune.choice", "args": [[64, 128, 256]]},
         "num_sgd_iter": {"func": "tune.randint", "args": [1, 20]},
         "lambda_": {"func": "tune.uniform", "args": [0.9, 1.0]},
@@ -33,11 +32,11 @@
   },
   {
     "experiment_type": "PPO_MultiAgent",
-    "env_name": "PPO",
+    "algo_name": "PPO",
     "log_level": "ERROR",
-    "num_of_episodes": 2,
-    "checkpoint_freq": 1,
-    "num_env_runners": 6,
+    "num_of_episodes": 30,
+    "checkpoint_freq": 6,
+    "num_env_runners":6,
     "config": {
       "train_batch_size": 720,
       "lr": 2e-5,
@@ -48,18 +47,18 @@
       "grad_clip": null,
       "entropy_coeff": 0.1,
       "vf_loss_coeff": 0.25,
-      "sgd_minibatch_size": 64,
+      "sgd_minibatch_size": 120,
       "num_sgd_iter": 10,
       "use_critic": true
     },
      "param_space": {
         "lr": {"func": "tune.loguniform", "args": [1e-6, 1e-2]},
-        "gamma": {"func": "tune.uniform", "args": [0.9, 0.999]},
-        "train_batch_size": {"func": "tune.choice", "args": [[512, 720, 1024, 2048]]},
-        "sgd_minibatch_size": {"func": "tune.choice", "args": [[64, 128, 256]]},
+        "gamma": {"func": "tune.uniform", "args": [0.96, 0.999]},
         "num_sgd_iter": {"func": "tune.randint", "args": [1, 20]},
         "lambda_": {"func": "tune.uniform", "args": [0.9, 1.0]},
         "clip_param": {"func": "tune.uniform", "args": [0.1, 0.4]},
+        "vf_loss_coeff": {"func": "tune.uniform", "args": [0.1, 1.0]},
+        "grad_clip": {"func": "tune.uniform", "args": [0.1, 5.0]},
         "entropy_coeff": {"func": "tune.loguniform", "args": [1e-5, 1e-1]}
   }
   }
