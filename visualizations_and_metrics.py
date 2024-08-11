@@ -4,18 +4,18 @@ import pandas as pd
 import numpy as np
 import os
 import matplotlib.pyplot as plt
+import json
 
 
-def analyze_episodes(base_path, num_episodes=8,
-                     file_pattern="DQN_intersection_4_random_easy_1_07.29-13:05:23_conn0_ep{}.csv"):
+def analyze_episodes(num_intersection, num_episodes=8,
+                     path_to_episode="DQN_intersection_4_random_easy_1_07.29-13:05:23_conn0_ep{}.csv"):
     # List to store the mean waiting times for each episode
     episode_mean_waiting_times = []
-
+    base_path = f"Outputs/Training/intersection_{num_intersection}/experiments/"
     # Run for specified number of episodes
     for episode in range(1, num_episodes + 1):
         # Construct the filename for each episode
-        filename = file_pattern.format(episode)
-        full_path = os.path.join(base_path, filename)
+        full_path = os.path.join(base_path, path_to_episode.format(episode))
 
         # Check if the file exists
         if os.path.exists(full_path):
@@ -52,7 +52,7 @@ def analyze_episodes(base_path, num_episodes=8,
     else:
         print("\nNo episodes were processed successfully.")
 
-    return episode_mean_waiting_times, overall_mean, overall_std
+    return min_episode, overall_mean, overall_std
 
 # You can add more functions here if needed
 # main.py
@@ -74,7 +74,7 @@ def analyze_episodes(base_path, num_episodes=8,
 # plot_waiting_time.py
 
 
-def plot_waiting_time(base_path, episode_number,file_pattern="DQN_intersection_4_random_easy_1_07.29-13:05:23_conn0_ep{}.csv"):
+def plot_waiting_time(num_intersection, episode_number, path_to_episode="DQN_intersection_4_random_easy_1_07.29-13:05:23_conn0_ep{}.csv"):
     """
     Plots the system mean waiting time for a specific episode.
 
@@ -87,7 +87,8 @@ def plot_waiting_time(base_path, episode_number,file_pattern="DQN_intersection_4
     """
     # Construct the filename for the chosen episode
 
-    full_path = os.path.join(base_path, file_pattern)
+    base_path = f"Outputs/Training/intersection_{num_intersection}/experiments/"
+    full_path = os.path.join(base_path, path_to_episode.format(episode_number))
 
     # Check if the file exists
     if os.path.exists(full_path):
@@ -135,3 +136,95 @@ def plot_waiting_time(base_path, episode_number,file_pattern="DQN_intersection_4
     #
     # # Call the function to plot the waiting time
     # plot_waiting_time(base_path, episode_number)
+
+
+def plot_reward_from_json(json_file_path, title, cycle_index=-1):
+    """
+    Saves the custom metrics from RLlib results to a CSV file.
+
+    Parameters:
+    - json_file_path (str): The path to the JSON file containing RLlib training results.
+    - num_intersection (int): The number of intersections being trained.
+    - experiment_type (str): The type of experiment.
+    - cycle_index (int): The index of the cycle in the results, default is -1 for the last cycle.
+
+    Returns:
+    - None
+    """
+    with open(json_file_path, "r") as file:
+        json_results = [json.loads(line) for line in file]
+
+    if json_results:
+        # Access the result of the specified cycle
+        result_grid = json_results[cycle_index]
+
+        # Extract values
+        values = result_grid["env_runners"]["hist_stats"]["episode_reward"]
+        print(f"Original values: {values}")
+
+        # Ensure values is a NumPy array
+        values = np.array(values, dtype=np.float64)
+        print(f"Converted to NumPy array: {values}")
+
+        # Calculate IQR to identify outliers
+        Q1 = np.percentile(values, 35)
+        Q3 = np.percentile(values, 90)
+        IQR = Q3 - Q1
+        print(f"Q1: {Q1}, Q3: {Q3}, IQR: {IQR}")
+
+        # Define outlier boundaries
+        lower_bound = Q1 - 1.5 * IQR
+        upper_bound = Q3 + 1.5 * IQR
+        print(f"Lower bound: {lower_bound}, Upper bound: {upper_bound}")
+
+        # Identify outliers
+        outliers = values[(values < lower_bound) | (values > upper_bound)]
+        filtered_values = values[(values >= lower_bound) & (values <= upper_bound)]
+
+        # Print the outliers
+        if outliers.size > 0:
+            print("Outliers:")
+            print(outliers)
+        else:
+            print("No outliers found.")
+
+        # Plotting the filtered values
+        plt.plot(filtered_values, marker='o')
+        plt.title(title)
+        plt.xlabel('Episode number')
+        plt.ylabel('Reward value')
+        plt.grid(True)
+        plt.show()
+
+
+def plot_episode_mean_return(csv_file_path, title):
+    """
+    Plots the mean return for each episode from a CSV file.
+
+    Parameters:
+    - csv_file_path (str): The path to the CSV file containing the mean return values.
+    - title (str): The title of the plot.
+
+    Returns:
+    - None: Displays the plot.
+    """
+    # Read the CSV file
+    df = pd.read_csv(csv_file_path)
+
+    # Create the plot
+    plt.figure(figsize=(12, 6))
+
+    # Plot the mean return values
+    plt.plot(df["env_runners/episode_return_mean"], marker='o')
+
+    # Customize the plot
+    plt.title(title)
+    plt.xlabel("Episode")
+    plt.ylabel("Mean Return")
+    plt.grid(True)
+    plt.show()
+
+
+if __name__ == "__main__":
+    plot_reward_from_json("/Users/eviat/Downloads/PPO_2_16/result-5.json", "Reward values for PPO - 1")
+

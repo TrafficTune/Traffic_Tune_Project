@@ -1,14 +1,22 @@
 import json
 import os
+import pickle
 from sumo_rl import SumoEnvironment
 import env_manager
 import ray
+import utils
 from ray.rllib.algorithms import PPOConfig, PPO
 from ray.rllib.algorithms import DQNConfig, DQN
-from ray import tune, air
+from ray.rllib.algorithms import AlgorithmConfig
+from ray import tune
 from ray.tune.registry import register_env
-import project_logger
+from Logs import project_logger
 from callbacks import AverageWaitingTimeCallback
+from ray.tune.schedulers import ASHAScheduler
+from ray.rllib.policy.policy import PolicySpec
+from ray.rllib.algorithms.ppo import PPOTorchPolicy
+from ray.train import ScalingConfig, RunConfig, CheckpointConfig
+from ray.train.torch import TorchTrainer
 
 
 class ALGOTrainer:
@@ -57,14 +65,14 @@ class ALGOTrainer:
 
         # Initialize attributes from the configuration
         self.experiment_type = self.config["experiment_type"]
-        self.env_name = self.config["env_name"]
+        self.algo_name = self.config["algo_name"]
         self.log_level = self.config["log_level"]
         self.num_of_episodes = self.config["num_of_episodes"]
         self.checkpoint_freq = self.config["checkpoint_freq"]
         self.num_env_runners = self.config["num_env_runners"]
         self.training_config = self.config["config"]
 
-        self.param_space = self.convert_to_tune_calls(self.config["param_space"])
+        self.param_space = utils.convert_to_tune_calls(self.config["param_space"])
         self.storage_path = self.env_manager.storage_path
         self.kwargs = None
 
@@ -85,6 +93,7 @@ class ALGOTrainer:
             TypeError: If an invalid environment type is specified.
         """
         if self.env_manager.sumo_type == self.SINGLE_AGENT_ENV:
+            # env = SumoEnvironment(**self.env_manager.kwargs, reward_fn=self.env_manager.custom_waiting_time_reward)
             env = SumoEnvironment(**self.env_manager.kwargs)
             self.env_manager.env = env
         elif self.env_manager.sumo_type == self.MULTI_AGENT_ENV:
@@ -94,7 +103,7 @@ class ALGOTrainer:
                 "Invalid environment type, must be either 'SingleAgentEnvironment' or 'MultiAgentEnvironment'")
         return env
 
-    def build_config(self):
+    def build_config(self, flag=False):
         """
         Build and return the configuration for the training algorithm.
 
@@ -106,31 +115,43 @@ class ALGOTrainer:
         """
         ray.init(ignore_reinit_error=True)
 
-        register_env(self.env_name, env_creator=self.env_creator)
+        if flag:
+            register_env(self.algo_name, env_creator=self.env_creator)
+            return self.config
+
+        register_env(self.algo_name, env_creator=self.env_creator)
 
         self.config = (self.ALGOConfig()
-                       .environment(env=self.env_name)
+                       .environment(env=self.algo_name)
                        .training(**self.training_config)
-                       .env_runners(num_env_runners=self.num_env_runners, rollout_fragment_length='auto',
-                                    num_envs_per_env_runner=1)
+                       .env_runners(create_env_on_local_worker=True, num_env_runners=self.num_env_runners,
+                                    rollout_fragment_length='auto', num_envs_per_env_runner=1)
                        .learners(num_learners=self.num_env_runners)
                        .debugging(log_level=self.log_level)
                        .framework(framework="torch")
                        .resources(num_gpus=int(os.environ.get("RLLIB_NUM_GPUS", "0")))
                        .reporting(min_sample_timesteps_per_iteration=720)
                        # .evaluation(
-                       #         evaluation_interval=2,
-                       #         evaluation_duration=5,
+                       #         evaluation_interval=1,
+                       #         evaluation_duration=1,
                        #         evaluation_force_reset_envs_before_iteration=True,
                        #         evaluation_num_env_runners=1,
                        #         evaluation_duration_unit="episodes",
-                       #         evaluation_parallel_to_training=True
+                       #         evaluation_parallel_to_training=False
                        #     )
-                       .callbacks(AverageWaitingTimeCallback)
+                       # .callbacks(AverageWaitingTimeCallback)
                        )
 
         if self.env_manager.sumo_type == self.MULTI_AGENT_ENV:
-            self.config.multi_agent(policies=self.env_manager.get_policies(),
+            policies = self.env_manager.get_policies()
+
+            for policy_key, policy_tuple in policies.items():
+                policy_cls, policy_obs, policy_act, policy_config = policy_tuple
+                policy_config = self.param_space
+
+                policies[policy_key] = PolicySpec(policy_class=policy_cls, observation_space=policy_obs, action_space=policy_act, config=policy_config)
+
+            self.config.multi_agent(policies=policies,
                                     policy_mapping_fn=self.env_manager.policy_mapping_fn)
 
         return self.config
@@ -152,18 +173,46 @@ class ALGOTrainer:
             **self.param_space
         }
 
+        # scaling_config = ScalingConfig(
+        #     num_workers=self.num_env_runners,
+        #     use_gpu=True,
+        #     resources_per_worker={"CPU": 1, "GPU": 1/self.num_env_runners},
+        #     accelerator_type="G"
+        # )
+
+        # ray_trainer = TorchTrainer(
+        #     train_loop_per_worker=self.train_func,
+        #     scaling_config=scaling_config,
+        #     run_config=run_config,
+        # )
+
+        scheduler = ASHAScheduler(
+            metric="env_runners/episode_reward_mean",
+            mode="max",
+            grace_period=3,
+            reduction_factor=2,
+            # single num episodes >= grace_period
+            max_t=500
+        )
+
+        run_config = RunConfig(
+            storage_path=self.storage_path,
+            checkpoint_config=CheckpointConfig(
+                checkpoint_at_end=True,
+                checkpoint_frequency=self.checkpoint_freq,
+                checkpoint_score_attribute='env_runners/episode_reward_mean',
+                checkpoint_score_order="max"
+            ),
+            stop={'training_iteration': self.num_of_episodes * self.num_env_runners}
+        )
+
         tuner = tune.Tuner(
-            self.env_name,
+            self.algo_name,
             param_space=param_space,
-            run_config=air.RunConfig(
-                storage_path=self.storage_path,
-                checkpoint_config=air.CheckpointConfig(
-                    checkpoint_at_end=True,
-                    checkpoint_frequency=self.checkpoint_freq,
-                    checkpoint_score_attribute='env_runners/episode_reward_max',
-                    checkpoint_score_order="max"
-                ),
-                stop={'training_iteration': self.num_of_episodes * self.num_env_runners},
+            run_config=run_config,
+            tune_config=tune.TuneConfig(
+                scheduler=scheduler,
+                num_samples=3
             )
         )
 
@@ -185,32 +234,12 @@ class ALGOTrainer:
             return True
         return False
 
-    def convert_to_tune_calls(self, param):
+    def from_dict(self, config):
         """
-            Convert a dictionary of parameter specifications to Ray Tune search space calls.
+        Get the configuration for the training algorithm.
 
-            This function takes a dictionary where each key represents a parameter name and
-            each value is a dictionary specifying a Ray Tune function and its arguments. It
-            converts these specifications into the appropriate Ray Tune search space objects.
-
-            Args:
-                param (dict): A dictionary where keys are parameter names and values are dictionaries
-                              containing:
-                                - 'func' (str): The name of the Ray Tune function (e.g., 'tune.loguniform').
-                                - 'args' (list): A list of arguments to be passed to the Ray Tune function.
-
-            Returns:
-                dict: A dictionary where keys are the same parameter names and values are the corresponding
-                      Ray Tune search space objects.
+        Returns:
+            The configured algorithm configuration.
         """
-        param_space = {}
-        for key, value in param.items():
-            if value['func'] == 'tune.loguniform':
-                param_space[key] = tune.loguniform(*value['args'])
-            elif value['func'] == 'tune.uniform':
-                param_space[key] = tune.uniform(*value['args'])
-            elif value['func'] == 'tune.choice':
-                param_space[key] = tune.choice(*value['args'])
-            elif value['func'] == 'tune.randint':
-                param_space[key] = tune.randint(*value['args'])
-        return param_space
+        return self.ALGOConfig.from_dict(config_dict=config)
+

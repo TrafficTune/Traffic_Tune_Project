@@ -4,6 +4,7 @@ import os
 from pettingzoo.utils import conversions
 from ray.rllib.env.wrappers.pettingzoo_env import ParallelPettingZooEnv
 from sumo_rl.environment.env import SumoEnvironmentPZ
+import traci
 
 
 class EnvManager:
@@ -26,6 +27,7 @@ class EnvManager:
         self.env = None
         self.sumo_type = sumo_type
         self.storage_path = None
+        self.last_measure = 0
 
         # Load all configuration data from the specified configuration file
         with open(self.config_path, 'r') as f:
@@ -37,6 +39,9 @@ class EnvManager:
                 self.kwargs = config.get("kwargs")
                 break
 
+        net_path = self.kwargs["net_file"]
+        abspath = os.path.dirname(os.path.abspath(__file__))
+        self.kwargs["net_file"] = f"{abspath}/{net_path}"
         self._policies = {}
 
     def initialize_env(self, route: str, csv_file: str):
@@ -51,9 +56,6 @@ class EnvManager:
             dict: Updated kwargs for environment initialization.
         """
         kwargs = self.kwargs
-        net_path = kwargs["net_file"]
-        abspath = os.path.dirname(os.path.abspath(__file__))
-        kwargs["net_file"] = f"{abspath}/{net_path}"
         kwargs["route_file"] = route
         kwargs["out_csv_name"] = csv_file
         if self.sumo_type == "MultiAgentEnvironment":
@@ -181,3 +183,10 @@ class EnvManager:
             abspath = os.path.dirname(os.path.abspath(__file__))
             storage_path = f"{abspath}/{path_parts[0]}/{path_parts[1]}/{path_parts[2]}/saved_agent"
             return storage_path
+
+    def custom_waiting_time_reward(self, traffic_signal):
+        ts_wait = sum(traffic_signal.get_accumulated_waiting_time_per_lane()) / 100.0
+        throughput = traffic_signal.get_total_queued()
+        reward = (self.last_measure - ts_wait) + (throughput * 0.1)
+        self.last_measure = ts_wait
+        return reward
