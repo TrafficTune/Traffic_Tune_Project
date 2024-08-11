@@ -158,11 +158,38 @@ def plot_reward_from_json(json_file_path, title, cycle_index=-1):
         # Access the result of the specified cycle
         result_grid = json_results[cycle_index]
 
+        # Extract values
         values = result_grid["env_runners"]["hist_stats"]["episode_reward"]
-        # Print the custom metrics (optional)
-        print(values)
-        # Plotting the values
-        plt.plot(values, marker='o')
+        print(f"Original values: {values}")
+
+        # Ensure values is a NumPy array
+        values = np.array(values, dtype=np.float64)
+        print(f"Converted to NumPy array: {values}")
+
+        # Calculate IQR to identify outliers
+        Q1 = np.percentile(values, 35)
+        Q3 = np.percentile(values, 90)
+        IQR = Q3 - Q1
+        print(f"Q1: {Q1}, Q3: {Q3}, IQR: {IQR}")
+
+        # Define outlier boundaries
+        lower_bound = Q1 - 1.5 * IQR
+        upper_bound = Q3 + 1.5 * IQR
+        print(f"Lower bound: {lower_bound}, Upper bound: {upper_bound}")
+
+        # Identify outliers
+        outliers = values[(values < lower_bound) | (values > upper_bound)]
+        filtered_values = values[(values >= lower_bound) & (values <= upper_bound)]
+
+        # Print the outliers
+        if outliers.size > 0:
+            print("Outliers:")
+            print(outliers)
+        else:
+            print("No outliers found.")
+
+        # Plotting the filtered values
+        plt.plot(filtered_values, marker='o')
         plt.title(title)
         plt.xlabel('Episode number')
         plt.ylabel('Reward value')
@@ -199,7 +226,5 @@ def plot_episode_mean_return(csv_file_path, title):
 
 
 if __name__ == "__main__":
-    plot_episode_mean_return(csv_file_path="Outputs/Training/intersection_2/saved_agent/DQN_2024-07-31_11-36-26/DQN_DQN_f9812_00000_0_adam_epsilon=0.0000,gamma=0.9653,hiddens=128_128,lr=0.0002,n_step=3,target_network_update_freq=200,train_bat_2024-07-31_11-36-26/progress.csv"
-                             , title="Mean Return per Episode - DQN - Intersection 2_1")
-    plot_episode_mean_return(csv_file_path="Outputs/Training/intersection_2/saved_agent/DQN_2024-07-31_11-38-48/DQN_DQN_4e8f8_00000_0_adam_epsilon=0.0000,gamma=0.9561,hiddens=64_64,lr=0.0008,n_step=7,target_network_update_freq=1000,train_batc_2024-07-31_11-38-48/progress.csv"
-                             , title="Mean Return per Episode - DQN - Intersection 2_2")
+    plot_reward_from_json("/Users/eviat/Downloads/PPO_2_16/result-5.json", "Reward values for PPO - 1")
+
