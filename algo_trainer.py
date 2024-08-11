@@ -113,7 +113,7 @@ class ALGOTrainer:
         Returns:
             The configured algorithm configuration.
         """
-        ray.init(ignore_reinit_error=True, num_gpus=1)
+        ray.init(ignore_reinit_error=True)
 
         if flag:
             register_env(self.env_name, env_creator=self.env_creator)
@@ -211,7 +211,8 @@ class ALGOTrainer:
             param_space=param_space,
             run_config=run_config,
             tune_config=tune.TuneConfig(
-                scheduler=scheduler
+                scheduler=scheduler,
+                num_samples=3
             )
         )
 
