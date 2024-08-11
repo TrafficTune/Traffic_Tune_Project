@@ -65,7 +65,7 @@ class ALGOTrainer:
 
         # Initialize attributes from the configuration
         self.experiment_type = self.config["experiment_type"]
-        self.env_name = self.config["env_name"]
+        self.algo_name = self.config["algo_name"]
         self.log_level = self.config["log_level"]
         self.num_of_episodes = self.config["num_of_episodes"]
         self.checkpoint_freq = self.config["checkpoint_freq"]
@@ -116,13 +116,13 @@ class ALGOTrainer:
         ray.init(ignore_reinit_error=True)
 
         if flag:
-            register_env(self.env_name, env_creator=self.env_creator)
+            register_env(self.algo_name, env_creator=self.env_creator)
             return self.config
 
-        register_env(self.env_name, env_creator=self.env_creator)
+        register_env(self.algo_name, env_creator=self.env_creator)
 
         self.config = (self.ALGOConfig()
-                       .environment(env=self.env_name)
+                       .environment(env=self.algo_name)
                        .training(**self.training_config)
                        .env_runners(create_env_on_local_worker=True, num_env_runners=self.num_env_runners,
                                     rollout_fragment_length='auto', num_envs_per_env_runner=1)
@@ -207,7 +207,7 @@ class ALGOTrainer:
         )
 
         tuner = tune.Tuner(
-            self.env_name,
+            self.algo_name,
             param_space=param_space,
             run_config=run_config,
             tune_config=tune.TuneConfig(
@@ -243,27 +243,3 @@ class ALGOTrainer:
         """
         return self.ALGOConfig.from_dict(config_dict=config)
 
-    # def train_func(self, config):
-    #     # Initialize SUMO environment
-    #     env = self.env_creator
-    #
-    #     # Initialize the PPO trainer with the environment
-    #     trainer = PPO(env=env, config=config)
-    #
-    #     for i in range(config["num_epochs"]):
-    #         # Run a single iteration of training
-    #         result = trainer.train()
-    #
-    #         # Optionally save the model checkpoint
-    #         if i % config["checkpoint_frequency"] == 0:
-    #             checkpoint_dir = trainer.save()
-    #             print(f"Checkpoint saved at {checkpoint_dir}")
-    #
-    #         # Report training progress to Ray Tune
-    #         CLIReporter(
-    #             episode_reward_mean=result["episode_reward_mean"],
-    #             episode_len_mean=result["episode_len_mean"]
-    #         )
-    #
-    #     # Final save of the model
-    #     trainer.save()
