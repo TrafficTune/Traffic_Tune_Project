@@ -192,7 +192,7 @@ class ALGOTrainer:
             grace_period=3,
             reduction_factor=2,
             # single num episodes >= grace_period
-            max_t=self.num_of_episodes * self.num_env_runners
+            max_t=500
         )
 
         run_config = RunConfig(
