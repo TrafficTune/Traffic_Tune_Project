@@ -6,7 +6,7 @@ import csv
 from ray import tune
 
 
-def send_imessage(message, recipient):
+def send_imessage(message: str, recipient: str):
     """
     python script to send imessage when the training is done
     you can write in var message the message you want to send
@@ -24,7 +24,7 @@ def send_imessage(message, recipient):
     subprocess.run(['osascript', '-e', apple_script])
 
 
-def save_custom_metrics_to_csv(results_list, num_intersection, experiment_type, cycle_index=-1):
+def save_custom_metrics_to_csv(results_list: list, num_intersection: int, experiment_type: str, cycle_index=-1):
     """
     Saves the custom metrics from RLlib results to a CSV file.
 
@@ -57,7 +57,7 @@ def save_custom_metrics_to_csv(results_list, num_intersection, experiment_type, 
         print("No results available to save.")
 
 
-def save_result_from_json(json_file_path, num_intersection, experiment_type, cycle_index=-1):
+def save_result_from_json(json_file_path: str, num_intersection: int, experiment_type: str, cycle_index=-1):
     """
     Saves the custom metrics from RLlib results to a CSV file.
 
@@ -91,6 +91,36 @@ def save_result_from_json(json_file_path, num_intersection, experiment_type, cyc
 
 
 def extract_and_write_all_params():
+    """
+    Extract parameters from JSON files for different reinforcement learning algorithms and write them to CSV files.
+
+    This function walks through a directory structure, finds parameter files for PPO, DQN, and DDQN algorithms,
+    extracts relevant parameters, and writes them to separate CSV files for each algorithm.
+
+    The function performs the following steps:
+    1. Defines the base path and parameters to extract for each algorithm.
+    2. Walks through the directory structure to find 'params.json' files.
+    3. Extracts intersection number and date-time information from the file path.
+    4. Loads the full configuration from each 'params.json' file.
+    5. Determines the algorithm (PPO, DQN, or DDQN) based on the file path.
+    6. Extracts relevant parameters for the identified algorithm.
+    7. Organizes the extracted data into rows for each algorithm.
+    8. Sorts the rows by intersection number.
+    9. Writes the extracted parameters to separate CSV files for each algorithm.
+
+    The CSV files are saved in a 'params' subdirectory within the base path, with filenames like 'PPO_params.csv',
+    'DQN_params.csv', and 'DDQN_params.csv'.
+
+    Note:
+    - The function assumes a specific directory structure and naming convention for the parameter files.
+    - It handles potential errors during file processing and continues with the next file if an error occurs.
+    - The intersection numbers are extracted from directory names starting with 'intersection_'.
+    - The date-time information is extracted from directory names containing 'PPO_', 'DQN_', or 'DDQN_'.
+
+    Raises:
+        OSError: If there are issues creating the output directory or writing to files.
+        json.JSONDecodeError: If there are issues parsing the JSON files.
+    """
     base_path = 'Outputs/Training'
 
     # Define parameters to extract for each algorithm
@@ -200,24 +230,24 @@ def extract_and_write_all_params():
                 writer.writerows(rows)
 
 
-def convert_to_tune_calls(param):
+def convert_to_tune_calls(param: dict):
     """
-               Convert a dictionary of parameter specifications to Ray Tune search space calls.
+   Convert a dictionary of parameter specifications to Ray Tune search space calls.
 
-               This function takes a dictionary where each key represents a parameter name and
-               each value is a dictionary specifying a Ray Tune function and its arguments. It
-               converts these specifications into the appropriate Ray Tune search space objects.
+   This function takes a dictionary where each key represents a parameter name and
+   each value is a dictionary specifying a Ray Tune function and its arguments. It
+   converts these specifications into the appropriate Ray Tune search space objects.
 
-               Args:
-                   param (dict): A dictionary where keys are parameter names and values are dictionaries
-                                 containing:
-                                   - 'func' (str): The name of the Ray Tune function (e.g., 'tune.loguniform').
-                                   - 'args' (list): A list of arguments to be passed to the Ray Tune function.
+   Args:
+       param (dict): A dictionary where keys are parameter names and values are dictionaries
+                     containing:
+                       - 'func' (str): The name of the Ray Tune function (e.g., 'tune.loguniform').
+                       - 'args' (list): A list of arguments to be passed to the Ray Tune function.
 
-               Returns:
-                   dict: A dictionary where keys are the same parameter names and values are the corresponding
-                         Ray Tune search space objects.
-           """
+   Returns:
+       dict: A dictionary where keys are the same parameter names and values are the corresponding
+             Ray Tune search space objects.
+   """
     param_space = {}
     for key, value in param.items():
         if value['func'] == 'tune.loguniform':
