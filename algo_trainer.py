@@ -101,8 +101,13 @@ class ALGOTrainer:
         Build and return the configuration for the training algorithm.
 
         This method initializes Ray, registers the environment, and sets up the
-        configuration for the chosen algorithm (PPO or DQN).
+        configuration for the chosen algorithm (PPO | DQN | DDQN).
 
+        Args:
+            flag (bool): If True, returns the config immediately after registering the environment.
+                         Choose flag = true
+                         when you want to use the same config but with a different rou file.
+                         Used in cycle training after the first cycle
         Returns:
             The configured algorithm configuration.
         """
@@ -153,10 +158,10 @@ class ALGOTrainer:
         Execute the training process.
 
         This method sets up the tuner with the specified configuration and runs
-        the training process.
+        the training process using Ray Tune.
 
         Returns:
-            The results of the training process.
+            ExperimentAnalysis: The results of the training process.
         """
         base_config = self.config.to_dict()
 
@@ -164,19 +169,6 @@ class ALGOTrainer:
             **base_config,
             **self.param_space
         }
-
-        # scaling_config = ScalingConfig(
-        #     num_workers=self.num_env_runners,
-        #     use_gpu=True,
-        #     resources_per_worker={"CPU": 1, "GPU": 1/self.num_env_runners},
-        #     accelerator_type="G"
-        # )
-
-        # ray_trainer = TorchTrainer(
-        #     train_loop_per_worker=self.train_func,
-        #     scaling_config=scaling_config,
-        #     run_config=run_config,
-        # )
 
         scheduler = ASHAScheduler(
             metric="env_runners/episode_reward_mean",
