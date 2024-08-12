@@ -1,22 +1,16 @@
 import json
 import os
-import pickle
 from sumo_rl import SumoEnvironment
 import env_manager
 import ray
 import utils
-from ray.rllib.algorithms import PPOConfig, PPO
-from ray.rllib.algorithms import DQNConfig, DQN
-from ray.rllib.algorithms import AlgorithmConfig
+from ray.rllib.algorithms import PPOConfig
+from ray.rllib.algorithms import DQNConfig
 from ray import tune
 from ray.tune.registry import register_env
-from Logs import project_logger
-from callbacks import AverageWaitingTimeCallback
 from ray.tune.schedulers import ASHAScheduler
 from ray.rllib.policy.policy import PolicySpec
-from ray.rllib.algorithms.ppo import PPOTorchPolicy
-from ray.train import ScalingConfig, RunConfig, CheckpointConfig
-from ray.train.torch import TorchTrainer
+from ray.train import RunConfig, CheckpointConfig
 
 
 class ALGOTrainer:
@@ -43,7 +37,6 @@ class ALGOTrainer:
         Raises:
             ValueError: If the experiment_type and config_path do not match.
         """
-        self._logger = project_logger.ProjectLogger(self.__class__.__name__).setup_logger()
         self.env_manager = env_manager
         self.env = None
         self.config_path = config_path
@@ -139,7 +132,6 @@ class ALGOTrainer:
                        #         evaluation_duration_unit="episodes",
                        #         evaluation_parallel_to_training=False
                        #     )
-                       # .callbacks(AverageWaitingTimeCallback)
                        )
 
         if self.env_manager.sumo_type == self.MULTI_AGENT_ENV:

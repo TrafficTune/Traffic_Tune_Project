@@ -48,7 +48,7 @@ def analyze_episodes(num_intersection, num_episodes=8,
         min_waiting_time = min(episode_mean_waiting_times)
         min_episode = episode_mean_waiting_times.index(min_waiting_time) + 1  # +1 because episodes are 1-indexed
         print(f"\nEpisode with minimum waiting time: Episode {min_episode}")
-        print(f"Minimum waiting time: {min_waiting_time}")
+        print(f"Minimum waiting time: {min_waiting_time}\n")
     else:
         print("\nNo episodes were processed successfully.")
 
@@ -138,6 +138,7 @@ def plot_waiting_time(num_intersection, episode_number, path_to_episode="DQN_int
     # plot_waiting_time(base_path, episode_number)
 
 
+
 def plot_reward_from_json(json_file_path, title, cycle_index=-1):
     """
     Saves the custom metrics from RLlib results to a CSV file.
@@ -194,6 +195,7 @@ def plot_reward_from_json(json_file_path, title, cycle_index=-1):
         plt.xlabel('Episode number')
         plt.ylabel('Reward value')
         plt.grid(True)
+        plt.savefig(json_file_path.replace("result.json", f"{title}.png"))
         plt.show()
 
 

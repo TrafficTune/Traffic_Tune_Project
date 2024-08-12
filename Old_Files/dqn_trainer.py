@@ -197,7 +197,7 @@ if __name__ == "__main__":
 
     num_training_cycles = 1
     # Initialize the environment manager
-    manager = env_manager.EnvManager(f"SingleAgentEnvironment", "../env_config.json", json_id=f"intersection_{num_intersection}")
+    manager = env_manager.EnvManager(f"SingleAgentEnvironment", "../Config/env_config.json", json_id=f"intersection_{num_intersection}")
     generator = manager.env_generator(
         f"Nets/intersection_{num_intersection}/route_xml_path_intersection_{num_intersection}.txt",
         algo_name="ppo")
@@ -206,7 +206,7 @@ if __name__ == "__main__":
     rou, csv = next(generator)
     manager.initialize_env(rou, csv)
 
-    ppo_agent = ALGOTrainer(config_path="../dqn_config.json", env_manager=manager, experiment_type=experiment_type)
+    ppo_agent = ALGOTrainer(config_path="../Config/dqn_config.json", env_manager=manager, experiment_type=experiment_type)
 
     print(ppo_agent.experiment_type)
     print(ppo_agent.env_name)

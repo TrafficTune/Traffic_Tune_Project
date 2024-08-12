@@ -24,7 +24,7 @@
     "intersection_id": "intersection_2",
     "kwargs": {
       "net_file": "Nets/intersection_2/intersection_2.net.xml",
-      "use_gui": false,
+      "use_gui": true,
       "begin_time": 0,
       "num_seconds": 3600,
       "max_depart_delay": -1,
@@ -38,7 +38,7 @@
       "reward_fn": "diff-waiting-time",
       "sumo_seed": "random",
       "fixed_ts": false,
-      "sumo_warnings": false
+      "sumo_warnings": true
     }
   },
   {
