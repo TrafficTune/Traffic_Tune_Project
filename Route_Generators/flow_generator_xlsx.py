@@ -6,14 +6,21 @@ import os
 
 def add_vehicle_flows(original_xml_file_path: str, text_xml_file: str, inset_flows: list, hour: str) -> None:
     """
-    Add vehicle flows in an XML file and save a new copy with flows.
+    Add vehicle flows to an XML file and save a new copy with flows.
+
+    This function creates a new XML file with updated vehicle flows based on the original XML file.
+    It removes existing flows and adds new ones based on the provided data.
 
     Parameters:
     - original_xml_file_path (str): Path to the original XML file.
     - text_xml_file (str): Path to the text file where new XML paths are logged.
     - inset_flows (list): List of dictionaries containing flow information to insert.
-    - new_index (int): Index to append to the new XML file name.
-    - level (str): Difficulty level of the flows (e.g., easy, medium, hard, very_hard).
+    - hour (str): Hour identifier for the new file name.
+
+    Note:
+    - The function assumes the existence of a global 'intersection_num' variable.
+    - New XML files are named based on the hour and intersection number.
+    - The function creates necessary directories if they don't exist.
     """
     # Construct new file path based on level and index
     new_xml_file_path = original_xml_file_path.replace('.rou.xml', f'_{hour}.rou.xml')
@@ -52,7 +59,22 @@ def add_vehicle_flows(original_xml_file_path: str, text_xml_file: str, inset_flo
         f.write(f'{new_xml_file_path}\n')
 
 
-def create_flow_files(data_frame, intersection):
+def create_flow_files(data_frame):
+    """
+    Create flow files for each hour based on the provided DataFrame.
+
+    This function iterates through each row of the DataFrame, where each row represents an hour,
+    and creates flow files for that hour.
+
+    Parameters:
+    - data_frame (pd.DataFrame): DataFrame containing flow data for different hours and routes.
+    - intersection (int): Intersection number.
+
+    Note:
+    - The function assumes the existence of global variables 'xml_rou_path' and 'text_xml_path_file'.
+    - It skips columns named 'שעה' (hour) and any unnamed columns.
+    - The column names are used as route identifiers.
+    """
     for index, row in data_frame.iterrows():
         hour = str(row['שעה'])  # Replace 'שעה' with the actual column name for hours
         hour = hour.replace(":", "_").replace("-", "").replace("00", "")
@@ -75,22 +97,37 @@ def create_flow_files(data_frame, intersection):
         add_vehicle_flows(xml_rou_path, text_xml_path_file, flows, hour)
 
 
-for i in range(1, 7):
-    # Function to create flow files for each row
-    intersection_num = i
+xlsx_file_path = 'flow_hour_all.xlsx'
 
-    xlsx_file_path = 'Route_Generators/flow_hour_all.xlsx'
+abspath = os.path.dirname(os.path.abspath(__file__)).split('/Route_Generators')[0]
+
+for i in range(1, 7):
+    """
+    Process flow data for intersections 1 through 6.
+
+    This loop reads data from an Excel file for each intersection, creates necessary file paths,
+    and generates flow files for each hour of data.
+
+    Note:
+    - The Excel file 'flow_hour_all.xlsx' is expected to have sheets named 'intersection_1' through 'intersection_6'.
+    - XML and text files are created or overwritten in the specified paths.
+    """
+    intersection_num = i
 
     sheet_name = f'intersection_{intersection_num}'
 
     df = pd.read_excel(xlsx_file_path, sheet_name=sheet_name)
 
-    xml_rou_path = (f"Nets/intersection_{intersection_num}"
+    xml_rou_path = (f"{abspath}/Nets/intersection_{intersection_num}"
                     f"/routes_{intersection_num}/intersection_{intersection_num}.rou.xml")
-    text_xml_path_file = f'Nets/intersection_{intersection_num}/route_xml_path_intersection_{intersection_num}_hour.txt'
+
+    print(xml_rou_path)
+    text_xml_path_file = f'{abspath}/Nets/intersection_{intersection_num}/route_xml_path_intersection_{intersection_num}_hour.txt'
+    print(text_xml_path_file)
+
     if os.path.exists(text_xml_path_file):
         os.remove(text_xml_path_file)
-    create_flow_files(df, intersection_num)
+    create_flow_files(df)
 
 print("Done!")
 
