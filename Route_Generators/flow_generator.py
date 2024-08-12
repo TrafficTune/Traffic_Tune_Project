@@ -126,8 +126,8 @@ abspath = os.path.dirname(os.path.abspath(__file__)).split('/Route_Generators')[
 for j in range(1, 7):
     # Initialize variables and paths
     num_of_intersection = j
-    xml_file_path = f'{abspath}/Nets/intersection_{num_of_intersection}/routes_{num_of_intersection}/intersection_{num_of_intersection}.rou.xml'
-    text_xml_path_file = f'{abspath}/Nets/intersection_{num_of_intersection}/route_xml_path_intersection_{num_of_intersection}.txt'
+    xml_file_path = f'../Nets/intersection_{num_of_intersection}/routes_{num_of_intersection}/intersection_{num_of_intersection}.rou.xml'
+    text_xml_path_file = f'../Nets/intersection_{num_of_intersection}/route_xml_path_intersection_{num_of_intersection}.txt'
     if os.path.exists(text_xml_path_file):
         os.remove(text_xml_path_file)
 
