@@ -189,7 +189,7 @@ def generate_pdf_report(min_file_name, progress_csv_file, json_file, episode_num
             overall_mean = csv_df["system_mean_waiting_time"].mean()
             plt.plot(csv_df.index, csv_df["system_mean_waiting_time"], label='Waiting Time', color='#2b8cbe')
             plt.axhline(y=overall_mean, color='r', linestyle='--', label=f'Overall Mean ({overall_mean:.2f})')
-            plt.title("Mean Waiting Times for All Episodes", fontsize=24)
+            plt.title("Episode With The Best Waiting Time", fontsize=24)
             plt.xlabel("Time Step", fontsize=14)
             plt.ylabel("Mean Waiting Time", fontsize=14)
             plt.grid(True)
