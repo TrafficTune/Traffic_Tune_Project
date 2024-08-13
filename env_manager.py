@@ -139,6 +139,7 @@ class EnvManager:
         """
         with open(rou_path, 'r') as rou_file:
             for rou_line in rou_file:
+                rou_line = rou_line.replace('../', '')
                 unique_id = datetime.now().strftime("%m.%d-%H:%M:%S")
                 csv_output_path = self.generate_csv_output_path(rou_line.strip(), unique_id, algo_name)
                 yield rou_line.strip(), csv_output_path
@@ -158,8 +159,8 @@ class EnvManager:
         Raises:
             ValueError: If the route file path is invalid.
         """
-        if rou_line.startswith('../Nets/'):
-            base_output = rou_line.replace('../Nets/', 'Outputs/Training/', 1)
+        if rou_line.startswith('Nets/'):
+            base_output = rou_line.replace('Nets/', 'Outputs/Training/', 1)
             path_parts = base_output.split('/')
             rou_id = path_parts[4].split('.')
             csv_output_path = f"{path_parts[0]}/{path_parts[1]}/{path_parts[2]}/experiments/{algo_name}_{rou_id[0]}_{unique_id}"
