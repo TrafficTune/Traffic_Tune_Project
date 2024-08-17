@@ -54,25 +54,6 @@ def analyze_episodes(num_intersection, num_episodes=8,
 
     return min_episode, overall_mean, overall_std
 
-# You can add more functions here if needed
-# main.py
-
-# from episode_analysis import analyze_episodes
-#
-# # Base path for the CSV files
-# base_path = "Outputs/Training/intersection_4/experiments/"
-#
-# # Call the function
-# mean_waiting_times, overall_mean, overall_std = analyze_episodes(base_path, file_pattern="DQN_intersection_4_random_easy_1_07.29-13:05:23_conn0_ep{}.csv")
-#
-# # You can now use these returned values for further analysis or visualization if needed
-# print(f"Returned mean waiting times: {mean_waiting_times}")
-# print(f"Returned overall mean: {overall_mean}")
-# print(f"Returned overall standard deviation: {overall_std}")
-
-
-# plot_waiting_time.py
-
 
 def plot_waiting_time(num_intersection, episode_number, path_to_episode="DQN_intersection_4_random_easy_1_07.29-13:05:23_conn0_ep{}.csv"):
     """
@@ -86,7 +67,6 @@ def plot_waiting_time(num_intersection, episode_number, path_to_episode="DQN_int
     - None: Displays or saves the plot.
     """
     # Construct the filename for the chosen episode
-
     base_path = f"Outputs/Training/intersection_{num_intersection}/experiments/"
     full_path = os.path.join(base_path, path_to_episode.format(episode_number))
 
@@ -118,25 +98,8 @@ def plot_waiting_time(num_intersection, episode_number, path_to_episode="DQN_int
         plt.tight_layout()
         plt.show()
 
-        # If you want to save the plot instead of showing it:
-        # plt.savefig(f"episode_{episode_number}_waiting_time.png")
-        # plt.close()
     else:
         print(f"File for episode {episode_number} not found: {full_path}")
-
-    # # main_script.py
-    #
-    # from vm import plot_waiting_time
-    #
-    # # Base path for the CSV files
-    # base_path = "/Users/md/Desktop/Traffic_Tune_Project/Outputs/Training/intersection_4/experiments/"
-    #
-    # # Choose an episode number
-    # episode_number = 7  # You can change this to any episode number you want to plot
-    #
-    # # Call the function to plot the waiting time
-    # plot_waiting_time(base_path, episode_number)
-
 
 
 def plot_reward_from_json(json_file_path, title, cycle_index=-1):
@@ -156,47 +119,128 @@ def plot_reward_from_json(json_file_path, title, cycle_index=-1):
         json_results = [json.loads(line) for line in file]
 
     if json_results:
-        # Access the result of the specified cycle
         result_grid = json_results[cycle_index]
-
-        # Extract values
         values = result_grid["env_runners"]["hist_stats"]["episode_reward"]
-        print(f"Original values: {values}")
-
-        # Ensure values is a NumPy array
-        values = np.array(values, dtype=np.float64)
-        print(f"Converted to NumPy array: {values}")
-
-        # Calculate IQR to identify outliers
-        Q1 = np.percentile(values, 35)
-        Q3 = np.percentile(values, 90)
-        IQR = Q3 - Q1
-        print(f"Q1: {Q1}, Q3: {Q3}, IQR: {IQR}")
-
-        # Define outlier boundaries
-        lower_bound = Q1 - 1.5 * IQR
-        upper_bound = Q3 + 1.5 * IQR
-        print(f"Lower bound: {lower_bound}, Upper bound: {upper_bound}")
-
-        # Identify outliers
-        outliers = values[(values < lower_bound) | (values > upper_bound)]
-        filtered_values = values[(values >= lower_bound) & (values <= upper_bound)]
-
-        # Print the outliers
-        if outliers.size > 0:
-            print("Outliers:")
-            print(outliers)
-        else:
-            print("No outliers found.")
-
-        # Plotting the filtered values
-        plt.plot(filtered_values, marker='o')
-        plt.title(title)
-        plt.xlabel('Episode number')
-        plt.ylabel('Reward value')
+        plt.figure(figsize=(12, 6))
+        plt.plot(values, marker='o', linestyle='-', color='#31a354')
+        plt.title("Reward Over Episodes", fontsize=24)
+        plt.xlabel('Episode number', fontsize=14)
+        plt.ylabel('Reward value', fontsize=14)
         plt.grid(True)
-        plt.savefig(json_file_path.replace("result.json", f"{title}.png"))
         plt.show()
+
+
+import json
+import matplotlib.pyplot as plt
+import numpy as np
+
+def plot_rewards_intersection_algo(json_file_paths, title, cycle_index=-1, num_intersection=1):
+    """
+    Plots the custom metrics from RLlib results from multiple JSON files.
+
+    Parameters:
+    - json_file_paths (list): A list of paths to the JSON files containing RLlib training results.
+    - title (str): The title of the plot.
+    - cycle_index (int): The index of the cycle in the results, default is -1 for the last cycle.
+
+    Returns:
+    - None
+    """
+    colors = ['#31a354', '#3182bd', '#e6550d', '#756bb1', '#636363']  # Green, Blue, Orange, Purple, Gray
+    plt.figure(figsize=(12, 6))
+
+    for i, json_file_path in enumerate(json_file_paths):
+        with open(json_file_path, "r") as file:
+            json_results = [json.loads(line) for line in file]
+        label = json_file_path.split("/")[-2]
+
+        if json_results:
+            # Access the result of the specified cycle
+            result_grid = json_results[cycle_index]
+
+            # Extract values
+            values = result_grid["env_runners"]["hist_stats"]["episode_reward"]
+            print(f"Original values for {json_file_path}: {values}")
+
+            # Ensure values is a NumPy array
+            values = np.array(values, dtype=np.float64)
+            print(f"Converted to NumPy array: {values}")
+
+            # Calculate IQR to identify outliers
+            Q1 = np.percentile(values, 35)
+            Q3 = np.percentile(values, 90)
+            IQR = Q3 - Q1
+            print(f"Q1: {Q1}, Q3: {Q3}, IQR: {IQR}")
+
+            # Define outlier boundaries
+            lower_bound = Q1 - 1.5 * IQR
+            upper_bound = Q3 + 1.5 * IQR
+            print(f"Lower bound: {lower_bound}, Upper bound: {upper_bound}")
+
+            # Identify outliers
+            outliers = values[(values < lower_bound) | (values > upper_bound)]
+            filtered_values = values[(values >= lower_bound) & (values <= upper_bound)]
+
+            # Print the outliers
+            if outliers.size > 0:
+                print(f"Outliers for {json_file_path}:")
+                print(outliers)
+            else:
+                print(f"No outliers found for {json_file_path}.")
+
+            if "7" in json_file_path:
+                # Plotting the filtered values with a different color for each file
+                plt.plot(filtered_values, marker='o', color=colors[i % len(colors)], label=label)
+            else:
+                plt.plot(values, marker='o', linestyle='-', color=colors[i % len(colors)], label=label)
+
+    plt.title(title)
+    plt.xlabel('Episode number')
+    plt.ylabel('Reward value')
+    plt.legend()
+    plt.grid(True)
+    plt.savefig(f"{title}.png")
+    plt.show()
+
+
+def plot_rewards_from_multiple_jsons(json_file_paths, title, cycle_index=-1):
+    """
+    Plots the custom metrics from RLlib results from multiple JSON files in a 2x3 grid.
+
+    Parameters:
+    - json_file_paths (list): A list of 6 paths to the JSON files containing RLlib training results.
+    - title (str): The title of the overall figure.
+    - cycle_index (int): The index of the cycle in the results, default is -1 for the last cycle.
+
+    Returns:
+    - None
+    """
+    assert len(json_file_paths) == 6, "You must provide exactly 6 JSON file paths."
+
+    fig, axes = plt.subplots(2, 3, figsize=(18, 10))
+    axes = axes.flatten()  # Flatten to make it easier to iterate over
+
+    colors = ['#31a354', '#3182bd', '#e6550d', '#756bb1', '#636363', '#fdae6b']  # A list of colors for each plot
+
+    for i, json_file_path in enumerate(json_file_paths):
+        with open(json_file_path, "r") as file:
+            json_results = [json.loads(line) for line in file]
+
+        if json_results:
+            result_grid = json_results[cycle_index]
+            values = result_grid["env_runners"]["hist_stats"]["episode_reward"]
+
+            ax = axes[i]
+            ax.plot(values, marker='o', linestyle='-', color=colors[i])
+            ax.set_title(f"Intersection {i + 1}", fontsize=16)
+            ax.set_xlabel('Episode number', fontsize=10)
+            ax.set_ylabel('Reward value', fontsize=10)
+            ax.grid(True)
+
+    plt.suptitle(title, fontsize=24)
+    plt.subplots_adjust(wspace=0.3, hspace=0.4)  # Increase the space between plots
+    plt.savefig(f"{title}.png")
+    plt.show()
 
 
 def plot_episode_mean_return(csv_file_path, title):
@@ -227,6 +271,76 @@ def plot_episode_mean_return(csv_file_path, title):
     plt.show()
 
 
-if __name__ == "__main__":
-    plot_reward_from_json("/Users/eviat/Downloads/PPO_2_16/result-5.json", "Reward values for PPO - 1")
+def create_param_table(json_files_2):
+    rows = []
 
+    for i, file_path in enumerate(json_files_2, start=1):
+        with open(file_path, 'r') as f:
+            data = json.load(f)
+
+        if "DQN" in file_path:
+            # Columns for DQN
+            columns = ["Single Intersection", "lr", "gamma", "train batch size",
+                       "target network update freq", "hiddens", "n step", "adam_epsilon"]
+
+            # Extract DQN parameters
+            lr = data.get("lr", None)
+            gamma = data.get("gamma", None)
+            train_batch_size = data.get("train_batch_size", None)
+            target_network_update_freq = data.get("target_network_update_freq", None)
+            hiddens = data.get("hiddens", None)
+            n_step = data.get("n_step", None)
+            adam_epsilon = data.get("adam_epsilon", None)
+
+            # Add the row for DQN
+            rows.append({
+                "Single Intersection": i,
+                "lr": lr,
+                "gamma": gamma,
+                "train batch size": train_batch_size,
+                "target network update freq": target_network_update_freq,
+                "hiddens": hiddens,
+                "n step": n_step,
+                "adam_epsilon": adam_epsilon
+            })
+
+        elif "PPO" in file_path:
+            # Columns for PPO
+            columns = ["Single Intersection", "lr", "gamma", "num_sgd_iter",
+                       "lambda_", "clip_param", "vf_loss_coeff", "grad_clip", "entropy_coeff"]
+
+            # Extract PPO parameters
+            lr = data.get("lr", None)
+            gamma = data.get("gamma", None)
+            num_sgd_iter = data.get("num_sgd_iter", None)
+            lambda_ = data.get("lambda_",None)
+            clip_param = data.get("clip_param", None)
+            vf_loss_coeff = data.get("vf_loss_coeff", None)
+            grad_clip = data.get("grad_clip", None)
+            entropy_coeff = data.get("entropy_coeff", None)
+
+            # Add the row for PPO
+            rows.append({
+                "Single Intersection": i,
+                "lr": lr,
+                "gamma": gamma,
+                "num_sgd_iter": num_sgd_iter,
+                "lambda_": lambda_,
+                "clip_param": clip_param,
+                "vf_loss_coeff": vf_loss_coeff,
+                "grad_clip": grad_clip,
+                "entropy_coeff": entropy_coeff
+            })
+
+    # Convert the list of rows into a DataFrame
+    df = pd.DataFrame(rows, columns=columns)
+
+    return df
+
+
+if __name__ == "__main__":
+    json_list = []
+    algo_name = "PPO"
+
+    # for intersection in range(1, 7):
+    #     json_list.append(f"/Users/eviat/Desktop/Final_Project/training_best_result/intersection_{intersection}/{algo_name}/params.json")
