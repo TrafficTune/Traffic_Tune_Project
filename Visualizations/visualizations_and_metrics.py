@@ -130,10 +130,6 @@ def plot_reward_from_json(json_file_path, title, cycle_index=-1):
         plt.show()
 
 
-import json
-import matplotlib.pyplot as plt
-import numpy as np
-
 def plot_rewards_intersection_algo(json_file_paths, title, cycle_index=-1, num_intersection=1):
     """
     Plots the custom metrics from RLlib results from multiple JSON files.
@@ -271,13 +267,71 @@ def plot_episode_mean_return(csv_file_path, title):
     plt.show()
 
 
-def create_param_table(json_files_2):
+def create_param_table(json_files_2, flag=False):
     rows = []
 
     for i, file_path in enumerate(json_files_2, start=1):
         with open(file_path, 'r') as f:
             data = json.load(f)
+    if (flag):
+        policies = data.get("policies", None)
+        if "DQN" in file_path:
+            # Columns for DQN
+            columns = ["Intersection", "lr", "gamma", "train batch size",
+                       "target network update freq", "hiddens", "n step", "adam_epsilon"]
+            for policy in policies:
+                # Extract DQN parameters
+                intersection = policy.split("_")[1]
+                lr = policies[policy][3].get("lr", None)
+                gamma = policies[policy][3].get("gamma", None)
+                train_batch_size = policies[policy][3].get("train_batch_size", None)
+                target_network_update_freq = policies[policy][3].get("target_network_update_freq", None)
+                hiddens = policies[policy][3].get("hiddens", None)
+                n_step = policies[policy][3].get("n_step", None)
+                adam_epsilon = policies[policy][3].get("adam_epsilon", None)
 
+                # Add the row for DQN
+                rows.append({
+                    "Intersection": f"intersection_{intersection}",
+                    "lr": lr,
+                    "gamma": gamma,
+                    "train batch size": train_batch_size,
+                    "target network update freq": target_network_update_freq,
+                    "hiddens": hiddens,
+                    "n step": n_step,
+                    "adam_epsilon": adam_epsilon
+                })
+
+        elif "PPO" in file_path:
+            # Columns for PPO
+            columns = ["Intersection", "lr", "gamma", "num_sgd_iter",
+                       "lambda_", "clip_param", "vf_loss_coeff", "grad_clip", "entropy_coeff"]
+            for policy in policies:
+                # Extract PPO parameters
+                intersection = policy.split("_")[1]
+                lr = policies[policy][3].get("lr", None)
+                gamma = policies[policy][3].get("gamma", None)
+                num_sgd_iter = policies[policy][3].get("num_sgd_iter", None)
+                lambda_ = policies[policy][3].get("lambda_",None)
+                clip_param = policies[policy][3].get("clip_param", None)
+                vf_loss_coeff = policies[policy][3].get("vf_loss_coeff", None)
+                grad_clip = policies[policy][3].get("grad_clip", None)
+                entropy_coeff = policies[policy][3].get("entropy_coeff", None)
+
+                # Add the row for PPO
+                rows.append({
+                    "Intersection": f"intersection_{intersection}",
+                    "lr": lr,
+                    "gamma": gamma,
+                    "num_sgd_iter": num_sgd_iter,
+                    "lambda_": lambda_,
+                    "clip_param": clip_param,
+                    "vf_loss_coeff": vf_loss_coeff,
+                    "grad_clip": grad_clip,
+                    "entropy_coeff": entropy_coeff
+                })
+
+    else:
         if "DQN" in file_path:
             # Columns for DQN
             columns = ["Single Intersection", "lr", "gamma", "train batch size",
@@ -339,8 +393,31 @@ def create_param_table(json_files_2):
 
 
 if __name__ == "__main__":
-    json_list = []
-    algo_name = "PPO"
+    algo_list = ["DDQN" ,"DQN" ,"PPO"]
+    # # plot rewards for all intersections
+    for algo_name in algo_list:
+        json_list = []
+        for intersection in range(1, 7):
+            json_list.append(f"/Users/eviat/Desktop/Final_Project/Training_2/intersection_{intersection}/{algo_name}/result_{algo_name}.json")
+        plot_rewards_from_multiple_jsons(json_list, f"{algo_name} - Single Intersections")
 
-    # for intersection in range(1, 7):
-    #     json_list.append(f"/Users/eviat/Desktop/Final_Project/training_best_result/intersection_{intersection}/{algo_name}/params.json")
+    # # plot rewards for a single intersection
+    # json_list = []
+    # for intersection in range(6, 7):
+    #     for algo_name in algo_list:
+    #         json_list.append(f"/Users/eviat/Desktop/Final_Project/Training_2/intersection_{intersection}/{algo_name}/result_{algo_name}.json")
+    #     plot_rewards_intersection_algo(json_list, f"Reward Over Episodes - Intersection {intersection}")
+    #     json_list = []
+
+    # # param space to exel
+    # for algo_name in algo_list:
+    #     json_list = []
+    #     for intersection in range(1, 7):
+    #         json_list.append(f"/Users/eviat/Desktop/Final_Project/Training_2/intersection_{intersection}/{algo_name}/params.json")
+    #     create_param_table(json_list).to_excel(f"{algo_name}_params.xlsx", index=False)
+
+    # multi-agent param space to exel
+    # for algo_name in algo_list:
+    #     json_list = []
+    #     json_list.append(f"/Users/eviat/Desktop/Final_Project/Training_2/intersection_7/{algo_name}/params.json")
+    #     create_param_table(json_list, True).to_excel(f"{algo_name}_multi_params.xlsx", index=False)
