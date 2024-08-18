@@ -68,12 +68,20 @@ def set_custom_style():
 # Function to extract key from filename
 def extract_key_from_filename(filename):
     parts = filename.split("_")
-    if len(parts) == 8:
-        level = f"{parts[3]}_{parts[4]}"
+    level = "Default"
+    if len(parts) == 7:
+        level = f"{parts[2]}_{parts[3]}"
+    elif len(parts) == 8:
+        if parts[2] != "random":
+            level = f"Hour {parts[2]}-{parts[3]}"
+        else:
+            level = f"{parts[2]}_{parts[3]}_{parts[4]}"
     elif len(parts) == 9:
-        level = f"{parts[3]}_{parts[4]}_{parts[5]}"
+        level = f"{parts[2]}_{parts[3]}_{parts[4]}_{parts[5]}"
+
     episode = parts[-1].split("ep")[1].split(".")[0]
-    return f"{level}_{episode}"
+
+    return f"{episode} in {level} Route file "
 
 
 # Function to analyze episodes
