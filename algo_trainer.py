@@ -4,8 +4,7 @@ from sumo_rl import SumoEnvironment
 import env_manager
 import ray
 import utils
-from ray.rllib.algorithms import PPOConfig
-from ray.rllib.algorithms import DQNConfig
+from ray.rllib.algorithms import PPOConfig, DQNConfig, APPOConfig
 from ray import tune
 from ray.tune.registry import register_env
 from ray.tune.schedulers import ASHAScheduler
@@ -64,13 +63,16 @@ class ALGOTrainer:
         self.checkpoint_freq = self.config["checkpoint_freq"]
         self.num_env_runners = self.config["num_env_runners"]
         self.training_config = self.config["config"]
+        self.rollout_fragment_length = self.config.get("rollout_fragment_length", "auto")
 
         self.param_space = utils.convert_to_tune_calls(self.config["param_space"])
         self.storage_path = self.env_manager.storage_path
         self.kwargs = None
 
         # Set the algorithm configuration class based on the experiment type
-        self.ALGOConfig = PPOConfig if "PPO" in self.experiment_type else DQNConfig
+        self.ALGOConfig = (PPOConfig if "PPO" in self.experiment_type else
+                           APPOConfig if "APPO" in self.experiment_type else
+                           DQNConfig)
 
     def env_creator(self, env_config):
         """
@@ -123,7 +125,7 @@ class ALGOTrainer:
                        .environment(env=self.algo_name)
                        .training(**self.training_config)
                        .env_runners(create_env_on_local_worker=True, num_env_runners=self.num_env_runners,
-                                    rollout_fragment_length='auto', num_envs_per_env_runner=1)
+                                    rollout_fragment_length=self.rollout_fragment_length, num_envs_per_env_runner=1)
                        .learners(num_learners=self.num_env_runners)
                        .debugging(log_level=self.log_level)
                        .framework(framework="torch")
@@ -214,7 +216,9 @@ class ALGOTrainer:
         Returns:
             bool: True if the experiment type matches the config path, False otherwise.
         """
-        if ("PPO" in experiment_type and "ppo" in config_path) or ("DQN" in experiment_type and "dqn" in config_path):
+        if (("PPO" in experiment_type and "ppo" in config_path) or
+                ("APPO" in experiment_type and "appo" in config_path) or
+                ("DQN" in experiment_type and "dqn" in config_path)):
             return True
         return False
 
