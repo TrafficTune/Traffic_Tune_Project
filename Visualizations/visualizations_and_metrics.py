@@ -305,7 +305,7 @@ def create_param_table(json_files_2, flag=False):
         elif "PPO" in file_path:
             # Columns for PPO
             columns = ["Intersection", "lr", "gamma", "num_sgd_iter",
-                       "lambda_", "clip_param", "vf_loss_coeff", "grad_clip", "entropy_coeff"]
+                       "lambda_", "clip_param", "vf_loss_coeff", "grad_clip", "entropy_coeff", "kl_coeff", "kl_target"]
             for policy in policies:
                 # Extract PPO parameters
                 intersection = policy.split("_")[1]
@@ -317,6 +317,8 @@ def create_param_table(json_files_2, flag=False):
                 vf_loss_coeff = policies[policy][3].get("vf_loss_coeff", None)
                 grad_clip = policies[policy][3].get("grad_clip", None)
                 entropy_coeff = policies[policy][3].get("entropy_coeff", None)
+                kl_coeff = policies[policy][3].get("kl_coeff", None)
+                kl_target = policies[policy][3].get("kl_target", None)
 
                 # Add the row for PPO
                 rows.append({
@@ -328,7 +330,9 @@ def create_param_table(json_files_2, flag=False):
                     "clip_param": clip_param,
                     "vf_loss_coeff": vf_loss_coeff,
                     "grad_clip": grad_clip,
-                    "entropy_coeff": entropy_coeff
+                    "entropy_coeff": entropy_coeff,
+                    "kl_coeff": kl_coeff,
+                    "kl_target": kl_target
                 })
 
     else:
@@ -393,31 +397,31 @@ def create_param_table(json_files_2, flag=False):
 
 
 if __name__ == "__main__":
-    algo_list = ["DDQN" ,"DQN" ,"PPO"]
+    algo_list = ["DDQN" ,"DQN" ,"PPO", "APPO"]
     # # plot rewards for all intersections
-    for algo_name in algo_list:
-        json_list = []
-        for intersection in range(1, 7):
-            json_list.append(f"/Users/eviat/Desktop/Final_Project/Training_2/intersection_{intersection}/{algo_name}/result_{algo_name}.json")
-        plot_rewards_from_multiple_jsons(json_list, f"{algo_name} - Single Intersections")
-
-    # # plot rewards for a single intersection
-    # json_list = []
-    # for intersection in range(6, 7):
-    #     for algo_name in algo_list:
-    #         json_list.append(f"/Users/eviat/Desktop/Final_Project/Training_2/intersection_{intersection}/{algo_name}/result_{algo_name}.json")
-    #     plot_rewards_intersection_algo(json_list, f"Reward Over Episodes - Intersection {intersection}")
-    #     json_list = []
-
-    # # param space to exel
     # for algo_name in algo_list:
     #     json_list = []
     #     for intersection in range(1, 7):
-    #         json_list.append(f"/Users/eviat/Desktop/Final_Project/Training_2/intersection_{intersection}/{algo_name}/params.json")
-    #     create_param_table(json_list).to_excel(f"{algo_name}_params.xlsx", index=False)
+    #         json_list.append(f"/Users/eviat/Desktop/Final_Project/Training/Training_2/intersection_{intersection}/{algo_name}/result_{algo_name}.json")
+    #     plot_rewards_from_multiple_jsons(json_list, f"{algo_name} - Single Intersections")
+
+    # plot rewards for a single intersection
+    # json_list = []
+    # for intersection in range(7, 8):
+    #     for algo_name in algo_list:
+    #         json_list.append(f"/Users/eviat/Desktop/Final_Project/Training/Training_2/intersection_{intersection}/{algo_name}/result_{algo_name}.json")
+    #     plot_rewards_intersection_algo(json_list, f"Reward Over Episodes - Intersection {intersection}")
+    #     json_list = []
+
+    # param space to exel
+    for algo_name in algo_list:
+        json_list = []
+        for intersection in range(7, 8):
+            json_list.append(f"/Users/eviat/Desktop/Final_Project/Training/Training_2/intersection_{intersection}/{algo_name}/params.json")
+        create_param_table(json_list, flag=True).to_excel(f"{algo_name}_params.xlsx", index=False)
 
     # multi-agent param space to exel
     # for algo_name in algo_list:
     #     json_list = []
-    #     json_list.append(f"/Users/eviat/Desktop/Final_Project/Training_2/intersection_7/{algo_name}/params.json")
+    #     json_list.append(f"/Users/eviat/Desktop/Final_Project/Training/Training_2/intersection_7/{algo_name}/params.json")
     #     create_param_table(json_list, True).to_excel(f"{algo_name}_multi_params.xlsx", index=False)
