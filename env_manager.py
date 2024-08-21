@@ -4,7 +4,6 @@ import os
 from pettingzoo.utils import conversions
 from ray.rllib.env.wrappers.pettingzoo_env import ParallelPettingZooEnv
 from sumo_rl.environment.env import SumoEnvironmentPZ
-import traci
 
 
 class EnvManager:
@@ -140,6 +139,7 @@ class EnvManager:
         """
         with open(rou_path, 'r') as rou_file:
             for rou_line in rou_file:
+                rou_line = rou_line.replace('../', '')
                 unique_id = datetime.now().strftime("%m.%d-%H:%M:%S")
                 csv_output_path = self.generate_csv_output_path(rou_line.strip(), unique_id, algo_name)
                 yield rou_line.strip(), csv_output_path
@@ -163,7 +163,7 @@ class EnvManager:
             base_output = rou_line.replace('Nets/', 'Outputs/Training/', 1)
             path_parts = base_output.split('/')
             rou_id = path_parts[4].split('.')
-            csv_output_path = f"{path_parts[0]}/{path_parts[1]}/{path_parts[2]}/experiments/{algo_name}_{rou_id[0]}_{unique_id}"
+            csv_output_path = f"{path_parts[0]}/{path_parts[1]}/{path_parts[2]}/experiments/{algo_name}/{rou_id[0]}_{unique_id}"
             return csv_output_path
         else:
             raise ValueError("Invalid route file path")
@@ -185,6 +185,24 @@ class EnvManager:
             return storage_path
 
     def custom_waiting_time_reward(self, traffic_signal):
+        """
+        Calculate a custom reward based on waiting time and throughput for a traffic signal.
+
+        This function computes a reward that considers both the change in accumulated waiting time
+        and the total number of vehicles queued at the traffic signal.
+
+        Args:
+            traffic_signal: The traffic signal object containing information about waiting times and queued vehicles.
+
+        Returns:
+            float: The calculated reward value.
+
+        Note:
+            - The waiting time is normalized by dividing by 100.0.
+            - The throughput (total queued vehicles) is weighted by a factor of 0.1.
+            - The reward is positive if waiting time decreases or throughput increases.
+            - The function updates `self.last_measure` for use in the next reward calculation.
+        """
         ts_wait = sum(traffic_signal.get_accumulated_waiting_time_per_lane()) / 100.0
         throughput = traffic_signal.get_total_queued()
         reward = (self.last_measure - ts_wait) + (throughput * 0.1)

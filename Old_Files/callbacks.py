@@ -3,7 +3,7 @@ import logging
 from ray.rllib.algorithms.callbacks import DefaultCallbacks
 
 # Configure logging
-logging.basicConfig(filename='waiting_times.log', level=logging.INFO,
+logging.basicConfig(filename='../Logs/waiting_times.log', level=logging.INFO,
                     format='%(asctime)s - %(levelname)s - %(message)s')
 
 

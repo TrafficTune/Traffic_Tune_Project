@@ -120,12 +120,14 @@ def random_flows(routes: list, high: float) -> list:
     return flows
 
 
+abspath = os.path.dirname(os.path.abspath(__file__)).split('/Route_Generators')[0]
+
 # Generate and update flows for 100 files with varying difficulty levels
-for j in range(1, 8):
+for j in range(1, 7):
     # Initialize variables and paths
     num_of_intersection = j
-    xml_file_path = f'Nets/intersection_{num_of_intersection}/routes_{num_of_intersection}/intersection_{num_of_intersection}.rou.xml'
-    text_xml_path_file = f'Nets/intersection_{num_of_intersection}/route_xml_path_intersection_{num_of_intersection}.txt'
+    xml_file_path = f'../Nets/intersection_{num_of_intersection}/routes_{num_of_intersection}/intersection_{num_of_intersection}.rou.xml'
+    text_xml_path_file = f'../Nets/intersection_{num_of_intersection}/route_xml_path_intersection_{num_of_intersection}.txt'
     if os.path.exists(text_xml_path_file):
         os.remove(text_xml_path_file)
 

@@ -1,0 +1,63 @@
+[
+  {
+    "experiment_type": "APPO_SingleAgent",
+    "algo_name": "APPO",
+    "log_level": "ERROR",
+    "num_of_episodes": 12,
+    "checkpoint_freq": 1,
+    "num_env_runners": 1,
+    "rollout_fragment_length": 64,
+    "config": {
+      "train_batch_size":720,
+      "use_critic": true,
+      "use_gae": true,
+      "lambda_": 0.9,
+      "clip_param": 0.4,
+      "use_kl_loss": false,
+      "kl_target": 0.01,
+      "kl_coeff": 1.0,
+      "lr": 2e-5,
+      "gamma": 0.95
+    },
+     "param_space": {
+        "lambda_": {"func": "tune.uniform", "args": [0.9, 1.0]},
+        "clip_param": {"func": "tune.uniform", "args": [0.1, 0.4]},
+        "kl_coeff": {"func": "tune.uniform", "args": [0.1, 1.0]},
+        "kl_target": {"func": "tune.uniform", "args": [0.01, 0.03]},
+        "lr": {"func": "tune.loguniform", "args": [1e-6, 1e-2]},
+        "gamma": {"func": "tune.uniform", "args": [0.96, 0.999]},
+        "vf_loss_coeff": {"func": "tune.uniform", "args": [0.1, 1.0]},
+        "entropy_coeff": {"func": "tune.loguniform", "args": [1e-5, 1e-1]}
+  }
+  },
+  {
+    "experiment_type": "APPO_MultiAgent",
+    "algo_name": "APPO",
+    "log_level": "ERROR",
+    "num_of_episodes": 5,
+    "checkpoint_freq": 1,
+    "num_env_runners": 6,
+    "rollout_fragment_length": 120,
+    "config": {
+      "use_critic": true,
+      "use_gae": true,
+      "lambda_": 0.9,
+      "clip_param": 0.4,
+      "use_kl_loss": false,
+      "kl_target": 0.01,
+      "kl_coeff": 1.0,
+      "lr": 2e-5,
+      "gamma": 0.95
+    },
+     "param_space": {
+        "lambda_": {"func": "tune.uniform", "args": [0.9, 1.0]},
+        "clip_param": {"func": "tune.uniform", "args": [0.1, 0.4]},
+        "kl_coeff": {"func": "tune.uniform", "args": [0.1, 1.0]},
+        "kl_target": {"func": "tune.uniform", "args": [0.01, 0.03]},
+        "lr": {"func": "tune.loguniform", "args": [1e-6, 1e-2]},
+        "gamma": {"func": "tune.uniform", "args": [0.96, 0.999]},
+        "vf_loss_coeff": {"func": "tune.uniform", "args": [0.1, 1.0]},
+        "entropy_coeff": {"func": "tune.loguniform", "args": [1e-5, 1e-1]}
+  }
+  }
+]

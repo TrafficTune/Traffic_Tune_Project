@@ -1,22 +1,15 @@
 import json
 import os
-import pickle
 from sumo_rl import SumoEnvironment
 import env_manager
 import ray
 import utils
-from ray.rllib.algorithms import PPOConfig, PPO
-from ray.rllib.algorithms import DQNConfig, DQN
-from ray.rllib.algorithms import AlgorithmConfig
+from ray.rllib.algorithms import PPOConfig, DQNConfig, APPOConfig
 from ray import tune
 from ray.tune.registry import register_env
-from Logs import project_logger
-from callbacks import AverageWaitingTimeCallback
 from ray.tune.schedulers import ASHAScheduler
 from ray.rllib.policy.policy import PolicySpec
-from ray.rllib.algorithms.ppo import PPOTorchPolicy
-from ray.train import ScalingConfig, RunConfig, CheckpointConfig
-from ray.train.torch import TorchTrainer
+from ray.train import RunConfig, CheckpointConfig
 
 
 class ALGOTrainer:
@@ -43,7 +36,6 @@ class ALGOTrainer:
         Raises:
             ValueError: If the experiment_type and config_path do not match.
         """
-        self._logger = project_logger.ProjectLogger(self.__class__.__name__).setup_logger()
         self.env_manager = env_manager
         self.env = None
         self.config_path = config_path
@@ -71,13 +63,16 @@ class ALGOTrainer:
         self.checkpoint_freq = self.config["checkpoint_freq"]
         self.num_env_runners = self.config["num_env_runners"]
         self.training_config = self.config["config"]
+        self.rollout_fragment_length = self.config.get("rollout_fragment_length", "auto")
 
         self.param_space = utils.convert_to_tune_calls(self.config["param_space"])
         self.storage_path = self.env_manager.storage_path
         self.kwargs = None
 
         # Set the algorithm configuration class based on the experiment type
-        self.ALGOConfig = PPOConfig if "PPO" in self.experiment_type else DQNConfig
+        self.ALGOConfig = (PPOConfig if "PPO" in self.experiment_type else
+                           APPOConfig if "APPO" in self.experiment_type else
+                           DQNConfig)
 
     def env_creator(self, env_config):
         """
@@ -108,8 +103,13 @@ class ALGOTrainer:
         Build and return the configuration for the training algorithm.
 
         This method initializes Ray, registers the environment, and sets up the
-        configuration for the chosen algorithm (PPO or DQN).
+        configuration for the chosen algorithm (PPO | DQN | DDQN).
 
+        Args:
+            flag (bool): If True, returns the config immediately after registering the environment.
+                         Choose flag = true
+                         when you want to use the same config but with a different rou file.
+                         Used in cycle training after the first cycle
         Returns:
             The configured algorithm configuration.
         """
@@ -125,7 +125,7 @@ class ALGOTrainer:
                        .environment(env=self.algo_name)
                        .training(**self.training_config)
                        .env_runners(create_env_on_local_worker=True, num_env_runners=self.num_env_runners,
-                                    rollout_fragment_length='auto', num_envs_per_env_runner=1)
+                                    rollout_fragment_length=self.rollout_fragment_length, num_envs_per_env_runner=1)
                        .learners(num_learners=self.num_env_runners)
                        .debugging(log_level=self.log_level)
                        .framework(framework="torch")
@@ -139,7 +139,6 @@ class ALGOTrainer:
                        #         evaluation_duration_unit="episodes",
                        #         evaluation_parallel_to_training=False
                        #     )
-                       # .callbacks(AverageWaitingTimeCallback)
                        )
 
         if self.env_manager.sumo_type == self.MULTI_AGENT_ENV:
@@ -161,10 +160,10 @@ class ALGOTrainer:
         Execute the training process.
 
         This method sets up the tuner with the specified configuration and runs
-        the training process.
+        the training process using Ray Tune.
 
         Returns:
-            The results of the training process.
+            ExperimentAnalysis: The results of the training process.
         """
         base_config = self.config.to_dict()
 
@@ -172,19 +171,6 @@ class ALGOTrainer:
             **base_config,
             **self.param_space
         }
-
-        # scaling_config = ScalingConfig(
-        #     num_workers=self.num_env_runners,
-        #     use_gpu=True,
-        #     resources_per_worker={"CPU": 1, "GPU": 1/self.num_env_runners},
-        #     accelerator_type="G"
-        # )
-
-        # ray_trainer = TorchTrainer(
-        #     train_loop_per_worker=self.train_func,
-        #     scaling_config=scaling_config,
-        #     run_config=run_config,
-        # )
 
         scheduler = ASHAScheduler(
             metric="env_runners/episode_reward_mean",
@@ -230,7 +216,9 @@ class ALGOTrainer:
         Returns:
             bool: True if the experiment type matches the config path, False otherwise.
         """
-        if ("PPO" in experiment_type and "ppo" in config_path) or ("DQN" in experiment_type and "dqn" in config_path):
+        if (("PPO" in experiment_type and "ppo" in config_path) or
+                ("APPO" in experiment_type and "appo" in config_path) or
+                ("DQN" in experiment_type and "dqn" in config_path)):
             return True
         return False
 
