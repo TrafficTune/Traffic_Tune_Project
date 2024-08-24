@@ -9,6 +9,19 @@ import json
 
 def analyze_episodes(num_intersection, num_episodes=8,
                      path_to_episode="DQN_intersection_4_random_easy_1_07.29-13:05:23_conn0_ep{}.csv"):
+    """
+    Analyze episodes by calculating and displaying the mean waiting times.
+
+    Parameters:
+    - num_intersection (int): The intersection number for which the analysis is performed.
+    - num_episodes (int): The number of episodes to analyze. Default is 8.
+    - path_to_episode (str): The template path to the episode files. It should include a placeholder for the episode number.
+
+    Returns:
+    - min_episode (int): The episode number with the minimum waiting time.
+    - overall_mean (float): The overall mean waiting time across all episodes.
+    - overall_std (float): The overall standard deviation of waiting times across all episodes.
+    """
     # List to store the mean waiting times for each episode
     episode_mean_waiting_times = []
     base_path = f"Outputs/Training/intersection_{num_intersection}/experiments/"
@@ -57,14 +70,15 @@ def analyze_episodes(num_intersection, num_episodes=8,
 
 def plot_waiting_time(num_intersection, episode_number, path_to_episode="DQN_intersection_4_random_easy_1_07.29-13:05:23_conn0_ep{}.csv"):
     """
-    Plots the system mean waiting time for a specific episode.
+    Plot the system mean waiting time for a specific episode.
 
     Parameters:
-    - base_path (str): The base path to the directory containing the CSV files.
+    - num_intersection (int): The intersection number for which the plot is generated.
     - episode_number (int): The episode number to plot.
+    - path_to_episode (str): The template path to the episode file. It should include a placeholder for the episode number.
 
     Returns:
-    - None: Displays or saves the plot.
+    - None: Displays the plot.
     """
     # Construct the filename for the chosen episode
     base_path = f"Outputs/Training/intersection_{num_intersection}/experiments/"
@@ -104,16 +118,15 @@ def plot_waiting_time(num_intersection, episode_number, path_to_episode="DQN_int
 
 def plot_reward_from_json(json_file_path, title, cycle_index=-1):
     """
-    Saves the custom metrics from RLlib results to a CSV file.
+    Plot the rewards over episodes from a JSON file.
 
     Parameters:
     - json_file_path (str): The path to the JSON file containing RLlib training results.
-    - num_intersection (int): The number of intersections being trained.
-    - experiment_type (str): The type of experiment.
-    - cycle_index (int): The index of the cycle in the results, default is -1 for the last cycle.
+    - title (str): The title of the plot.
+    - cycle_index (int): The index of the cycle in the results to plot. Default is -1 for the last cycle.
 
     Returns:
-    - None
+    - None: Displays the plot.
     """
     with open(json_file_path, "r") as file:
         json_results = [json.loads(line) for line in file]
@@ -132,18 +145,21 @@ def plot_reward_from_json(json_file_path, title, cycle_index=-1):
 
 def plot_rewards_intersection_algo(json_file_paths, title, cycle_index=-1, num_intersection=1):
     """
-    Plots the custom metrics from RLlib results from multiple JSON files.
+    Plot rewards over episodes from multiple JSON files.
 
     Parameters:
     - json_file_paths (list): A list of paths to the JSON files containing RLlib training results.
     - title (str): The title of the plot.
-    - cycle_index (int): The index of the cycle in the results, default is -1 for the last cycle.
+    - cycle_index (int): The index of the cycle in the results to plot. Default is -1 for the last cycle.
+    - num_intersection (int): The number of intersections being analyzed.
 
     Returns:
-    - None
+    - None: Displays the plot.
     """
     colors = ['#31a354', '#3182bd', '#e6550d', '#756bb1', '#636363']  # Green, Blue, Orange, Purple, Gray
-    plt.figure(figsize=(12, 6))
+    markers = ['o', 's', 'D', '^', 'v']  # Different marker styles
+
+    plt.figure(figsize=(14, 8))
 
     for i, json_file_path in enumerate(json_file_paths):
         with open(json_file_path, "r") as file:
@@ -156,60 +172,52 @@ def plot_rewards_intersection_algo(json_file_paths, title, cycle_index=-1, num_i
 
             # Extract values
             values = result_grid["env_runners"]["hist_stats"]["episode_reward"]
-            print(f"Original values for {json_file_path}: {values}")
-
-            # Ensure values is a NumPy array
             values = np.array(values, dtype=np.float64)
-            print(f"Converted to NumPy array: {values}")
 
             # Calculate IQR to identify outliers
             Q1 = np.percentile(values, 35)
             Q3 = np.percentile(values, 90)
             IQR = Q3 - Q1
-            print(f"Q1: {Q1}, Q3: {Q3}, IQR: {IQR}")
 
             # Define outlier boundaries
             lower_bound = Q1 - 1.5 * IQR
             upper_bound = Q3 + 1.5 * IQR
-            print(f"Lower bound: {lower_bound}, Upper bound: {upper_bound}")
 
-            # Identify outliers
-            outliers = values[(values < lower_bound) | (values > upper_bound)]
+            # Identify and filter outliers
             filtered_values = values[(values >= lower_bound) & (values <= upper_bound)]
 
-            # Print the outliers
-            if outliers.size > 0:
-                print(f"Outliers for {json_file_path}:")
-                print(outliers)
-            else:
-                print(f"No outliers found for {json_file_path}.")
+            # Plot the filtered values with enhanced visibility settings
+            plt.plot(
+                filtered_values,
+                marker=markers[i % len(markers)],
+                color=colors[i % len(colors)],
+                linewidth=2.5,  # Increased line width
+                markersize=8,   # Larger markers
+                alpha=0.8,      # Slight transparency to make overlapping lines distinguishable
+                label=label
+            )
 
-            if "7" in json_file_path:
-                # Plotting the filtered values with a different color for each file
-                plt.plot(filtered_values, marker='o', color=colors[i % len(colors)], label=label)
-            else:
-                plt.plot(values, marker='o', linestyle='-', color=colors[i % len(colors)], label=label)
-
-    plt.title(title)
-    plt.xlabel('Episode number')
-    plt.ylabel('Reward value')
-    plt.legend()
+    plt.title(title, fontsize=16)
+    plt.xlabel('Episode number', fontsize=14)
+    plt.ylabel('Reward value', fontsize=14)
+    plt.legend(fontsize=12)
     plt.grid(True)
+    plt.tight_layout()
     plt.savefig(f"{title}.png")
     plt.show()
 
 
 def plot_rewards_from_multiple_jsons(json_file_paths, title, cycle_index=-1):
     """
-    Plots the custom metrics from RLlib results from multiple JSON files in a 2x3 grid.
+    Plot rewards over episodes from multiple JSON files in a 2x3 grid.
 
     Parameters:
     - json_file_paths (list): A list of 6 paths to the JSON files containing RLlib training results.
     - title (str): The title of the overall figure.
-    - cycle_index (int): The index of the cycle in the results, default is -1 for the last cycle.
+    - cycle_index (int): The index of the cycle in the results to plot. Default is -1 for the last cycle.
 
     Returns:
-    - None
+    - None: Displays the plot.
     """
     assert len(json_file_paths) == 6, "You must provide exactly 6 JSON file paths."
 
@@ -241,7 +249,7 @@ def plot_rewards_from_multiple_jsons(json_file_paths, title, cycle_index=-1):
 
 def plot_episode_mean_return(csv_file_path, title):
     """
-    Plots the mean return for each episode from a CSV file.
+    Plot the mean return for each episode from a CSV file.
 
     Parameters:
     - csv_file_path (str): The path to the CSV file containing the mean return values.
@@ -268,6 +276,17 @@ def plot_episode_mean_return(csv_file_path, title):
 
 
 def create_param_table(json_files_2, flag=False):
+    """
+    Creates a parameter table from a list of JSON files containing RL algorithm parameters.
+
+    Parameters:
+    - json_files_2 (list): List of file paths to JSON files.
+    - flag (bool): If True, assumes multiple policies for intersections; if False, single intersection.
+
+    Returns:
+    - df (pd.DataFrame): DataFrame containing extracted parameters.
+    """
+
     rows = []
 
     for i, file_path in enumerate(json_files_2, start=1):
@@ -397,7 +416,7 @@ def create_param_table(json_files_2, flag=False):
 
 
 if __name__ == "__main__":
-    algo_list = ["DDQN" ,"DQN" ,"PPO", "APPO"]
+    algo_list = ["APPO"]
     # # plot rewards for all intersections
     # for algo_name in algo_list:
     #     json_list = []
@@ -414,11 +433,12 @@ if __name__ == "__main__":
     #     json_list = []
 
     # param space to exel
-    for algo_name in algo_list:
-        json_list = []
-        for intersection in range(7, 8):
-            json_list.append(f"/Users/eviat/Desktop/Final_Project/Training/Training_2/intersection_{intersection}/{algo_name}/params.json")
-        create_param_table(json_list, flag=True).to_excel(f"{algo_name}_params.xlsx", index=False)
+    # for algo_name in algo_list:
+    #     json_list = []
+    #     for intersection in range(7, 8):
+    #         json_list.append(f"/Users/eviat/Desktop/Final_Project/Training/Training_2/intersection_{intersection}/{algo_name}/params.json")
+    #     # flag=True for multi-agent
+    #     create_param_table(json_list, flag=True).to_excel(f"{algo_name}_params.xlsx", index=False)
 
     # multi-agent param space to exel
     # for algo_name in algo_list:
