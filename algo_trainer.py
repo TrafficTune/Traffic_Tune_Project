@@ -131,14 +131,15 @@ class ALGOTrainer:
                        .framework(framework="torch")
                        .resources(num_gpus=int(os.environ.get("RLLIB_NUM_GPUS", "0")))
                        .reporting(min_sample_timesteps_per_iteration=720)
+                       # comment this line if you don't want to run evaluation during training
                        # .evaluation(
-                       #         evaluation_interval=1,
-                       #         evaluation_duration=1,
-                       #         evaluation_force_reset_envs_before_iteration=True,
-                       #         evaluation_num_env_runners=1,
-                       #         evaluation_duration_unit="episodes",
-                       #         evaluation_parallel_to_training=False
-                       #     )
+                       #     evaluation_interval=1,
+                       #     evaluation_duration=1,
+                       #     evaluation_force_reset_envs_before_iteration=True,
+                       #     evaluation_num_env_runners=1,
+                       #     evaluation_duration_unit="episodes",
+                       #     evaluation_parallel_to_training=False
+                       # )
                        )
 
         if self.env_manager.sumo_type == self.MULTI_AGENT_ENV:
@@ -148,7 +149,8 @@ class ALGOTrainer:
                 policy_cls, policy_obs, policy_act, policy_config = policy_tuple
                 policy_config = self.param_space
 
-                policies[policy_key] = PolicySpec(policy_class=policy_cls, observation_space=policy_obs, action_space=policy_act, config=policy_config)
+                policies[policy_key] = PolicySpec(policy_class=policy_cls, observation_space=policy_obs,
+                                                  action_space=policy_act, config=policy_config)
 
             self.config.multi_agent(policies=policies,
                                     policy_mapping_fn=self.env_manager.policy_mapping_fn)
@@ -230,4 +232,3 @@ class ALGOTrainer:
             The configured algorithm configuration.
         """
         return self.ALGOConfig.from_dict(config_dict=config)
-
